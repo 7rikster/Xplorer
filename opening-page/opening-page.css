@@ -1,0 +1,145 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    list-style: none;
+    text-decoration: none;
+    scroll-behavior: smooth;
+}
+
+#header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(28, 28, 28);
+    backdrop-filter: blur(15px);
+    padding: 0.2rem 2.5rem;
+    z-index: 1000;
+}
+
+.logo{
+    font-size: 2rem;
+    color: #f3f3f3;
+    animation: moveRight 1s forwards;
+}
+#logo{
+    font-size: 2rem;
+    color: #f3f3f3;
+}
+
+#logo span{
+    color: #ef0454;
+    font-size: 3rem;
+}
+
+.user h4{
+    color: #f3f3f3;
+    cursor: pointer;
+}
+
+.user h4 div{
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.4s;
+    cursor: pointer;
+}
+
+.user h4 div:hover{
+    background-color: #393838;
+}
+
+.user h4 i{
+    margin-left: 1rem;
+    position: relative;
+    left: -8px;
+}
+
+.main-body{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+}
+
+.main-body h2{
+    color: #000;
+    margin-top: 12rem;
+    font-size: 2rem;
+}
+
+.city-cards-container{
+    width: 80%;
+    height: 42%;
+    margin-top: 6rem ;
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    column-gap: 15px;
+}
+
+#guwahati{
+    background: url(./images/guwahati.jpg) no-repeat;
+    background-size: cover;
+}
+
+#delhi{
+    background-image: url(./images/delhi2.jpg);
+    background-size: cover;
+    transition: all 2;
+}
+
+#mumbai{
+    background: url(./images/mumbai2.jpg) no-repeat;
+    transition: all 2;
+    background-size: cover;
+}
+
+#silchar{
+    background: url(./images/silchar2.jpg) no-repeat;
+    background-size: cover;
+}
+
+#goa{
+    background: url(./images/goa.jpeg) no-repeat;
+    background-size: cover;
+}
+
+.city-card{
+    transition: 0.6s;
+}
+
+.city-card:hover{
+    box-shadow: 0 0 15px #000;
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.city-card h3{
+    text-align: center;
+    position: relative;
+    top: 70%;
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 400;
+    opacity: 0;
+    transition: 0.6s;
+}
+
+.city-card:hover h3{
+    opacity: 1;
+}
+
+
+
+
+
