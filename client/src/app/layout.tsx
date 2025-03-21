@@ -4,6 +4,8 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import Header from "@/components/header";
 import { AuthProvider } from "@/context/authContext";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,11 +32,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          <Header />
-          {children}
-          <Toaster />
-        </AuthProvider>
+        <Suspense fallback={<Loading />}>
+          <AuthProvider>
+            <Header />
+            {children}
+            <Toaster />
+          </AuthProvider>
+        </Suspense>
       </body>
     </html>
   );

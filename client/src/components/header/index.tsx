@@ -24,6 +24,7 @@ import { signOut } from "@/lib/firebase/auth";
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
 import { DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Avatar, AvatarImage } from "../ui/avatar";
+import { Skeleton } from "../ui/skeleton";
 
 interface HeaderItem {
   title?: string;
@@ -42,12 +43,18 @@ function Header() {
 
   const { y: currentScrollY } = useWindowScroll();
 
-  const user = useUser();
+  const { user, loading: authLoading } = useUser();
 
   const router = useRouter();
   const pathName = usePathname();
 
-  let headerContents: HeaderContents = [];
+  let headerContents: HeaderContents = [
+    {
+      title: "Sign Up",
+      type: "button",
+      link: "/auth/register",
+    },
+  ];
 
   if (pathName.startsWith("/explore")) {
     headerContents = ExplorePageHeaderContents;
@@ -80,7 +87,7 @@ function Header() {
   return (
     <div
       ref={navContainerRef}
-      className="fixed inset-x-0 top-2 z-50 h-16 border-none transition-all duration-700 sm:inset-x-4 "
+      className="fixed inset-x-0 top-4 z-50 h-16 border-none transition-all duration-700 sm:inset-x-6 "
     >
       <header className="absolute top-1/2 w-full -translate-y-1/2">
         <nav className="flex size-full items-center justify-between p-2 ">
@@ -113,7 +120,9 @@ function Header() {
                         </Button>
                       </Link>
                     ))}
-                  {user ? (
+                  {authLoading ? (
+                    <Skeleton className="h-8 w-8 rounded-full" />
+                  ) : user ? (
                     <div>
                       <Link href="/profile">
                         <Button
@@ -206,8 +215,10 @@ function Header() {
                       </Button>
                     </Link>
                   ))}
-              {user ? (
-                <div>
+              {authLoading ? (
+                <Skeleton className="h-8 w-8 rounded-full" />
+              ) : user ? (
+                <div className="flex items-center">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Avatar className="ml-2 cursor-pointer">
@@ -218,7 +229,7 @@ function Header() {
                       <Link href="/profile">
                         <Button
                           variant="ghost"
-                          className="w-full flex justify-start"
+                          className="w-full flex justify-start cursor-pointer"
                         >
                           <UserRound />
                           Profile
@@ -226,7 +237,7 @@ function Header() {
                       </Link>
                       <Button
                         variant="ghost"
-                        className="w-full flex justify-start"
+                        className="w-full flex justify-start cursor-pointer"
                         onClick={() => signOut()}
                       >
                         <LogOut />
