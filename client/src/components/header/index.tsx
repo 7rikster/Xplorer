@@ -179,9 +179,11 @@ function Header() {
             </Sheet>
           </div>
           <div className="flex items-center gap-7 text-3xl font-semibold text-white">
-            <div>
-              <span className="text-5xl text-primary ">X</span>plorer
-            </div>
+            <Link href="/explore">
+              <div>
+                <span className="text-5xl text-primary ">X</span>plorer
+              </div>
+            </Link>
           </div>
           <div className="hidden h-full items-center lg:flex">
             <div className="hidden lg:block">

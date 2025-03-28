@@ -20,7 +20,7 @@ export default function GenerateLayout({
     if (!user) {
       setTimeout(() => {
         toast("You need to be logged in to access this page");
-        redirect("/auth/login");
+        redirect(`/auth/login?redirect=${encodeURIComponent("/generate")}`);
       }, 100);
     } else {
       setLoading(false);

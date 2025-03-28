@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .hoarding-content {
+    text-shadow: 0 5px 10px #0004;
+    transform: translateY(50px);
+    filter: blur(20px);
+    opacity: 0;
+    animation: showContent 0.5s 1 linear forwards;
+  }
+
+  .next {
+    @apply w-45 h-55 absolute bottom-[50px] left-1/2 rounded-lg;
+    animation: showImage 0.5s 1 linear forwards;
+  }
+
+  .next-thumbnail-img {
+    width: 0;
+    overflow: hidden;
+    animation: showThumbnail 0.5s 1 linear forwards;
+  }
+
+  .next-thumbnail {
+    transform: translateX(180px);
+    animation: transformThumbnail 0.5s 1 linear forwards;
+  }
+
+  .prev {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    animation: outImage 0.5s 1 linear forwards;
+  }
+
+  .prev-thumbnail-img {
+    width: 0;
+    overflow: hidden;
+    opacity: 0;
+    animation: showThumbnail 0.5s 1 linear forwards;
+  }
+}
+
+@keyframes outImage {
+  to {
+    width: 180px;
+    height: 220px;
+    border-radius: 8px;
+    left: 50%;
+    bottom: 50px;
+  }
+}
+
+@keyframes transformThumbnail {
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes showThumbnail {
+  to {
+    width: 180px;
+  }
+}
+
+@keyframes showImage {
+  to {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    bottom: 0;
+    border-radius: 0;
+  }
+}
+
+@keyframes showContent {
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}

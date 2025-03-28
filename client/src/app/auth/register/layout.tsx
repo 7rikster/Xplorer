@@ -25,7 +25,7 @@ export default function RegisterLayout({
     } else {
       setLoading(false);
     }
-  }, [user, authLoading]);
+  }, [authLoading]);
   if (loading) return <Loading />;
   return <main>{children}</main>;
 }

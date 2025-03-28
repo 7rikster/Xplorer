@@ -1,6 +1,10 @@
+import Carousel from "@/components/carousel";
+
 function Explore() {
   return (
-    <main className="h-screen flex items-center justify-center bg-[url(/cover-photo.jpg)] bg-cover bg-center"></main>
+    <main className="h-screen flex items-center justify-center">
+      <Carousel />
+    </main>
   );
 }
 
