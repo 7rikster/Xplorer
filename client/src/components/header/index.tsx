@@ -210,8 +210,8 @@ function Header() {
                     <Link href={item.link} key={index}>
                       <Button
                         key={index}
-                        variant="outline"
-                        className="bg-transparent text-white cursor-pointer"
+                        variant="ghost"
+                        className="bg-transparent text-white cursor-pointer border border-white"
                       >
                         {item.title}
                       </Button>
