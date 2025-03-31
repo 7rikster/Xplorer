@@ -40,9 +40,6 @@ generator client {
     photoUrl String
   
     typeOfPlace TypeofPlace
-  
-    userId   String @db.ObjectId
-    user     User   @relation(fields: [userId], references: [id])
   }
   
   enum TypeofPlace{
