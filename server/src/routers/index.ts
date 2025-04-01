@@ -1,3 +1,3 @@
 import Health from "./health";
-
-export { Health };
+import Destination from "./destination";
+export { Health, Destination };

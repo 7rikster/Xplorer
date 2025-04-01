@@ -1,4 +1,4 @@
-const ROOT = "/api/v1";
+const ROOT = "/api";
 const DOCS = "./docs/swagger.yaml";
 const PORT = process.env.PORT || 3000;
 

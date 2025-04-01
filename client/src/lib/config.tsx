@@ -1,6 +1,9 @@
 import {
+  BarChart,
   Hotel,
+  LogOut,
   MapPinHouse,
+  MapPinned,
   MicVocal,
   MountainSnow,
   Plane,
@@ -9,7 +12,7 @@ import {
   Utensils,
 } from "lucide-react";
 
-export const LandingPageHeaderContents = [{}];
+
 
 export const ExplorePageHeaderContents = [
   {
@@ -72,5 +75,31 @@ export const GeneratePageHeaderContents = [
     title: "Explore",
     type: "button",
     link: "/explore",
+  },
+];
+
+export const AdminPageMenuItems = [
+  {
+    icon: BarChart,
+    label: "Dashboard",
+    value: "dashboard",
+   
+  },
+  {
+    icon: MapPinned,
+    label: "Destinations",
+    value: "destinations",
+
+  },
+  {
+    icon: PlaneTakeoff,
+    label: "Tours",
+    value: "tours",
+
+  },
+  {
+    icon: LogOut,
+    label: "Logout",
+    value: "logout",
   },
 ];

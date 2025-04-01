@@ -48,13 +48,15 @@ function Header() {
   const router = useRouter();
   const pathName = usePathname();
 
-  let headerContents: HeaderContents = [
-    {
-      title: "Sign Up",
-      type: "button",
-      link: "/auth/register",
-    },
-  ];
+  let headerContents: HeaderContents = user
+    ? []
+    : [
+        {
+          title: "Sign Up",
+          type: "button",
+          link: "/auth/register",
+        },
+      ];
 
   if (pathName.startsWith("/explore")) {
     headerContents = ExplorePageHeaderContents;
@@ -87,11 +89,19 @@ function Header() {
   return (
     <div
       ref={navContainerRef}
-      className="fixed inset-x-0 top-4 z-50 h-16 border-none transition-all duration-700 sm:inset-x-6 "
+      className="fixed inset-x-0 top-4 z-50 h-18 border-none transition-all duration-700 sm:inset-x-6 "
     >
-      <header className="absolute top-1/2 w-full -translate-y-1/2">
+      <header
+        className={`absolute top-1/2 w-full -translate-y-1/2 px-4 ${
+          pathName.startsWith("/admin") ? "bg-black rounded-lg" : ""
+        }`}
+      >
         <nav className="flex size-full items-center justify-between p-2 ">
-          <div className="lg:hidden">
+          <div
+            className={`${
+              pathName.startsWith("/admin") ? "hidden" : ""
+            } lg:hidden`}
+          >
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" className="px-0 mr-10">
@@ -178,9 +188,9 @@ function Header() {
               </SheetContent>
             </Sheet>
           </div>
-          <div className="flex items-center gap-7 text-3xl font-semibold text-white">
+          <div className="flex items-center gap-7 text-3xl font-semibold text-white ">
             <Link href="/explore">
-              <div>
+              <div className="ml-2 pb-1">
                 <span className="text-5xl text-primary ">X</span>plorer
               </div>
             </Link>
@@ -223,8 +233,13 @@ function Header() {
                 <div className="flex items-center">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Avatar className="ml-2 cursor-pointer">
-                        <AvatarImage src={user.photoURL || ""} />
+                      <Avatar className="ml-2 cursor-pointer ">
+                        <AvatarImage
+                          src={
+                            user.photoURL ||
+                            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.vecteezy.com%2Ffree-vector%2Fprofile-icon&psig=AOvVaw2RkZqH5xdv1j0SjaQioFDA&ust=1743606398035000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCJiYpZOOt4wDFQAAAAAdAAAAABAEhttps://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"
+                          }
+                        />
                       </Avatar>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>

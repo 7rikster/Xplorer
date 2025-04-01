@@ -56,9 +56,6 @@ generator client {
     id String @id @default(auto()) @map("_id") @db.ObjectId
     placeId String @unique
     name String
-    location String
-    latitude String
-    longitude String
-    photos String[]
+    photoUrl String
     rating Int
   }
