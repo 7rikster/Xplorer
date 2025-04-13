@@ -3,15 +3,21 @@ import * as Errors from "../../globals/errors";
 import { prisma } from "../../utils";
 
 const Create: Interfaces.Controllers.Async = async (req, res, next) => {
-  let { placeId, name, photoUrl, rating } = req.body;
+  const auth: string | undefined = req?.headers?.authorization;
+  if (!auth) {
+    return next(Errors.Destination.badRequest("Auth token is missing"));
+  }
 
-  if (!placeId || !name || !photoUrl || !rating) {
+  let { placeId, name, photoUrl, rating, publicId } = req.body;
+
+  if (!placeId || !name || !photoUrl || !rating || !publicId) {
     return next(Errors.Destination.badRequest);
   }
 
   placeId = placeId.trim();
   name = name.trim();
   photoUrl = photoUrl.trim();
+  publicId = publicId.trim();
 
   const destinationExists = await prisma.destination.count({
     where: {
@@ -29,6 +35,7 @@ const Create: Interfaces.Controllers.Async = async (req, res, next) => {
         placeId,
         name,
         photoUrl,
+        publicId,
         rating,
       },
     });

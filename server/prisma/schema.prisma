@@ -57,5 +57,6 @@ generator client {
     placeId String @unique
     name String
     photoUrl String
+    publicId String
     rating Int
   }

@@ -9,8 +9,9 @@ interface AdminCardProps {
   name: string;
   description?: string;
   rating?: number;
-  onEditNavigate: string;
+  onEditNavigate?: string;
   onDelete?: () => void;
+  isEdit?: boolean;
 }
 
 function AdminCard({
@@ -20,18 +21,19 @@ function AdminCard({
   rating,
   onEditNavigate,
   onDelete,
+  isEdit = true,
 }: AdminCardProps) {
   return (
-    <Card className="w-40 md:w-60 p-2">
+    <Card className="w-29 sm:w-40 md:w-60 p-1 md:p-2 gap-0 md:gap-4">
       <Image
-        src={"/image3.jpg"}
+        src={image}
         alt={name}
         width={300}
-        height={300}
-        className="rounded-lg"
+        height={10}
+        className="rounded-lg h-20 md:h-40"
       />
-      <CardContent className="px-1 py-0 flex flex-col items-center justify-between">
-        <div className="flex justify-between items-center w-full mb-2">
+      <CardContent className="px-1 py-0 flex flex-col items-center justify-start">
+        <div className="flex flex-col md:flex-row items-start justify-between md:items-center w-full  md:mb-2">
           <div>
             <p className="font-bold text-lg md:text-2xl">{name}</p>
             {description && (
@@ -55,14 +57,24 @@ function AdminCard({
             )}
           </div>
         </div>
-        <div className="flex flex-row justify-between items-center w-full mb-2 mt-2">
-          <Link href={onEditNavigate}>
-            <Button variant="outline" className="cursor-pointer">
-              <SquarePen /> <span className="hidden md:block">Edit</span>
-            </Button>
-          </Link>
-          <Button className="cursor-pointer">
-            <Delete /> <span className="hidden md:block">Delete</span>
+        <div
+          className={`flex flex-row ${
+            !isEdit ? "justify-end" : "justify-between"
+          } items-center w-full mb-2 mt-2`}
+        >
+          {isEdit && (
+            <Link href={onEditNavigate || ""}>
+              <Button
+                variant="outline"
+                className="cursor-pointer w-8 h-8 md:w-20 md:h-9"
+              >
+                <SquarePen /> <span className="hidden md:block">Edit</span>
+              </Button>
+            </Link>
+          )}
+
+          <Button className="cursor-pointer w-8 h-8 md:w-20 md:h-9">
+            <Delete /> <span className={`hidden md:block`}>Delete</span>
           </Button>
         </div>
       </CardContent>
