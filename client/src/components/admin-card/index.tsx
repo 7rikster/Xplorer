@@ -1,8 +1,12 @@
+"use client";
+
 import Image from "next/image";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { Delete, SquarePen, Star } from "lucide-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { toast } from "sonner";
+import { useState } from "react";
 
 interface AdminCardProps {
   image: string;
@@ -10,8 +14,10 @@ interface AdminCardProps {
   description?: string;
   rating?: number;
   onEditNavigate?: string;
-  onDelete?: () => void;
+  id: string;
+  onDelete: (id: string, publicId: string) => Promise<void>;
   isEdit?: boolean;
+  publicId: string;
 }
 
 function AdminCard({
@@ -21,8 +27,12 @@ function AdminCard({
   rating,
   onEditNavigate,
   onDelete,
+  id,
+  publicId,
   isEdit = true,
 }: AdminCardProps) {
+  const [loading, setLoading] = useState(false);
+
   return (
     <Card className="w-29 sm:w-40 md:w-60 p-1 md:p-2 gap-0 md:gap-4">
       <Image
@@ -73,8 +83,34 @@ function AdminCard({
             </Link>
           )}
 
-          <Button className="cursor-pointer w-8 h-8 md:w-20 md:h-9">
-            <Delete /> <span className={`hidden md:block`}>Delete</span>
+          <Button
+            disabled={loading}
+            className={`w-8 h-8 md:w-20 md:h-9 ${
+              loading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+            }`}
+            onClick={async () => {
+              setLoading(true);
+              await new Promise((r) => setTimeout(r, 0));
+              toast.loading(`Deleting ${name}...`);
+              try {
+                await onDelete(id, publicId);
+                toast.dismiss();
+                toast.success(`Deleted ${name} successfully!`);
+              } catch (error) {
+                console.error("Error deleting item:", error);
+              } finally {
+                setLoading(false);
+              }
+        
+            }}
+          >
+            {loading ? (
+              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              <>
+                <Delete /> <span className={`hidden md:block`}>Delete</span>
+              </>
+            )}
           </Button>
         </div>
       </CardContent>

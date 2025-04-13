@@ -60,7 +60,6 @@ function AdminDestination() {
             },
           }
         );
-        console.log("Image uploaded successfully:", response.data);
         if (response.data) {
           setDestinationData((prev) => ({
             ...prev,
@@ -117,10 +116,6 @@ function AdminDestination() {
         headers: options.headers,
       });
 
-      console.log(
-        "Response: ",
-        response.data.suggestions[0].placePrediction.placeId
-      );
       const placeId = response.data.suggestions[0].placePrediction.placeId;
       return placeId;
     } catch (error) {
@@ -164,7 +159,6 @@ function AdminDestination() {
           },
         }
       );
-      console.log("Destination added successfully:", response.data);
     } catch (error) {
       console.error("Error adding destination:", error);
     }
@@ -179,6 +173,33 @@ function AdminDestination() {
     fetchDestinations();
     isDialogOpen && setIsDialogOpen(false);
   }
+
+  async function handleDeleteDestination(id: string, publicId: string) {
+    if (!user) return;
+    const token = await user.getIdToken();
+    try {
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/destination/delete/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/media/delete/${publicId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      fetchDestinations();
+    } catch (error) {
+      console.error("Error deleting destination:", error);
+    }
+  }
+
   async function fetchDestinations() {
     if (!user) return;
     const token = await user.getIdToken();
@@ -191,7 +212,6 @@ function AdminDestination() {
           },
         }
       );
-      console.log("Fetched destinations:", response.data);
       setDestinations(response.data.data);
     } catch (error) {
       console.error("Error fetching destinations:", error);
@@ -314,11 +334,14 @@ function AdminDestination() {
             destinations.map((destination) => (
               <AdminCard
                 key={destination.id}
+                id={destination.id}
                 image={destination.photoUrl}
                 name={destination.name}
                 rating={destination.rating}
                 onEditNavigate={`/admin/destination/edit/${destination.id}`}
                 isEdit={false}
+                onDelete={handleDeleteDestination}
+                publicId={destination.publicId}
               />
             ))}
         </CardContent>
