@@ -89,7 +89,7 @@ function Header() {
   return (
     <div
       ref={navContainerRef}
-      className="fixed inset-x-2 top-2 sm:top-4 z-50 h-12 sm:h-18 border-none transition-all duration-700 sm:inset-x-6 "
+      className="fixed inset-x-2 top-2 sm:top-4 z-500 h-12 sm:h-18 border-none transition-all duration-700 sm:inset-x-6 "
     >
       <header
         className={`absolute top-1/2 w-full -translate-y-1/2 px-4 ${
@@ -104,7 +104,7 @@ function Header() {
           >
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" className="px-0 mr-10">
+                <Button variant="ghost" className="px-0 md:mr-10">
                   <AlignLeft className="text-white" />
                 </Button>
               </SheetTrigger>
@@ -212,7 +212,7 @@ function Header() {
             </div>
           </div>
           <div className="flex h-full flex-col items-center ">
-            <div className="hidden md:flex">
+            <div className="flex">
               {headerContents &&
                 headerContents.length > 0 &&
                 headerContents
@@ -222,7 +222,7 @@ function Header() {
                       <Button
                         key={index}
                         variant="ghost"
-                        className="bg-transparent text-white cursor-pointer border border-white"
+                        className="bg-transparent text-white cursor-pointer border border-white hidden md:flex"
                       >
                         {item.title}
                       </Button>

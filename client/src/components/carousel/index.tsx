@@ -112,7 +112,7 @@ function Carousel() {
   }, [hoarding]);
 
   return (
-    <div className="w-screen h-screen overflow-hidden relative ">
+    <div className="w-full h-screen overflow-hidden relative ">
       <div>
         {hoarding.map((item, index) => (
           <div
@@ -133,20 +133,22 @@ function Carousel() {
             />
             <div
               ref={index === 0 ? contentContainerref : null}
-              className={`absolute top-[20%] w-[1140px] max-w-[80%] left-1/2 transform -translate-x-[55%] pr-[30%] box-border text-white drop-shadow-4xl `}
+              className={`absolute top-[20%] w-[1140px] max-w-[80%] left-1/2 transform -translate-x-[55%] md:pr-[30%] box-border text-white drop-shadow-4xl `}
             >
-              <h1 className="text-6xl font-bold  tracking-widest">
+              <h1 className="text-3xl md:text-6xl font-bold  tracking-widest">
                 {item.title.toUpperCase()}
               </h1>
-              <p className="font-semibold text-2xl mt-1 text-gray-100">
+              <p className="font-semibold text-xl md:text-2xl mt-1 text-gray-100">
                 {item.location}
               </p>
-              <p className="mt-6 text-lg leading-6">{item.description}</p>
+              <p className="mt-6 text-sm md:text-lg leading-4 md:leading-6">
+                {item.description}
+              </p>
               <Button
                 variant="outline"
-                className="bg-transparent cursor-pointer mt-4"
+                className="bg-transparent cursor-pointer mt-4 w-auto text-sm"
               >
-                Explore {item.title}
+                Explore <span className="hidden md:block"> {item.title} </span>
               </Button>
             </div>
           </div>
@@ -154,14 +156,14 @@ function Carousel() {
       </div>
       {/* Thumbnail images */}
       <div
-        className="absolute bottom-[50px] left-1/2 z-100 flex gap-[20px]"
+        className="absolute bottom-[20px] md:bottom-[50px] left-1/2 z-100 flex gap-[20px]"
         ref={thumbnailref}
       >
         {hoarding.map((item, index) =>
           index !== 0 ? (
             <div
               key={index}
-              className="w-45 h-55 shrink-0 relative"
+              className="w-30 h-35 md:w-45 md:h-55 shrink-0 relative"
               ref={
                 index === 1
                   ? firstThumbnailImageref
@@ -175,8 +177,8 @@ function Carousel() {
                 alt={item.title}
                 className="w-full h-full object-cover rounded-lg"
               />
-              <div className="absolute bottom-0 left-0 right-0 py-3 px-4 text-white">
-                <h1 className="font-bold text-xl">
+              <div className="absolute bottom-0 left-0 right-0 py-3 px-1 md:px-4 text-white">
+                <h1 className="font-bold text-sm md:text-xl">
                   {item.title.toUpperCase()}
                 </h1>
                 <p className="text-gray-100 font-bold">{item.location}</p>
@@ -186,17 +188,17 @@ function Carousel() {
         )}
       </div>
       {/* Arrows */}
-      <div className="absolute top-[80%] right-[52%] w-[25rem] max-w-[30%] flex gap-2 items-center z-10">
+      <div className="absolute top-[90%] md:top-[80%] right-[52%] w-[10rem] md:w-[25rem] max-w-[30%] flex gap-2 items-center z-10">
         <Button
           onClick={handlePrev}
-          className="w-[40px] h-[40px] rounded-full bg-[#ffffff55] text-white font-bold flex items-center justify-center cursor-pointer"
+          className="w-[30px] h-[30px] md:w-[40px] md:h-[40px] rounded-full bg-[#ffffff55] text-white font-bold flex items-center justify-center cursor-pointer"
           variant="ghost"
         >
           <ChevronLeft />
         </Button>
         <Button
           onClick={handleNext}
-          className="w-[40px] h-[40px] rounded-full bg-[#ffffff55] text-white font-bold flex items-center justify-center cursor-pointer"
+          className="w-[30px] h-[30px] md:w-[40px] md:h-[40px] rounded-full bg-[#ffffff55] text-white font-bold flex items-center justify-center cursor-pointer"
           variant="ghost"
         >
           <ChevronRight />
