@@ -1,10 +1,12 @@
-function Generate() {
+function Destination() {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-black text-white">
-      <h1 className="text-xl font-semibold mb-4">This is the Generate page</h1>
+      <h1 className="text-xl font-semibold mb-4">
+        This is the Destinations page
+      </h1>
       <h1 className="text-6xl font-bold">Coming soon</h1>
     </div>
   );
 }
 
-export default Generate;
+export default Destination;

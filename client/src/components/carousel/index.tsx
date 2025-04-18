@@ -146,7 +146,7 @@ function Carousel() {
               </p>
               <Button
                 variant="outline"
-                className="bg-transparent cursor-pointer mt-4 w-auto text-sm"
+                className="bg-transparent cursor-pointer mt-4 w-auto text-sm hover:border-white"
               >
                 Explore <span className="hidden md:block"> {item.title} </span>
               </Button>

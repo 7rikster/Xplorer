@@ -18,6 +18,7 @@ interface AdminCardProps {
   onDelete: (id: string, publicId: string) => Promise<void>;
   isEdit?: boolean;
   publicId: string;
+  location?: string;
 }
 
 function AdminCard({
@@ -29,6 +30,7 @@ function AdminCard({
   onDelete,
   id,
   publicId,
+  location,
   isEdit = true,
 }: AdminCardProps) {
   const [loading, setLoading] = useState(false);
@@ -49,6 +51,11 @@ function AdminCard({
             {description && (
               <p className="text-gray-600 text-sm md:text-md md:font-bold">
                 {description}
+              </p>
+            )}
+            {location && (
+              <p className="text-gray-600 text-md md:text-lg md:font-bold">
+                {location}
               </p>
             )}
           </div>
@@ -101,7 +108,6 @@ function AdminCard({
               } finally {
                 setLoading(false);
               }
-        
             }}
           >
             {loading ? (

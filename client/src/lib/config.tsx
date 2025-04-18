@@ -12,13 +12,11 @@ import {
   Utensils,
 } from "lucide-react";
 
-
-
 export const ExplorePageHeaderContents = [
   {
-    title: "Places",
+    title: "Destinations",
     type: "text",
-    link: "/explore/places",
+    link: "/explore/destinations",
     icon: <MapPinHouse />,
   },
   {
@@ -83,19 +81,16 @@ export const AdminPageMenuItems = [
     icon: BarChart,
     label: "Dashboard",
     value: "dashboard",
-   
   },
   {
     icon: MapPinned,
     label: "Destinations",
     value: "destinations",
-
   },
   {
     icon: PlaneTakeoff,
     label: "Tours",
     value: "tours",
-
   },
   {
     icon: LogOut,

@@ -1,6 +1,10 @@
 "use client";
 
-import AdminCard from "../admin-card";
+import { auth } from "@/lib/firebase/firebaseConfig";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import {
@@ -12,32 +16,31 @@ import {
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import axios from "axios";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/lib/firebase/firebaseConfig";
-import { useEffect, useState } from "react";
+import { Textarea } from "../ui/textarea";
 import Image from "next/image";
-import { toast } from "sonner";
+import AdminCard from "../admin-card";
 
-interface DestinationData {
+interface HoardingData {
   id: string;
   name: string;
-  rating: number;
+  location: string;
   photoUrl: string;
   publicId: string;
   placeId: string;
+  description: string;
 }
 
-function AdminDestination() {
+function AdminHoarding() {
   const [user] = useAuthState(auth);
   const [loading, setLoading] = useState(false);
-  const [destinations, setDestinations] = useState<DestinationData[] | []>([]);
-  const [destinationData, setDestinationData] = useState({
+  const [hoardings, setHoardings] = useState<HoardingData[]>([]);
+  const [hoarding, setHoarding] = useState({
     name: "",
-    rating: 0,
+    location: "",
     photoUrl: "",
     publicId: "",
     placeId: "",
+    description: "",
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isImageUploading, setIsImageUploading] = useState(false);
@@ -63,7 +66,7 @@ function AdminDestination() {
           }
         );
         if (response.data) {
-          setDestinationData((prev) => ({
+          setHoarding((prev) => ({
             ...prev,
             photoUrl: response.data.data.secure_url,
             publicId: response.data.data.public_id,
@@ -125,35 +128,41 @@ function AdminDestination() {
     }
   }
 
-  async function handleAddDestination() {
+  async function handleAddHoarding() {
     if (!user) return;
     setLoading(true);
     const token = await user.getIdToken();
-    if (!destinationData.name || destinationData.name === "") {
-      toast.error("Please enter a name for the destination.");
+    if (!hoarding.name || hoarding.name === "") {
+      toast.error("Please enter a name for the hoarding.");
       setLoading(false);
       return;
     }
-    if (!destinationData.photoUrl || destinationData.photoUrl === "") {
+    if (!hoarding.photoUrl || hoarding.photoUrl === "") {
       setLoading(false);
-      toast.error("Please upload an image for the destination.");
+      toast.error("Please upload an image for the hoarding.");
       return;
     }
-    if (!destinationData.rating || destinationData.rating === 0) {
+    if (!hoarding.location || hoarding.location === "") {
       setLoading(false);
-      toast.error("Please enter a rating for the destination.");
+      toast.error("Please enter a location for the hoarding.");
       return;
     }
-    const place_Id = await getPlaceId(destinationData.name);
+    if (!hoarding.description || hoarding.description === "") {
+      setLoading(false);
+      toast.error("Please enter a description for the hoarding.");
+      return;
+    }
+    const place_Id = await getPlaceId(hoarding.name);
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/destination/add`,
+        `${process.env.NEXT_PUBLIC_API_URL}/hoarding/add`,
         {
-          name: destinationData.name,
-          rating: destinationData.rating,
-          photoUrl: destinationData.photoUrl,
-          publicId: destinationData.publicId,
+          name: hoarding.name,
+          description: hoarding.description,
+          photoUrl: hoarding.photoUrl,
+          publicId: hoarding.publicId,
           placeId: place_Id,
+          location: hoarding.location,
         },
         {
           headers: {
@@ -162,26 +171,27 @@ function AdminDestination() {
         }
       );
     } catch (error) {
-      console.error("Error adding destination:", error);
+      console.error("Error adding hoarding:", error);
     }
     setLoading(false);
-    setDestinationData({
+    setHoarding({
       name: "",
-      rating: 0,
+      description: "",
       photoUrl: "",
       publicId: "",
       placeId: "",
+      location: "",
     });
-    fetchDestinations();
+    // fetchHoardings();
     isDialogOpen && setIsDialogOpen(false);
   }
 
-  async function handleDeleteDestination(id: string, publicId: string) {
+  async function handleDeleteHoarding(id: string, publicId: string) {
     if (!user) return;
     const token = await user.getIdToken();
     try {
       await axios.delete(
-        `${process.env.NEXT_PUBLIC_API_URL}/destination/delete/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/hoarding/delete/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -196,32 +206,32 @@ function AdminDestination() {
           },
         }
       );
-      fetchDestinations();
+    //   fetchHoardings();
     } catch (error) {
-      console.error("Error deleting destination:", error);
+      console.error("Error deleting hoarding:", error);
     }
   }
 
-  async function fetchDestinations() {
+  async function fetchHoardings() {
     if (!user) return;
     const token = await user.getIdToken();
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/destination/get`,
+        `${process.env.NEXT_PUBLIC_API_URL}/hoarding/get`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      setDestinations(response.data.data);
+      setHoardings(response.data.data);
     } catch (error) {
-      console.error("Error fetching destinations:", error);
+      console.error("Error fetching hoardings:", error);
     }
   }
 
   useEffect(() => {
-    fetchDestinations();
+    // fetchHoardings();
   }, [user]);
 
   return (
@@ -229,15 +239,16 @@ function AdminDestination() {
       <Card className="px-0">
         <CardHeader className="flex flex-row justify-between items-center px-3 md:px-6">
           <CardTitle className="text-lg md:text-3xl font-extrabold">
-            Top Destinations
+            Hoarding Items
           </CardTitle>
           <Dialog
             open={isDialogOpen}
             onOpenChange={() => {
               setIsDialogOpen((prev) => !prev);
-              setDestinationData({
+              setHoarding({
                 name: "",
-                rating: 0,
+                description: "",
+                location: "",
                 photoUrl: "",
                 publicId: "",
                 placeId: "",
@@ -246,12 +257,12 @@ function AdminDestination() {
           >
             <DialogTrigger asChild>
               <Button className="cursor-pointer px-2 md:px-4">
-                Add <span className="hidden md:block">New</span> Destination
+                Add <span className="hidden md:block">New</span> Hoarding
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[400px]">
               <DialogHeader>
-                <DialogTitle>Add a New Destination</DialogTitle>
+                <DialogTitle>Add a New Hoarding</DialogTitle>
               </DialogHeader>
               <div className="grid gap-4 py-2">
                 <div className="grid grid-cols-4 items-center gap-4">
@@ -260,9 +271,9 @@ function AdminDestination() {
                   </Label>
                   <Input
                     id="name"
-                    value={destinationData.name}
+                    value={hoarding.name}
                     onChange={(event) =>
-                      setDestinationData((prev) => ({
+                      setHoarding((prev) => ({
                         ...prev,
                         name: event.target.value,
                       }))
@@ -271,20 +282,35 @@ function AdminDestination() {
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="rating" className="text-right">
-                    Rating
+                  <Label htmlFor="location" className="text-right">
+                    Location
                   </Label>
                   <Input
-                    id="rating"
-                    value={destinationData.rating}
+                    id="location"
+                    value={hoarding.location}
                     onChange={(event) =>
-                      setDestinationData((prev) => ({
+                      setHoarding((prev) => ({
                         ...prev,
-                        rating: Number(event.target.value),
+                        location: event.target.value,
                       }))
                     }
                     className="col-span-3"
-                    type="number"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="description" className="text-right">
+                    Description
+                  </Label>
+                  <Textarea
+                    id="description"
+                    value={hoarding.description}
+                    onChange={(event) =>
+                      setHoarding((prev) => ({
+                        ...prev,
+                        description: event.target.value,
+                      }))
+                    }
+                    className="col-span-3"
                   />
                 </div>
 
@@ -292,7 +318,7 @@ function AdminDestination() {
                   <Label htmlFor="rating" className="text-right">
                     Image
                   </Label>
-                  {destinationData.photoUrl === "" ? (
+                  {hoarding.photoUrl === "" ? (
                     <Input
                       onChange={(event) => handleImageUploadChange(event)}
                       type="file"
@@ -301,10 +327,10 @@ function AdminDestination() {
                     />
                   ) : (
                     <Image
-                      src={destinationData.photoUrl}
+                      src={hoarding.photoUrl}
                       width={300}
                       height={100}
-                      alt={destinationData.name}
+                      alt={hoarding.name}
                       className="col-span-3 object-cover h-36 w-full rounded-md"
                     />
                   )}
@@ -317,14 +343,14 @@ function AdminDestination() {
                 </div>
               </div>
               <Button
-                onClick={handleAddDestination}
+                onClick={handleAddHoarding}
                 className="cursor-pointer"
                 disabled={loading || isImageUploading}
               >
                 {loading ? (
                   <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 ) : (
-                  "Add Destination"
+                  "Add Hoarding"
                 )}
               </Button>
             </DialogContent>
@@ -332,18 +358,18 @@ function AdminDestination() {
         </CardHeader>
 
         <CardContent className="flex flex-wrap gap-2 md:gap-4 px-2 md:px-6">
-          {destinations.length > 0 &&
-            destinations.map((destination) => (
+          {hoardings.length > 0 &&
+            hoardings.map((hoardingItem) => (
               <AdminCard
-                key={destination.id}
-                id={destination.id}
-                image={destination.photoUrl}
-                name={destination.name}
-                rating={destination.rating}
-                onEditNavigate={`/admin/destination/edit/${destination.id}`}
+                key={hoardingItem.id}
+                id={hoardingItem.id}
+                image={hoardingItem.photoUrl}
+                name={hoardingItem.name}
+                location={hoardingItem.location}
+                onEditNavigate={`/admin/hoardingItem/edit/${hoardingItem.id}`}
                 isEdit={false}
-                onDelete={handleDeleteDestination}
-                publicId={destination.publicId}
+                onDelete={handleDeleteHoarding}
+                publicId={hoardingItem.publicId}
               />
             ))}
         </CardContent>
@@ -352,4 +378,4 @@ function AdminDestination() {
   );
 }
 
-export default AdminDestination;
+export default AdminHoarding;

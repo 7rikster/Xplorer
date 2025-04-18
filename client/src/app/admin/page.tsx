@@ -2,12 +2,14 @@
 
 import AdminDashboard from "@/components/admin-dashboard";
 import AdminDestination from "@/components/admin-destinations";
+import AdminHoarding from "@/components/admin-hoarding";
 import AdminTours from "@/components/admin-tours";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { signOut } from "@/lib/firebase/auth";
 import {
   BarChart,
+  GalleryThumbnails,
   LogOut,
   MapPinned,
   Menu,
@@ -38,6 +40,12 @@ function Admin() {
       label: "Tours",
       value: "tours",
       component: <AdminTours />,
+    },
+    {
+      icon: GalleryThumbnails,
+      label: "Hoarding",
+      value: "hoarding",
+      component: <AdminHoarding />,
     },
     {
       icon: LogOut,
