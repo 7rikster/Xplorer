@@ -23,6 +23,7 @@ app
 app.use(`${Constants.System.ROOT}/`, Routers.Health);
 app.use(`${Constants.System.ROOT}/destination`, Routers.Destination);
 app.use(`${Constants.System.ROOT}/media`, Routers.Media);
+app.use(`${Constants.System.ROOT}/hoarding`, Routers.Hoarding);
 
 // Error Handlers
 app.use(Middlewares.Error.errorHandler);

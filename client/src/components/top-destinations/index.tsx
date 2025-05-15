@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import DestinationsCard from "./card";
+import LoadingCard from "../loading-card"
 import {
   Carousel,
   CarouselContent,
@@ -18,10 +19,12 @@ interface DestinationList {
   photoUrl: string;
   publicId: string;
   placeId: string;
+  location: string;
 }
 
 function TopDestinations() {
   const [list, setList] = useState<DestinationList[] | []>([]);
+  const [loading, setLoading] = useState(true);
 
   async function fetchDestinations() {
     try {
@@ -33,6 +36,7 @@ function TopDestinations() {
     } catch (error) {
       console.error("Error fetching destinations:", error);
     }
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -40,8 +44,8 @@ function TopDestinations() {
   }, []);
 
   return (
-    <div className="w-full flex flex-col items-center justify-center py-10 px-2">
-      <div className="flex flex-col items-center justify-center mb-8 sm:mb-16 space-y-1">
+    <div className="w-full flex flex-col items-center justify-center py-10 px-2   ">
+      <div className="flex flex-col items-center justify-center mb-8 sm:mb-12 md:mb-16 space-y-1">
         <h1 className="text-md sm:text-lg font-semibold text-gray-700">
           DESTINATIONS
         </h1>
@@ -49,9 +53,9 @@ function TopDestinations() {
           Explore Top Destinations
         </h1>
       </div>
-      <div className="w-full flex flex-col items-center justify-center">
+      <div className="w-full h-full flex flex-col items-center justify-center ">
         <Carousel
-          className={`w-screen ${"md:w-[85%]"} h-[150px] md:h-max px-3 sm:px-0`}
+          className={`w-full ${"md:w-[85%]"} h-[184px] sm:h-max px-3 sm:px-0`}
           opts={{
             slidesToScroll: 4,
             loop: false,
@@ -59,7 +63,7 @@ function TopDestinations() {
           plugins={[]}
         >
           <CarouselContent
-            className={` md:overflow-x-visible`}
+            className={` md:overflow-x-visible `}
             style={{ scrollbarWidth: "none" }}
           >
             {list &&
@@ -69,33 +73,52 @@ function TopDestinations() {
                 <CarouselItem
                   key={index}
                   className={
-                    "basis-1/3 md:basis-1/6 lg:basis-1/6 h-70  rounded-xl overflow-x-hidden"
+                    "basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 h-50 sm:h-74"
                   }
                 >
-                  <div className={`${"w-max"}`}>
+                  <div className={`${"w-full pt-2"}`}>
                     <DestinationsCard
                       key={index}
                       name={item.name}
                       photoUrl={item.photoUrl}
                       rating={item.rating}
+                      location={item.location}
                     />
                   </div>
                 </CarouselItem>
               ))}
-            {list.length == 0 &&
+            {
+              loading &&
               Array.from({ length: 12 }).map((_, index) => (
                 <CarouselItem
                   key={index}
                   className={
-                    "basis-1/3 md:basis-1/4 lg:basis-1/6 sm:h-70  rounded-xl overflow-x-hidden"
+                    "basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 h-50 sm:h-74 "
                   }
                 >
-                  <div className="w-max ">
+                  <div className="w-full pt-2">
+                    <LoadingCard/>
+                  
+                  </div>
+                </CarouselItem>
+              ))
+            }
+
+            {list.length == 0 && !loading &&
+              Array.from({ length: 12 }).map((_, index) => (
+                <CarouselItem
+                  key={index}
+                  className={
+                    "basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 h-50 sm:h-74 "
+                  }
+                >
+                  <div className="w-full pt-2">
                     <DestinationsCard
                       key={index}
                       name="Paris"
                       photoUrl="https://res.cloudinary.com/dqobuxkcj/image/upload/v1744534530/u6c4rwk7yhakk0b3oe6h.webp"
                       rating={5}
+                      location="France"
                     />
                   </div>
                 </CarouselItem>

@@ -16,7 +16,8 @@ import {
   PlaneTakeoff,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 function Admin() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -43,8 +44,8 @@ function Admin() {
     },
     {
       icon: GalleryThumbnails,
-      label: "Hoarding",
-      value: "hoarding",
+      label: "Hoardings",
+      value: "hoardings",
       component: <AdminHoarding />,
     },
     {
@@ -55,16 +56,44 @@ function Admin() {
     },
   ];
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 1024px)");
+
+    const handleResize = () => {
+      if (mediaQuery.matches) {
+        setToggleNav(false);
+      } else {
+        setToggleNav(true);
+      }
+    };
+
+    handleResize();
+
+    mediaQuery.addEventListener("change", handleResize);
+
+    return () => mediaQuery.removeEventListener("change", handleResize);
+  }, []);
+
   return (
     <div className=" min-h-screen flex bg-gray-100">
       <aside
-        className={`fixed min-h-screen transition-all duration-300 ease-in-out ${
+        className={`fixed lg:static min-h-screen transition-all duration-300 ease-in-out ${
           toggleNav ? "w-12 md:w-18" : "w-48 md:w-64"
         } bg-white shadow-md md:block`}
       >
-        <div className="p-1 pt-18 sm:pt-28 md:p-4 md:pt-28">
+        <div className="flex items-center justify-center h-16 mt-4">
+          <Link href="/explore">
+            <div className="text-4xl font-semibold">
+              <span className="text-5xl text-primary ">X</span>
+              <span className={`${toggleNav == true ? "hidden" : ""}`}>
+                plorer
+              </span>
+            </div>
+          </Link>
+        </div>
+        <div className="p-1 pt-6 md:p-4 md:pt-6">
           <nav>
-            <div className="flex justify-end ">
+            <div className="lg:hidden flex justify-end ">
               <Button
                 className="mb-2 cursor-pointer"
                 onClick={() => setToggleNav(!toggleNav)}
@@ -81,7 +110,9 @@ function Admin() {
                     ? () => signOut()
                     : () => {
                         setActiveTab(item.value);
-                        setToggleNav(true);
+                        if (window.matchMedia("(max-width: 1023px)").matches) {
+                          setToggleNav(true);
+                        }
                       }
                 }
                 variant={item.value === activeTab ? "default" : "ghost"}
@@ -93,11 +124,8 @@ function Admin() {
           </nav>
         </div>
       </aside>
-      <main className="flex-1 ml-12 md:ml-18 p-1 md:p-8 pt-18 md:pt-30 overflow-y-auto">
+      <main className="flex-1 ml-12 md:ml-0 p-1 md:p-8 pt-18 md:pt-30 overflow-y-auto">
         <div className="max-w-[82.1rem] mx-auto">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-4 ml-2 md:mb-8">
-            Dashboard
-          </h1>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             {menuItems.map((item) => (
               <TabsContent key={item.value} value={item.value}>

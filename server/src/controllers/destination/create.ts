@@ -8,9 +8,9 @@ const Create: Interfaces.Controllers.Async = async (req, res, next) => {
     return next(Errors.Destination.badRequest("Auth token is missing"));
   }
 
-  let { placeId, name, photoUrl, rating, publicId } = req.body;
+  let { placeId, name, photoUrl, rating, publicId, location } = req.body;
 
-  if (!placeId || !name || !photoUrl || !rating || !publicId) {
+  if (!placeId || !name || !photoUrl || !rating || !publicId || !location) {
     return next(Errors.Destination.badRequest);
   }
 
@@ -18,6 +18,7 @@ const Create: Interfaces.Controllers.Async = async (req, res, next) => {
   name = name.trim();
   photoUrl = photoUrl.trim();
   publicId = publicId.trim();
+  location = location.trim();
 
   const destinationExists = await prisma.destination.count({
     where: {
@@ -37,6 +38,7 @@ const Create: Interfaces.Controllers.Async = async (req, res, next) => {
         photoUrl,
         publicId,
         rating,
+        location
       },
     });
     res.status(200).json({

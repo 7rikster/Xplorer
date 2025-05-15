@@ -26,6 +26,7 @@ interface DestinationData {
   photoUrl: string;
   publicId: string;
   placeId: string;
+  location: string;
 }
 
 function AdminDestination() {
@@ -38,6 +39,7 @@ function AdminDestination() {
     photoUrl: "",
     publicId: "",
     placeId: "",
+    location: "",
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isImageUploading, setIsImageUploading] = useState(false);
@@ -144,6 +146,11 @@ function AdminDestination() {
       toast.error("Please enter a rating for the destination.");
       return;
     }
+    if (!destinationData.location || destinationData.location === "") {
+      setLoading(false);
+      toast.error("Please enter a location for the destination.");
+      return;
+    }
     const place_Id = await getPlaceId(destinationData.name);
     try {
       const response = await axios.post(
@@ -154,6 +161,7 @@ function AdminDestination() {
           photoUrl: destinationData.photoUrl,
           publicId: destinationData.publicId,
           placeId: place_Id,
+          location: destinationData.location,
         },
         {
           headers: {
@@ -171,6 +179,7 @@ function AdminDestination() {
       photoUrl: "",
       publicId: "",
       placeId: "",
+      location: "",
     });
     fetchDestinations();
     isDialogOpen && setIsDialogOpen(false);
@@ -241,6 +250,7 @@ function AdminDestination() {
                 photoUrl: "",
                 publicId: "",
                 placeId: "",
+                location: "",
               });
             }}
           >
@@ -256,7 +266,7 @@ function AdminDestination() {
               <div className="grid gap-4 py-2">
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="name" className="text-right">
-                    Name
+                    Place
                   </Label>
                   <Input
                     id="name"
@@ -270,6 +280,23 @@ function AdminDestination() {
                     className="col-span-3"
                   />
                 </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="name" className="text-right">
+                    Location
+                  </Label>
+                  <Input
+                    id="name"
+                    value={destinationData.location}
+                    onChange={(event) =>
+                      setDestinationData((prev) => ({
+                        ...prev,
+                        location: event.target.value,
+                      }))
+                    }
+                    className="col-span-3"
+                  />
+                </div>
+
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="rating" className="text-right">
                     Rating
@@ -340,6 +367,7 @@ function AdminDestination() {
                 image={destination.photoUrl}
                 name={destination.name}
                 rating={destination.rating}
+                location={destination.location}
                 onEditNavigate={`/admin/destination/edit/${destination.id}`}
                 isEdit={false}
                 onDelete={handleDeleteDestination}

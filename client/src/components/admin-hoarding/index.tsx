@@ -182,7 +182,7 @@ function AdminHoarding() {
       placeId: "",
       location: "",
     });
-    // fetchHoardings();
+    fetchHoardings();
     isDialogOpen && setIsDialogOpen(false);
   }
 
@@ -206,7 +206,7 @@ function AdminHoarding() {
           },
         }
       );
-    //   fetchHoardings();
+      fetchHoardings();
     } catch (error) {
       console.error("Error deleting hoarding:", error);
     }
@@ -231,7 +231,7 @@ function AdminHoarding() {
   }
 
   useEffect(() => {
-    // fetchHoardings();
+    fetchHoardings();
   }, [user]);
 
   return (

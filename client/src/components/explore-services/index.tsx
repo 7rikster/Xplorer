@@ -2,7 +2,7 @@ import Image from "next/image";
 
 function Services() {
   return (
-    <div className="w-full flex flex-col items-center justify-center py-10 sm:py-10 px-8 sm:px-10 md:px-20 lg:px-30">
+    <div className="w-full flex flex-col items-center justify-center py-10 sm:py-10 px-8 sm:px-10 md:px-20 lg:px-30 bg-gray-100">
       <div className="flex flex-col items-center justify-center mb-8 sm:mb-16 space-y-1">
         <h1 className="text-md sm:text-lg font-semibold text-gray-700">
           CATEGORY
@@ -12,7 +12,7 @@ function Services() {
         </h1>
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-12 md:gap-16  w-full">
-        <div className="rounded-4xl transition-all ease-in duration-300 shadow-md hover:shadow-xl flex flex-col items-center justify-between space-y-4">
+        <div className="bg-white rounded-4xl transition-all ease-in duration-300 shadow-md hover:shadow-xl flex flex-col items-center justify-between space-y-4">
           <div className="w-full h-10 sm:h-30 flex items-center justify-center pt-6 sm:pt-12">
             <Image
               src="https://res.cloudinary.com/dqobuxkcj/image/upload/v1744904250/Group_48_buvltt.png"
@@ -30,7 +30,7 @@ function Services() {
             </p>
           </div>
         </div>
-        <div className="rounded-4xl transition-all ease-in duration-300 shadow-md hover:shadow-xl flex flex-col items-center justify-between space-y-4">
+        <div className="bg-white rounded-4xl transition-all ease-in duration-300 shadow-md hover:shadow-xl flex flex-col items-center justify-between space-y-4">
           <div className="w-full sm:h-30 flex items-center justify-center pt-6 sm:pt-12">
             <Image
               src="https://res.cloudinary.com/dqobuxkcj/image/upload/c_crop,w_130,h_100/v1744904250/Group_51_xkccnl.png"
@@ -48,7 +48,7 @@ function Services() {
             </p>
           </div>
         </div>
-        <div className="rounded-4xl transition-all ease-in duration-300 shadow-md hover:shadow-xl flex flex-col items-center justify-between space-y-4">
+        <div className="bg-white rounded-4xl transition-all ease-in duration-300 shadow-md hover:shadow-xl flex flex-col items-center justify-between space-y-4">
           <div className="w-full sm:h-30 flex items-center justify-center pt-6 sm:pt-12">
             <Image
               src="https://res.cloudinary.com/dqobuxkcj/image/upload/v1744904249/Group_50_q1zdag.png"
@@ -66,7 +66,7 @@ function Services() {
             </p>
           </div>
         </div>
-        <div className="rounded-4xl transition-all ease-in duration-300 shadow-md hover:shadow-xl flex flex-col items-center justify-between space-y-4">
+        <div className="bg-white rounded-4xl transition-all ease-in duration-300 shadow-md hover:shadow-xl flex flex-col items-center justify-between space-y-4">
           <div className="w-full sm:h-30 flex items-center justify-center pt-6 sm:pt-12">
             <Image
               src="https://res.cloudinary.com/dqobuxkcj/image/upload/v1744904249/Group_49_apy588.png"

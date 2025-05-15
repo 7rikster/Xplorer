@@ -59,4 +59,15 @@ generator client {
     photoUrl String
     publicId String
     rating Int
+    location String
+  }
+
+  model Hoarding{
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    placeId String @unique
+    name String
+    photoUrl String
+    publicId String
+    location String
+    description String
   }

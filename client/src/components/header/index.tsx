@@ -89,11 +89,13 @@ function Header() {
   return (
     <div
       ref={navContainerRef}
-      className="fixed inset-x-2 top-2 sm:top-4 z-500 h-12 sm:h-18 border-none transition-all duration-700 sm:inset-x-6 "
+      className={`fixed inset-x-2 top-2 sm:top-4 z-500 h-12 sm:h-18 border-none transition-all duration-700 sm:inset-x-6 ${
+        pathName.startsWith("/admin") ? " hidden" : ""
+      }`}
     >
       <header
         className={`absolute top-1/2 w-full -translate-y-1/2 px-4 ${
-          pathName.startsWith("/admin") ? "bg-black rounded-lg" : ""
+          pathName.startsWith("/admin") ? "hidden" : ""
         }`}
       >
         <nav className="flex size-full items-center justify-between p-1 sm:p-2">
@@ -108,7 +110,7 @@ function Header() {
                   <AlignLeft className="text-white" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left">
+              <SheetContent side="left" className="w-64 z-1000">
                 <SheetHeader className="flex justify-center items-center flex-row">
                   <SheetTitle className="text-3xl font-semibold ">
                     <span className="text-5xl text-primary ">X</span>plorer
@@ -240,6 +242,7 @@ function Header() {
                             user.photoURL ||
                             "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"
                           }
+                          referrerPolicy="no-referrer"
                         />
                       </Avatar>
                     </DropdownMenuTrigger>

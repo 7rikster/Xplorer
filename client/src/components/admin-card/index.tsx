@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
-import { Delete, SquarePen, Star } from "lucide-react";
+import { Delete, MapPin, SquarePen, Star } from "lucide-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -54,7 +54,8 @@ function AdminCard({
               </p>
             )}
             {location && (
-              <p className="text-gray-600 text-md md:text-lg md:font-bold">
+              <p className="text-gray-600 text-sm md:text-md md:font-semibold flex ">
+                <MapPin className="w-4 h-5 mr-0.5"/>
                 {location}
               </p>
             )}
