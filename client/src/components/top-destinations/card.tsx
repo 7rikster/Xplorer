@@ -46,7 +46,7 @@ function DestinationsCard({ name, photoUrl, rating, location }: CardProps) {
           </div>
         </div>
         <div>
-          <Button className="cursor-pointer w-12 h-6 text-[10px] sm:w-12 sm:h-7 md:text-xs lg:w-auto lg:h-auto lg:text-sm">
+          <Button className="cursor-pointer w-12 h-6 text-[10px] sm:w-16 sm:h-7 md:text-xs lg:w-auto lg:h-auto lg:text-sm">
             Explore
           </Button>
         </div>

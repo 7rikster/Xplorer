@@ -21,10 +21,15 @@ import {
 import { AlignLeft, LogOut, UserRound } from "lucide-react";
 import { useUser } from "@/context/authContext";
 import { signOut } from "@/lib/firebase/auth";
-import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
-import { DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Skeleton } from "../ui/skeleton";
+import axios from "axios";
 
 interface HeaderItem {
   title?: string;
@@ -38,6 +43,7 @@ type HeaderContents = HeaderItem[];
 function Header() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isNavVisible, setIsNavVisible] = useState(true);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const navContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -62,6 +68,15 @@ function Header() {
     headerContents = ExplorePageHeaderContents;
   } else if (pathName.startsWith("/generate")) {
     headerContents = GeneratePageHeaderContents;
+  }
+
+  function handleDashboardClick() {
+    setDropdownOpen(false);
+    if (user?.role === "ADMIN") {
+      router.push("/admin");
+    } else {
+      router.push("/dashboard");
+    }
   }
 
   useEffect(() => {
@@ -136,17 +151,17 @@ function Header() {
                     <Skeleton className="h-8 w-8 rounded-full" />
                   ) : user ? (
                     <div>
-                      <Link href="/profile">
-                        <Button
-                          variant="ghost"
-                          className="w-full flex justify-start"
-                        >
-                          <span className="mr-2">
-                            <UserRound />
-                          </span>
-                          Profile
-                        </Button>
-                      </Link>
+                      <Button
+                        variant="ghost"
+                        className="w-full flex justify-start"
+                        onClick={handleDashboardClick}
+                      >
+                        <span className="mr-2">
+                          <UserRound />
+                        </span>
+                        Dashboard
+                      </Button>
+
                       <div className="flex flex-col justify-center items-center space-y-2 mt-2">
                         <Button className="px-9 " onClick={() => signOut()}>
                           Sign Out
@@ -234,12 +249,15 @@ function Header() {
                 <Skeleton className="h-8 w-8 rounded-full" />
               ) : user ? (
                 <div className="flex items-center">
-                  <DropdownMenu>
+                  <DropdownMenu
+                    open={dropdownOpen}
+                    onOpenChange={setDropdownOpen}
+                  >
                     <DropdownMenuTrigger asChild>
                       <Avatar className="ml-2 cursor-pointer ">
                         <AvatarImage
                           src={
-                            user.photoURL ||
+                            user.photoUrl ||
                             "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"
                           }
                           referrerPolicy="no-referrer"
@@ -247,23 +265,26 @@ function Header() {
                       </Avatar>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      <Link href="/profile">
-                        <Button
-                          variant="ghost"
-                          className="w-full flex justify-start cursor-pointer"
-                        >
-                          <UserRound />
-                          Profile
-                        </Button>
-                      </Link>
-                      <Button
-                        variant="ghost"
-                        className="w-full flex justify-start cursor-pointer"
-                        onClick={() => signOut()}
+                      <DropdownMenuItem
+                        onSelect={(e) => {
+                          e.preventDefault(); // optional: prevent default selection behavior
+                          handleDashboardClick();
+                        }}
                       >
-                        <LogOut />
+                        <UserRound className="mr-2 h-4 w-4" />
+                        Dashboard
+                      </DropdownMenuItem>
+
+                      <DropdownMenuItem
+                        onSelect={(e) => {
+                          e.preventDefault();
+                          setDropdownOpen(false);
+                          signOut();
+                        }}
+                      >
+                        <LogOut className="mr-2 h-4 w-4" />
                         Sign Out
-                      </Button>
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>

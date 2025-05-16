@@ -38,8 +38,8 @@ function Admin() {
     },
     {
       icon: PlaneTakeoff,
-      label: "Tours",
-      value: "tours",
+      label: "Trips",
+      value: "trips",
       component: <AdminTours />,
     },
     {

@@ -44,6 +44,8 @@ function AdminDestination() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isImageUploading, setIsImageUploading] = useState(false);
 
+  console.log(user);
+
   async function handleImageUploadChange(
     event: React.ChangeEvent<HTMLInputElement>
   ) {
@@ -368,7 +370,6 @@ function AdminDestination() {
                 name={destination.name}
                 rating={destination.rating}
                 location={destination.location}
-                onEditNavigate={`/admin/destination/edit/${destination.id}`}
                 isEdit={false}
                 onDelete={handleDeleteDestination}
                 publicId={destination.publicId}

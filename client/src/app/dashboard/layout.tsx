@@ -1,12 +1,12 @@
 import ProtectedRoute from "@/components/protectedRoutes";
 
-export default function AdminLayout({
+export default function ClientLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <ProtectedRoute allowedRoles={["ADMIN"]}>
+    <ProtectedRoute allowedRoles={["CLIENT"]}>
       <main>{children}</main>
     </ProtectedRoute>
   );

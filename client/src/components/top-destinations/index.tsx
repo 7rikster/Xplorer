@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import DestinationsCard from "./card";
-import LoadingCard from "../loading-card"
+import LoadingCard from "../loading-card";
 import {
   Carousel,
   CarouselContent,
@@ -44,7 +44,7 @@ function TopDestinations() {
   }, []);
 
   return (
-    <div className="w-full flex flex-col items-center justify-center py-10 px-2   ">
+    <div className="w-full flex flex-col items-center justify-center pt-10 pb-6 px-2   ">
       <div className="flex flex-col items-center justify-center mb-8 sm:mb-12 md:mb-16 space-y-1">
         <h1 className="text-md sm:text-lg font-semibold text-gray-700">
           DESTINATIONS
@@ -55,7 +55,7 @@ function TopDestinations() {
       </div>
       <div className="w-full h-full flex flex-col items-center justify-center ">
         <Carousel
-          className={`w-full ${"md:w-[85%]"} h-[184px] sm:h-max px-3 sm:px-0`}
+          className={`w-full md:w-[85%] h-[194px] sm:h-max px-3 sm:px-0`}
           opts={{
             slidesToScroll: 4,
             loop: false,
@@ -73,7 +73,7 @@ function TopDestinations() {
                 <CarouselItem
                   key={index}
                   className={
-                    "basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 h-50 sm:h-74"
+                    "basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 h-50 sm:h-82"
                   }
                 >
                   <div className={`${"w-full pt-2"}`}>
@@ -87,8 +87,7 @@ function TopDestinations() {
                   </div>
                 </CarouselItem>
               ))}
-            {
-              loading &&
+            {loading &&
               Array.from({ length: 12 }).map((_, index) => (
                 <CarouselItem
                   key={index}
@@ -97,14 +96,13 @@ function TopDestinations() {
                   }
                 >
                   <div className="w-full pt-2">
-                    <LoadingCard/>
-                  
+                    <LoadingCard />
                   </div>
                 </CarouselItem>
-              ))
-            }
+              ))}
 
-            {list.length == 0 && !loading &&
+            {list.length == 0 &&
+              !loading &&
               Array.from({ length: 12 }).map((_, index) => (
                 <CarouselItem
                   key={index}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Label } from "../../../components/ui/label";
 import { Input } from "../../../components/ui/input";
@@ -13,76 +13,171 @@ import {
   CardHeader,
   CardTitle,
 } from ".././../../components/ui/card";
-import { signIn, signInWithGoogle } from "../../../lib/firebase/auth";
+import { signIn, signInWithGoogle, signOut } from "../../../lib/firebase/auth";
 import { toast } from "sonner";
 import Link from "next/link";
+import { sendEmailVerification } from "firebase/auth";
+import { auth } from "@/lib/firebase/firebaseConfig";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import axios from "axios";
 
 function LogIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [logging, setLogging] = useState(false);
+  const [verifyEmail, setVerifyEmail] = useState(false);
 
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
 
-  function handleSignIn(event: any) {
+  async function handleSignIn(event: any) {
     event.preventDefault();
     setLogging(true);
 
     if (email && password) {
-      signIn(email, password)
-        .then((user) => {
-          if (user?.uid) {
-            toast.success("User Signed in Successfully");
-            setLogging(false);
-            setTimeout(() => {
-              router.refresh();
-              router.push(typeof redirect === "string" ? redirect : "/");
-            }, 1000);
-          } else {
-            toast("Something went wrong");
-          }
-        })
-        .catch((e) => {
+      try {
+        const user = await signIn(email, password);
+        if (user?.emailVerified === false) {
           setLogging(false);
-          console.log(e);
-          const errorCode = e.code;
-          const errorMessage = e.message;
-          if (errorCode === "auth/invalid-credential") {
-            toast("Invalid credentials!");
-          } else if (errorCode === "auth/invalid-email") {
-            toast("Enter an email!");
-          } else if (errorCode === "auth/missing-password") {
-            toast("Enter the password!");
-          } else {
-            toast(`${errorMessage}`);
-          }
-        });
+          toast.error("Please verify your email");
+          await sendEmailVerification(user, {
+            url: `${
+              window.location.origin
+            }/auth/login?redirect=${encodeURIComponent(
+              typeof redirect === "string" ? redirect : "/"
+            )}`,
+          });
+          setVerifyEmail(true);
+          await signOut();
+          return;
+        }
+
+        if (user?.uid && user?.emailVerified) {
+          toast.success("User Signed in Successfully");
+          setLogging(false);
+          setTimeout(() => {
+            router.refresh();
+            router.push(typeof redirect === "string" ? redirect : "/");
+          }, 1000);
+        } else {
+          toast("Something went wrong");
+        }
+      } catch (e: any) {
+        setLogging(false);
+        console.log(e);
+        const errorCode = e.code;
+        const errorMessage = e.message;
+        if (errorCode === "auth/invalid-credential") {
+          toast("Invalid credentials!");
+        } else if (errorCode === "auth/invalid-email") {
+          toast("Enter an email!");
+        } else if (errorCode === "auth/missing-password") {
+          toast("Enter the password!");
+        } else {
+          toast(`${errorMessage}`);
+        }
+      }
     } else {
       setLogging(false);
       toast.error("Please fill all the fields");
     }
   }
 
-  function handleSignInWithGoogle(event: any) {
+  async function handleSignInWithGoogle(event: any) {
     event.preventDefault();
 
-    signInWithGoogle().then((user) => {
-      if (user.uid) {
-        toast.success("User Signed in Successfully");
+    try {
+      const user = await signInWithGoogle();
+
+      if (user?.uid) {
+        const token = await user.getIdToken();
+        const username = user.email.split("@")[0];
+
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/auth/username/${username}`
+        );
+        if (!response.data?.data) {
+          try {
+            const response = await axios.post(
+              `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,
+              {
+                name: user.displayName,
+                email: user.email,
+                userName: username,
+                photoUrl: user.photoURL,
+                firebaseId: user.uid,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+          } catch (error) {
+            console.error("Error creating user:", error);
+          }
+        }
+
+        toast.success("User registered Successfully");
         setTimeout(() => {
           router.refresh();
           router.push(typeof redirect === "string" ? redirect : "/");
         }, 1000);
       } else {
-        toast.error("User Signin Failed");
+        toast.error("User SignUp Failed");
       }
-    });
+    } catch (error) {
+      console.error("Google Sign Up Error:", error);
+      toast.error("An error occurred during Google Sign Up");
+    }
   }
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user?.emailVerified) {
+      setVerifyEmail(false);
+      setLogging(false);
+    }
+  }, []);
 
   return (
     <main className="h-screen flex items-center justify-center bg-[url(/cover-photo.jpg)] bg-cover bg-center">
+      <Dialog open={verifyEmail}>
+        <DialogContent>
+          <DialogTitle className="w-full text-2xl text-center">
+            Verify your email
+          </DialogTitle>
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <p className="text-center">
+              A verification link has been sent to your email. Please verify
+              your email to continue.
+            </p>
+            <p className="text-center">
+              If you didn't receive the email, please check your spam folder or
+              click the button below to resend the verification email.
+            </p>
+            <Button
+              onClick={async () => {
+                const user = auth.currentUser;
+                if (user) {
+                  await sendEmailVerification(user, {
+                    url: `${
+                      window.location.origin
+                    }/auth/register?redirect=${encodeURIComponent(
+                      typeof redirect === "string" ? redirect : "/"
+                    )}`,
+                  });
+                  toast.success("Verification email sent!");
+                }
+              }}
+            >
+              Resend Verification Email
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <Card className="p-6 space-y-4">
         <CardHeader>
           <CardTitle className="text-2xl">Welcome Back!!</CardTitle>
