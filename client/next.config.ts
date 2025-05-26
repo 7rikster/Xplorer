@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   images: {
     domains: ["res.cloudinary.com"],
   },
+  ssr: {
+    noExternal: [/@syncfusion/]
+  }
 };
 
 export default nextConfig;

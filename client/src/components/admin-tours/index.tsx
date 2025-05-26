@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 interface DestinationData {
   id: string;
@@ -22,6 +23,8 @@ function AdminTours() {
 
   const [user] = useAuthState(auth);
   const [destinations, setDestinations] = useState<DestinationData[] | []>([]);
+
+  const router = useRouter();
 
   async function handleDeleteDestination(id: string, publicId: string) {
     if (!user) return;
@@ -79,7 +82,7 @@ function AdminTours() {
           <CardTitle className="text-lg md:text-3xl font-extrabold">
             Trips
           </CardTitle>
-          <Button className="cursor-pointer px-2 md:px-4">
+          <Button className="cursor-pointer px-2 md:px-4" onClick={() => router.push("/admin/add-new-trip")}>
             Add <span className="hidden md:block">New</span> Trip
           </Button>
         </CardHeader>

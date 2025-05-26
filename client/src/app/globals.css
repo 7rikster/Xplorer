@@ -130,6 +130,15 @@
     @apply bg-black rounded-lg border;
   }
 
-  
+  .combo-box {
+    @apply p-2 rounded-lg border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors mt-1;
+  }
+
+  .leaflet-container {
+    @apply h-full w-full rounded-lg border border-border;
+  }
 }
 
+.leaflet-container {
+  height: 50vh;
+}
