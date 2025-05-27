@@ -20,7 +20,6 @@ generator client {
   
     role Role
 
-    adminTrips  AdminTrip[]  
     userTrips   UserTrip[]
   
   }
@@ -60,8 +59,6 @@ generator client {
 
   model AdminTrip{
     id String @id @default(auto()) @map("_id") @db.ObjectId
-    userId String @db.ObjectId
-    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     createdAt DateTime
 

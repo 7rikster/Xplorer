@@ -13,7 +13,17 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import axios from "axios";
 
-function NewTripForm() {
+interface TripData{
+  imageUrls: string[];
+  tripDetail: string;
+}
+
+interface NewTripFormProps {
+  saveTrip: (data: TripData) => void;
+  loading?: boolean;
+}
+
+function NewTripForm({  saveTrip, loading:dbLoading }: NewTripFormProps) {
   type Place = {
     location: string;
     placeId: string;
@@ -81,8 +91,13 @@ function NewTripForm() {
           },
         }
       );
+      
+      const tripData: TripData = {
+        imageUrls: response.data.data.imageUrls,
+        tripDetail: response.data.data.tripDetail,
+      };
+      saveTrip(tripData);
       setLoading(false);
-      console.log("Trip generated successfully:", response.data);
     } catch (error) {
       setLoading(false);
       console.error("Error generating trip:", error);
@@ -251,8 +266,8 @@ function NewTripForm() {
           />
         </div>
 
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? (
+        <Button type="submit" className="w-full" disabled={loading || dbLoading}>
+          {loading || dbLoading ? (
             <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
           ) : (
             <>

@@ -2,12 +2,50 @@
 
 import NewTripForm from "@/components/new-trip-form";
 import { Button } from "@/components/ui/button";
+import { auth } from "@/lib/firebase/firebaseConfig";
+import axios from "axios";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { toast } from "sonner";
+
+interface TripData{
+  imageUrls: string[];
+  tripDetail: string;
+}
 
 function AddNewTrip() {
-   
+  const [user] = useAuthState(auth);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  async function saveTrip(data: TripData) {
+    if (!user) return;
+    setLoading(true);
+    const token = await user.getIdToken();
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/trip/create`,
+        {
+          tripDetail: data.tripDetail,
+          imageUrls: data.imageUrls,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Trip created successfully:", response.data);
+      setLoading(false);
+      toast.success("Trip created successfully!");
+      router.push(`/admin/trips/${response.data.data.id}`);
+    } catch (error) {
+      console.error("Error creating trip:", error);
+      setLoading(false);
+    }
+  }
 
   return (
     <main className="flex flex-col items-start justify-start p-4 md:p-8 bg-gray-100 min-h-screen gap-6 md:gap-10 pb-20">
@@ -26,7 +64,7 @@ function AddNewTrip() {
         </div>
       </div>
       <section className="mt-2.5 w-full max-w-2xl mx-auto">
-        <NewTripForm  />
+        <NewTripForm saveTrip={saveTrip} loading={loading}/>
       </section>
     </main>
   );
