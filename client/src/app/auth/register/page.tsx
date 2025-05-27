@@ -20,6 +20,7 @@ import axios from "axios";
 import { auth } from "../../../lib/firebase/firebaseConfig";
 import { sendEmailVerification, signOut } from "firebase/auth";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { useUser } from "@/context/authContext";
 
 function Register() {
   const [name, setName] = useState("");
@@ -29,6 +30,7 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [logging, setLogging] = useState(false);
   const [verifyEmail, setVerifyEmail] = useState(false);
+  const { loading } = useUser();
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -152,11 +154,16 @@ function Register() {
         } catch (error) {
           console.error("Error creating user:", error);
         }
-        toast.success("User registered Successfully");
-        setTimeout(() => {
+        
+
+        if (!loading) {
+          toast.success("User registered Successfully");
           router.refresh();
           router.push(typeof redirect === "string" ? redirect : "/");
-        }, 1000);
+        }
+        else{
+          toast.loading("Registering user...");
+        }
       } else {
         toast.error("User SignUp Failed");
       }

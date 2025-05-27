@@ -3,4 +3,6 @@ import Destination from "./destination";
 import Media from "./media";
 import Hoarding from "./hoarding";
 import Auth from "./auth";
-export { Health, Destination, Media, Hoarding, Auth };
+import AITrip from "./aimodal";
+
+export { Health, Destination, Media, Hoarding, Auth, AITrip };

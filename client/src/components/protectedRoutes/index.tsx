@@ -33,10 +33,10 @@ export default function ProtectedRoute({
       return;
     }
 
-    if (allowedRoles && !allowedRoles.includes(user?.role)) {
+    if (allowedRoles && !allowedRoles.includes(user?.role!)) {
       toast("You do not have permission to access this page.");
       if (user?.role === "ADMIN") router.push("/admin");
-      else router.push("dashboard");
+      else router.push("/dashboard");
       return;
     }
 

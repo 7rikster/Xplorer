@@ -33,8 +33,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [firebaseAuthLoading, setFirebaseAuthLoading] = useState(true);
   const [userLoading, setUserLoading] = useState(true);
 
-  async function getUser(email: string | null, token: string | null) {
-    setUserLoading(true);
+  async function getUser(email: string | null, token: string | null, retries = 5) {
+  setUserLoading(true);
+  for (let i = 0; i < retries; i++) {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/user/${email}`,
@@ -44,13 +45,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           },
         }
       );
-      setUser(response.data?.data || null);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      setUser(null);
+      if (response.data?.data) {
+        setUser(response.data.data);
+        setUserLoading(false);
+        return;
+      }
+    } catch (error: any) {
+      if (i === retries - 1 || error?.response?.status !== 404) {
+        console.error("Error fetching user:", error);
+        setUser(null);
+        break;
+      }
+      // wait before retrying
+      await new Promise((res) => setTimeout(res, 1000));
     }
-    setUserLoading(false);
   }
+  setUserLoading(false);
+}
 
   useEffect(() => {
     setFirebaseAuthLoading(true);

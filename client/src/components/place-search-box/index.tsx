@@ -148,7 +148,7 @@ function PlaceSearchBox({ setPlace }: PlaceSearchBoxProps) {
         dataSource={places}
         fields={{ text: "text", value: "value" }}
         placeholder="Search for a place"
-        className="combo-box w-[96%] font-bold "
+        className="combo-box w-[92%] md:w-[96%] font-bold "
         change={(e: { value: string | undefined }) => {
           if (e.value) {
             const selectedValue = e.value as string;

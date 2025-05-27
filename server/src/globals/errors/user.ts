@@ -1,7 +1,7 @@
 import * as Utils from "../../utils";
 
 const userAlreadyExists = Utils.Response.error(
-  "Destination already exists",
+  "User already exists",
   409
 );
 

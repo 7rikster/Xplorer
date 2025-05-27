@@ -20,12 +20,14 @@ import { sendEmailVerification } from "firebase/auth";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import axios from "axios";
+import { useUser } from "@/context/authContext";
 
 function LogIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [logging, setLogging] = useState(false);
   const [verifyEmail, setVerifyEmail] = useState(false);
+  const { loading } = useUser();
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -98,38 +100,40 @@ function LogIn() {
           `${process.env.NEXT_PUBLIC_API_URL}/auth/username/${username}`
         );
         if (!response.data?.data) {
-          try {
-            const response = await axios.post(
-              `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,
-              {
-                name: user.displayName,
-                email: user.email,
-                userName: username,
-                photoUrl: user.photoURL,
-                firebaseId: user.uid,
+        try {
+          const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,
+            {
+              name: user.displayName,
+              email: user.email,
+              userName: username,
+              photoUrl: user.photoURL,
+              firebaseId: user.uid,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
               },
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
-          } catch (error) {
-            console.error("Error creating user:", error);
-          }
+            }
+          );
+        } catch (error) {
+          console.error("Error creating user:", error);
+        }
         }
 
-        toast.success("User registered Successfully");
-        setTimeout(() => {
+        if (!loading) {
+          toast.success("User logged in Successfully");
           router.refresh();
           router.push(typeof redirect === "string" ? redirect : "/");
-        }, 1000);
+        } else {
+          toast.loading("Logging in user...");
+        }
       } else {
-        toast.error("User SignUp Failed");
+        toast.error("User SignIn Failed");
       }
     } catch (error) {
-      console.error("Google Sign Up Error:", error);
-      toast.error("An error occurred during Google Sign Up");
+      console.error("Google Sign In Error:", error);
+      toast.error("An error occurred during Google Sign In");
     }
   }
 

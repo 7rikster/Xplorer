@@ -8,6 +8,10 @@ import { ComboBoxComponent } from "@syncfusion/ej2-react-dropdowns";
 import { budget, groupTypes, interests, travelStyle } from "@/app/constants";
 import Map from "../map";
 import { Button } from "../ui/button";
+import { toast } from "sonner";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/lib/firebase/firebaseConfig";
+import axios from "axios";
 
 function NewTripForm() {
   type Place = {
@@ -18,14 +22,73 @@ function NewTripForm() {
   };
   type TripFormData = {
     duration: number;
-    place: string;
+    location: string;
     groupType: string;
     travelStyle: string;
     interest: string;
     budget: string;
   };
+  const [user] = useAuthState(auth);
   const [place, setPlace] = useState<Place | null>(null);
-  const [formData, setFormData] = useState<TripFormData | null>(null);
+  const [formData, setFormData] = useState<TripFormData>({
+    duration: 0,
+    location: "",
+    groupType: "",
+    travelStyle: "",
+    interest: "",
+    budget: "",
+  });
+  const [loading, setLoading] = useState(false);
+
+  async function handleGenerateTrip(e: React.FormEvent) {
+    e.preventDefault();
+    if (!user) return;
+    setLoading(true);
+    if (
+      !place ||
+      !formData.budget ||
+      !formData.duration ||
+      !formData.groupType ||
+      !formData.interest ||
+      !formData.travelStyle
+    ) {
+      setLoading(false);
+      toast.error("Please fill all fields");
+      return;
+    }
+
+    setFormData((prevData) => ({
+      ...prevData,
+      location: place.location,
+    }));
+
+    const token = await user.getIdToken();
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/trip/generate`,
+        {
+          location: place.location,
+          budget: formData.budget,
+          numberOfDays: formData.duration,
+          groupType: formData.groupType,
+          interests: formData.interest,
+          travelStyle: formData.travelStyle,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setLoading(false);
+      console.log("Trip generated successfully:", response.data);
+    } catch (error) {
+      setLoading(false);
+      console.error("Error generating trip:", error);
+      toast.error("Failed to generate trip. Please try again.");
+    }
+  }
 
   function handleChange(key: keyof TripFormData, value: string | number) {
     if (key === "duration" && typeof value !== "number") {
@@ -37,7 +100,8 @@ function NewTripForm() {
       const updatedData = {
         duration:
           key === "duration" ? (value as number) : prevData?.duration ?? 0,
-        place: key === "place" ? (value as string) : prevData?.place ?? "",
+        location:
+          key === "location" ? (value as string) : prevData?.location ?? "",
         groupType:
           key === "groupType" ? (value as string) : prevData?.groupType ?? "",
         travelStyle:
@@ -54,7 +118,10 @@ function NewTripForm() {
 
   return (
     <div>
-      <form className="p-6 bg-white rounded-lg shadow-md space-y-4">
+      <form
+        className="p-6 bg-white rounded-lg shadow-md space-y-4"
+        onSubmit={handleGenerateTrip}
+      >
         <PlaceSearchBox setPlace={setPlace} />
         <div>
           <Label htmlFor="duration">Duration</Label>
@@ -75,7 +142,7 @@ function NewTripForm() {
             dataSource={groupTypes.map((item) => ({ text: item, value: item }))}
             fields={{ text: "text", value: "value" }}
             placeholder="Select group type"
-            className="combo-box w-[96%] font-bold"
+            className="combo-box w-[92%] md:w-[96%] font-bold"
             change={(e: { value: string | undefined }) => {
               if (e.value) {
                 handleChange("groupType", e.value);
@@ -102,7 +169,7 @@ function NewTripForm() {
             ].map((item) => ({ text: item, value: item }))}
             fields={{ text: "text", value: "value" }}
             placeholder="Select travel style"
-            className="combo-box w-[96%] font-bold"
+            className="combo-box w-[92%] md:w-[96%] font-bold"
             change={(e: { value: string | undefined }) => {
               if (e.value) {
                 handleChange("travelStyle", e.value);
@@ -131,7 +198,7 @@ function NewTripForm() {
             ].map((item) => ({ text: item, value: item }))}
             fields={{ text: "text", value: "value" }}
             placeholder="Select interest"
-            className="combo-box w-[96%] font-bold"
+            className="combo-box w-[92%] md:w-[96%] font-bold"
             change={(e: { value: string | undefined }) => {
               if (e.value) {
                 handleChange("interest", e.value);
@@ -158,7 +225,7 @@ function NewTripForm() {
             dataSource={budget.map((item) => ({ text: item, value: item }))}
             fields={{ text: "text", value: "value" }}
             placeholder="Select budget"
-            className="combo-box w-[96%] font-bold"
+            className="combo-box w-[92%] md:w-[96%] font-bold"
             change={(e: { value: string | undefined }) => {
               if (e.value) {
                 handleChange("budget", e.value);
@@ -176,7 +243,7 @@ function NewTripForm() {
           />
         </div>
 
-        <div className="w-full h-96">
+        <div className="w-full">
           <Map
             latitude={place?.latitude}
             longitude={place?.longitude}
@@ -184,7 +251,16 @@ function NewTripForm() {
           />
         </div>
 
-        <Button className="w-full"><img src="/magic-star.svg"/>Generate</Button>
+        <Button type="submit" className="w-full" disabled={loading}>
+          {loading ? (
+            <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          ) : (
+            <>
+              <img src="/magic-star.svg" />
+              Generate
+            </>
+          )}
+        </Button>
       </form>
     </div>
   );
