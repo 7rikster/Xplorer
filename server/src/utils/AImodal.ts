@@ -53,6 +53,7 @@ export const getAIGeneratedTrip = async ({location, numberOfDays, travelStyle, i
     ],
     "location": {
         "city": "Main destination",
+        "country": "Country name",
         "coordinates": [latitude, longitude],
         "openStreetMap": "https://www.openstreetmap.org/?mlat=lat&mlon=lon"
     },

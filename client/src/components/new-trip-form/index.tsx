@@ -266,7 +266,7 @@ function NewTripForm({  saveTrip, loading:dbLoading }: NewTripFormProps) {
           />
         </div>
 
-        <Button type="submit" className="w-full" disabled={loading || dbLoading}>
+        <Button type="submit" className="w-full cursor-pointer" disabled={loading || dbLoading}>
           {loading || dbLoading ? (
             <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
           ) : (
