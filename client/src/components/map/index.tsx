@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
+import L, { map } from "leaflet";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -23,32 +23,34 @@ const SetViewOnClick = ({ coords }: { coords: [number, number] }) => {
   return null;
 };
 
-interface MapProps {
+interface MapPin {
   latitude?: number;
   longitude?: number;
   place?: string;
 }
 
-const Map: React.FC<MapProps> = ({ latitude, longitude, place }) => {
-  const [location, setLocation] = useState<[number, number] | null>(null);
+interface MapProps {
+  mapPins: MapPin[];
+}
+
+const Map: React.FC<MapProps> = ({ mapPins }) => {
+  const [locations, setLocations] = useState<MapPin[]>([]);
 
   useEffect(() => {
-    if (
-      latitude !== undefined &&
-      longitude !== undefined &&
-      (location === null ||
-        location[0] !== latitude ||
-        location[1] !== longitude)
-    ) {
-      setLocation([latitude, longitude]);
+    if (mapPins && mapPins.length > 0) {
+      setLocations(mapPins);
     }
-  }, [latitude, longitude]);
+  }, [mapPins]);
 
   return (
     <main>
       <div className="flex flex-col-reverse md:flex-row overflow-hidden justify-between intems-center mt-2 mb-8">
         <MapContainer
-          center={location ? location : [48.8566, 2.3522]}
+          center={
+            locations && locations.length > 0
+              ? [locations[0].latitude!, locations[0].longitude!]
+              : [48.8566, 2.3522]
+          }
           zoom={10}
           id="map"
           className="h-[70vh] w-100 rounded-xl shadow"
@@ -57,12 +59,23 @@ const Map: React.FC<MapProps> = ({ latitude, longitude, place }) => {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          {location && (
+          {locations && locations.length > 0 && (
             <>
-              <SetViewOnClick coords={location} />
-              <Marker position={location}>
-                <Popup>{place}</Popup>
-              </Marker>
+              {locations.map((location, index) => (
+                <div key={index}>
+                  {/* Set the view on click for each marker */}
+                  <SetViewOnClick
+                    key={`${index}`}
+                    coords={[location.latitude!, location.longitude!]}
+                  />
+                  <Marker
+                    key={`marker-${index}`}
+                    position={[location.latitude!, location.longitude!]}
+                  >
+                    <Popup>{location.place}</Popup>
+                  </Marker>
+                </div>
+              ))}
             </>
           )}
         </MapContainer>

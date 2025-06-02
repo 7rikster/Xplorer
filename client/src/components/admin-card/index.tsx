@@ -50,7 +50,7 @@ function AdminCard({
   const router = useRouter();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   return (
-    <Card className={`w-29 sm:w-40 md:w-60 p-1 md:p-2 gap-0 md:gap-4`}>
+    <Card className={`w-29 sm:w-40 md:w-68 p-1 md:p-2 gap-0 md:gap-4`}>
       <CardContent
         className={`px-1 py-0 flex flex-col items-center justify-start ${
           onClickNavigate ? "cursor-pointer" : ""

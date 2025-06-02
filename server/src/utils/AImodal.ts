@@ -79,7 +79,7 @@ export const getAIGeneratedTrip = async ({location, numberOfDays, travelStyle, i
         "activities": [
             {
             "time": "Morning",
-            "description": "☕ Breakfast at a famous café",
+            "description": "Breakfast at a famous café",
             "location": "Central Market Café",
             "ticketPrice": "Free entry",
             "openingHours": "7:00 AM – 11:00 AM",
@@ -87,7 +87,7 @@ export const getAIGeneratedTrip = async ({location, numberOfDays, travelStyle, i
             },
             {
             "time": "Midday",
-            "description": "🏛️ Visit the National Museum with a guided tour",
+            "description": "Visit the National Museum with a guided tour",
             "location": "National Museum of Art",
             "ticketPrice": "$12",
             "openingHours": "10:00 AM – 5:00 PM",
@@ -95,7 +95,7 @@ export const getAIGeneratedTrip = async ({location, numberOfDays, travelStyle, i
             },
             {
             "time": "Afternoon",
-            "description": "🛍️ Explore local markets and try street food",
+            "description": "Explore local markets and try street food",
             "location": "Old Town Bazaar",
             "ticketPrice": "Free entry",
             "openingHours": "11:00 AM – 8:00 PM",
@@ -103,7 +103,7 @@ export const getAIGeneratedTrip = async ({location, numberOfDays, travelStyle, i
             },
             {
             "time": "Evening",
-            "description": "🍽️ Dinner at a rooftop restaurant with city views",
+            "description": "Dinner at a rooftop restaurant with city views",
             "location": "Skyline Dine & Wine",
             "ticketPrice": "Average meal $25 per person",
             "openingHours": "6:00 PM – 11:00 PM",
@@ -126,9 +126,10 @@ export const getAIGeneratedTrip = async ({location, numberOfDays, travelStyle, i
     const textResult = await genAI.getGenerativeModel({model: "gemini-2.0-flash"}).generateContent([prompt]);
 
     const trip = parseMarkdownToJson(textResult.response.text());
+    const city = location.split(",")[0].trim();
 
     const imageResponse = await fetch(
-        `https://api.unsplash.com/search/photos?query=${location} ${interests} ${travelStyle}&client_id=${unsplashApiKey}`
+        `https://api.unsplash.com/search/photos?query=${city} &client_id=${unsplashApiKey}`
     );
     const imageUrls = (await imageResponse.json()).results.slice(0,3).map((result: any) => result.urls?.regular || null);
 

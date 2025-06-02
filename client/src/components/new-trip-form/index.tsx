@@ -13,7 +13,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import axios from "axios";
 
-interface TripData{
+interface TripData {
   imageUrls: string[];
   tripDetail: string;
 }
@@ -23,7 +23,7 @@ interface NewTripFormProps {
   loading?: boolean;
 }
 
-function NewTripForm({  saveTrip, loading:dbLoading }: NewTripFormProps) {
+function NewTripForm({ saveTrip, loading: dbLoading }: NewTripFormProps) {
   type Place = {
     location: string;
     placeId: string;
@@ -66,6 +66,11 @@ function NewTripForm({  saveTrip, loading:dbLoading }: NewTripFormProps) {
       toast.error("Please fill all fields");
       return;
     }
+    if (formData.duration <= 0 || formData.duration > 10) {
+      setLoading(false);
+      toast.error("Duration must be between 1 and 10");
+      return;
+    }
 
     setFormData((prevData) => ({
       ...prevData,
@@ -91,7 +96,7 @@ function NewTripForm({  saveTrip, loading:dbLoading }: NewTripFormProps) {
           },
         }
       );
-      
+
       const tripData: TripData = {
         imageUrls: response.data.data.imageUrls,
         tripDetail: response.data.data.tripDetail,
@@ -260,13 +265,25 @@ function NewTripForm({  saveTrip, loading:dbLoading }: NewTripFormProps) {
 
         <div className="w-full">
           <Map
-            latitude={place?.latitude}
-            longitude={place?.longitude}
-            place={place?.location || ""}
+            mapPins={
+              place
+                ? [
+                    {
+                      latitude: place?.latitude,
+                      longitude: place?.longitude,
+                      place: place?.location || "",
+                    },
+                  ]
+                : []
+            }
           />
         </div>
 
-        <Button type="submit" className="w-full cursor-pointer" disabled={loading || dbLoading}>
+        <Button
+          type="submit"
+          className="w-full cursor-pointer"
+          disabled={loading || dbLoading}
+        >
           {loading || dbLoading ? (
             <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
           ) : (

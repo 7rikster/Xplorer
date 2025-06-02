@@ -55,5 +55,5 @@ declare interface Trip {
   estimatedPrice: string;
   weatherInfo: string[];
   imageUrls: string[];
-  createAt: Date;
+  createAt?: Date;
 }
