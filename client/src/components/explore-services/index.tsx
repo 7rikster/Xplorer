@@ -11,7 +11,7 @@ function Services() {
           We offer Best Services
         </h1>
       </div>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-12 md:gap-16  w-full">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-12 md:gap-10  w-full">
         <div className="bg-white rounded-4xl transition-all ease-in duration-300 shadow-md hover:shadow-xl flex flex-col items-center justify-between space-y-4">
           <div className="w-full h-10 sm:h-30 flex items-center justify-center pt-6 sm:pt-12">
             <Image

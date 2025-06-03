@@ -13,6 +13,11 @@ import { toast } from "sonner";
 interface TripData{
   imageUrls: string[];
   tripDetail: string;
+  city: string;
+  country: string;
+  groupType: string;
+  budget: string;
+
 }
 
 function AddNewTrip() {
@@ -30,6 +35,10 @@ function AddNewTrip() {
         {
           tripDetail: data.tripDetail,
           imageUrls: data.imageUrls,
+          city: data.city,
+          country: data.country,
+          groupType: data.groupType,
+          budget: data.budget,
         },
         {
           headers: {

@@ -18,6 +18,7 @@ import { auth } from "@/lib/firebase/firebaseConfig";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
+import LoadingCard from "../loading-card";
 
 interface DestinationData {
   id: string;
@@ -32,6 +33,7 @@ interface DestinationData {
 function AdminDestination() {
   const [user] = useAuthState(auth);
   const [loading, setLoading] = useState(false);
+  const [dataLoading, setDataLoading] = useState(false);
   const [destinations, setDestinations] = useState<DestinationData[] | []>([]);
   const [destinationData, setDestinationData] = useState({
     name: "",
@@ -215,6 +217,7 @@ function AdminDestination() {
 
   async function fetchDestinations() {
     if (!user) return;
+    setDataLoading(true);
     const token = await user.getIdToken();
     try {
       const response = await axios.get(
@@ -228,6 +231,8 @@ function AdminDestination() {
       setDestinations(response.data.data);
     } catch (error) {
       console.error("Error fetching destinations:", error);
+    } finally {
+      setDataLoading(false);
     }
   }
 
@@ -360,21 +365,29 @@ function AdminDestination() {
           </Dialog>
         </CardHeader>
 
-        <CardContent className="flex flex-wrap gap-2 md:gap-4 px-2 md:px-6">
-          {destinations.length > 0 &&
-            destinations.map((destination) => (
-              <AdminCard
-                key={destination.id}
-                id={destination.id}
-                image={destination.photoUrl}
-                name={destination.name}
-                rating={destination.rating}
-                location={destination.location}
-                isEdit={false}
-                onDelete={handleDeleteDestination}
-                publicId={destination.publicId}
-              />
-            ))}
+        <CardContent className="flex flex-col px-2 md:px-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
+            {dataLoading &&
+              Array.from({ length: 8 }).map((_, index) => (
+                <div className="w-full pt-2" key={index}>
+                  <LoadingCard />
+                </div>
+              ))}
+            {destinations.length > 0 &&
+              destinations.map((destination) => (
+                <AdminCard
+                  key={destination.id}
+                  id={destination.id}
+                  image={destination.photoUrl}
+                  name={destination.name}
+                  rating={destination.rating}
+                  location={destination.location}
+                  isEdit={false}
+                  onDelete={handleDeleteDestination}
+                  publicId={destination.publicId}
+                />
+              ))}
+          </div>
         </CardContent>
       </Card>
     </div>

@@ -7,6 +7,7 @@ import { auth } from "@/lib/firebase/firebaseConfig";
 import { getFirstWord, parseTripData } from "@/lib/utils";
 import axios from "axios";
 import { ArrowLeft, CalendarDays, MapPin } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -20,7 +21,6 @@ function TripPage({ params }: { params: Promise<Params> }) {
   const { tripId } = use(params);
   const [trip, setTrip] = useState<Trip>();
   const [loading, setLoading] = useState(false);
-    const router = useRouter();
   useEffect(() => {
     const fetchTripDetails = async () => {
       if (!user) return;
@@ -63,14 +63,13 @@ function TripPage({ params }: { params: Promise<Params> }) {
   if (loading) return <Loading />;
 
   return (
-    <div className="min-h-screen flex flex-col items-center p-8 bg-gray-200">
-      <div className="flex justify-between items-center w-full mb-6">
-        <Button
-          onClick={() => router.push("/admin")}
-          className="cursor-pointer"
-        >
-          <ArrowLeft /> Back to Dashboard
-        </Button>
+    <div className="min-h-screen flex flex-col items-center w-full p-2 md:p-8 bg-gray-200">
+      <div className="flex justify-between items-center w-full mb-2 md:mb-6">
+        <Link href="/admin">
+          <Button className="cursor-pointer">
+            <ArrowLeft /> Back to Dashboard
+          </Button>
+        </Link>
       </div>
       <TripDetails trip={trip} />
     </div>

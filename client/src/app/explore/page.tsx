@@ -1,6 +1,7 @@
 import Carousel from "@/components/carousel";
 import Services from "@/components/explore-services";
 import TopDestinations from "@/components/top-destinations";
+import HandpickedTrips from "@/components/handpicked-trips";
 
 function Explore() {
   return (
@@ -8,6 +9,7 @@ function Explore() {
       <Carousel />
       <TopDestinations />
       <Services />
+      <HandpickedTrips />
     </main>
   );
 }

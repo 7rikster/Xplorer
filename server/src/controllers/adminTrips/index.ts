@@ -1,5 +1,5 @@
 import Create from "./create";
-import { Read, ReadAll } from "./read";
+import { Read,  PageBasedRead} from "./read";
 import Delete from "./delete";
 
-export { Create, Read, ReadAll, Delete };
+export { Create, Read, PageBasedRead, Delete };

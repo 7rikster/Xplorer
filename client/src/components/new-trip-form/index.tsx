@@ -12,10 +12,15 @@ import { toast } from "sonner";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import axios from "axios";
+import Loading from "@/app/loading";
 
 interface TripData {
   imageUrls: string[];
   tripDetail: string;
+  city: string;
+  country: string;
+  groupType: string;
+  budget: string;
 }
 
 interface NewTripFormProps {
@@ -100,9 +105,18 @@ function NewTripForm({ saveTrip, loading: dbLoading }: NewTripFormProps) {
       const tripData: TripData = {
         imageUrls: response.data.data.imageUrls,
         tripDetail: response.data.data.tripDetail,
+        city: place?.location.split(",")[1]
+          ? place?.location.split(",")[0]
+          : "",
+        country: place?.location.split(",")[1]
+          ? place?.location.split(",")[place.location.split(",").length - 1]
+          : place?.location,
+        groupType: formData.groupType,
+        budget: formData.budget,
       };
+      console.log("Generated trip data:", tripData);
       saveTrip(tripData);
-      setLoading(false);
+      // setLoading(false);
     } catch (error) {
       setLoading(false);
       console.error("Error generating trip:", error);
@@ -135,6 +149,13 @@ function NewTripForm({ saveTrip, loading: dbLoading }: NewTripFormProps) {
       return updatedData;
     });
   }
+
+  if (loading)
+    return (
+      <Loading
+        text={`Generating your trip${place ? ` to ${place.location}` : ""}...`}
+      />
+    );
 
   return (
     <div>

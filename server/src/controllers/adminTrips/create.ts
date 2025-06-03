@@ -7,8 +7,8 @@ const Create: Interfaces.Controllers.Async = async (req, res, next) => {
     if (!auth) {
         return next(Errors.Destination.badRequest("Auth token is missing"));
     }
-    const { imageUrls, tripDetail } = req.body;
-    if (!imageUrls || !tripDetail) {
+    const { imageUrls, tripDetail, city, country, groupType, budget } = req.body;
+    if (!imageUrls || !tripDetail || !country || !groupType || !budget) {
         return next(Errors.Destination.badRequest("Missing required fields"));
     }
     try {
@@ -16,6 +16,10 @@ const Create: Interfaces.Controllers.Async = async (req, res, next) => {
             data: {
                 imageUrls: imageUrls,
                 tripDetail: tripDetail,
+                city: city,
+                country: country,
+                groupType: groupType,
+                budget: budget,
                 createdAt: new Date(),
             },
         });

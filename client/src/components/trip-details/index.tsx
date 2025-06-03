@@ -73,21 +73,21 @@ function TripDetails({ trip }: TripDetailsProps) {
 
   return (
     <div>
-      <div className="bg-white p-8 rounded-lg shadow-md max-w-5xl w-full">
+      <div className="bg-white p-4 md:p-8 rounded-lg shadow-md max-w-5xl w-full">
         <header className="mb-6">
-          <h1 className="text-4xl font-bold mb-4">{trip?.name}</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 md:mb-4">{trip?.name}</h1>
           <div className="flex gap-4">
-            <p className="flex items-center text-md text-gray-600">
-              <CalendarDays className="w-5 h-5 mr-1" />
+            <p className="flex items-center text-xs sm:text-sm md:text-md text-gray-600">
+              <CalendarDays className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 mr-1" />
               {duration} day plan
             </p>
-            <p className="flex items-center text-md text-gray-600">
-              <MapPin className="w-5 h-5 mr-1" />
+            <p className="flex items-center text-xs sm:text-sm md:text-md text-gray-600">
+              <MapPin className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 mr-1" />
               {location?.city}, {location?.country}
             </p>
           </div>
         </header>
-        <div className="grid grid-cols-1 grid-rows-3 md:grid-rows-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mt-6 h-100">
+        <div className="grid grid-cols-1 grid-rows-3 md:grid-rows-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mt-6 h-160 sm:h-140 md:h-100">
           {imageUrls &&
             imageUrls.length > 0 &&
             imageUrls.map((imageUrl, index) => (
@@ -109,18 +109,18 @@ function TripDetails({ trip }: TripDetailsProps) {
               </div>
             ))}
         </div>
-        <div className="flex justify-between items-start mt-8">
-          <p className=" text-sm md:text-sm md:font-semibold flex flex-wrap  gap-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start mt-4 gap-1 sm:mt-8">
+          <p className=" text-xs md:text-sm md:font-semibold flex flex-wrap gap-1  sm:gap-4">
             {pillItems.map((item, index) => (
               <span
                 key={index}
-                className={`rounded-full px-4 py-1 mr-1 mb-1 ${item.bg} text-xs md:text-sm`}
+                className={`rounded-full px-4 py-1 mr-1 ${item.bg} text-xs md:text-sm`}
               >
                 {getFirstWord(item.text)}
               </span>
             ))}
           </p>
-          <p className="font-bold flex items-center">
+          <p className="font-bold flex items-center ml-auto">
             {Array.from({ length: 5 }, (_, i) => (
               <svg
                 key={i}
@@ -139,22 +139,22 @@ function TripDetails({ trip }: TripDetailsProps) {
             </span>
           </p>
         </div>
-        <section className="mt-8">
-          <h1 className="text-4xl font-semibold">
+        <section className="mt-4 sm:mt-8">
+          <h1 className="text-xl sm:text-2xl md:text-4xl font-semibold">
             {duration}-Day {location?.city} {travelStyle}
           </h1>
-          <p className="text-gray-500 mt-1 text-2xl">
+          <p className="text-gray-500 mt-1 text-md sm:text-xl md:text-2xl">
             {budget}, {groupType} and {interests}
           </p>
-          <p className="mt-4 text-lg px-4">{description}</p>
+          <p className="mt-4 text-sm sm:text-lg px-2 sm:px-4">{description}</p>
 
           <section className="mt-5">
-            <h2 className="text-3xl font-semibold mb-1">Accommodation</h2>
-            <div className="flex items-center gap-4 justify-between px-3">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-1">Accommodation</h2>
+            <div className="flex items-center gap-4 justify-between px-2 sm:px-3">
               <div className="w-full ">
-                <h3 className="text-xl mb-1 font-semibold flex items-center justify-between">
+                <h3 className="text-lg sm:text-lg md:text-2xl mb-1 font-semibold flex items-center justify-between">
                   {accommodation?.hotelName}
-                  <span className="mr-10">
+                  <span className="sm:mr-10">
                     <span className="font-bold">
                       {accommodation?.pricePerNight}
                     </span>
@@ -167,7 +167,7 @@ function TripDetails({ trip }: TripDetailsProps) {
                       key={i}
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 576 512"
-                      className="w-2 h-2 sm:w-3 sm:h-3 text-yellow-400"
+                      className="w-3 h-3 sm:w-3 sm:h-3 text-yellow-400"
                     >
                       <path
                         fill="#FFD43B"
@@ -176,11 +176,11 @@ function TripDetails({ trip }: TripDetailsProps) {
                     </svg>
                   ))}
                 </p>
-                <p className="text-gray-600 mt-2">{accommodation?.location}</p>
+                <p className="text-gray-600 mt-2 text-sm sm:text-md md:text-lg">{accommodation?.location}</p>
 
                 <div className="sm:w-2/3">
-                  <h3 className="text-lg font-semibold">Amenities:</h3>
-                  <ul className="list-disc list-inside text-gray-600 columns-2 gap-x-4">
+                  <h3 className="text-lg font-semibold mt-1">Amenities:</h3>
+                  <ul className="list-disc list-inside text-gray-600 text-sm sm:text-[1rem] columns-2 gap-x-4">
                     {accommodation?.amenities?.map((amenity, index) => (
                       <li key={index}>{amenity}</li>
                     ))}
@@ -193,31 +193,31 @@ function TripDetails({ trip }: TripDetailsProps) {
                   alt="Hotel"
                   width={200}
                   height={200}
-                  className="rounded-lg shadow-md"
+                  className="rounded-lg shadow-md hidden sm:block"
                 />
               )}
             </div>
           </section>
         </section>
-        <section className="mt-8">
-          <h1 className="text-3xl font-semibold">Itinerary</h1>
-          <div className="flex flex-col gap-5 mt-4">
+        <section className="mt-4 sm:mt-8">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold">Itinerary</h1>
+          <div className="flex flex-col gap-3 sm:gap-5 mt-2 sm:mt-4">
             {itinerary?.map((day, index) => (
               <div
                 key={index}
-                className="px-4 bg-gray-100 rounded-lg shadow-sm"
+                className="px-2 sm:px-4 bg-gray-100 rounded-lg shadow-sm"
               >
                 <div
-                  className=" py-4 flex items-center gap-12 cursor-pointer"
+                  className=" py-2 sm:py-4 flex items-center gap-3 sm:gap-12 cursor-pointer"
                   onClick={() => toggleDay(index)}
                 >
-                  <h2 className="text-xl font-semibold">DAY {day.day}</h2>
-                  <h3 className="font-semibold text-lg">{day.location}</h3>
+                  <h2 className="text-md sm:text-xl font-semibold">DAY {day.day}</h2>
+                  <h3 className="font-semibold text-md sm:text-lg">{day.location}</h3>
                   <span className="ml-auto">
                     {expandedDays[index] ? (
-                      <ChevronUp className="w-5 h-5 transition-transform duration-300" />
+                      <ChevronUp className="w-3 h-3 sm:w-5 sm:h-5 transition-transform duration-300" />
                     ) : (
-                      <ChevronDown className="w-5 h-5 transition-transform duration-300" />
+                      <ChevronDown className="w-3 h-3 sm:w-5 sm:h-5 transition-transform duration-300" />
                     )}
                   </span>
                 </div>
@@ -231,9 +231,9 @@ function TripDetails({ trip }: TripDetailsProps) {
                       transition={{ duration: 0.3 }}
                       className="overflow-hidden"
                     >
-                      <ul className="list-disc list-inside px-3 pb-4">
+                      <ul className="list-disc list-inside px-3 pb-2 sm:pb-4">
                         {day.activities.map((activity, activityIndex) => (
-                          <li key={activityIndex} className="mt-1">
+                          <li key={activityIndex} className="mt-1 text-sm md:text-[1rem]">
                             <span className="font-semibold">
                               {activity.time}
                             </span>
@@ -248,11 +248,11 @@ function TripDetails({ trip }: TripDetailsProps) {
             ))}
           </div>
         </section>
-        <section className="mt-8">
-          <h1 className="text-2xl font-semibold">Best Time to Visit</h1>
+        <section className="mt-6 sm:mt-8">
+          <h1 className="text-xl sm:text-2xl font-semibold">Best Time to Visit</h1>
           <div className="mt-3">
             {bestTimeToVisit && bestTimeToVisit?.length > 0 ? (
-              <ul className="list-disc list-inside px-3">
+              <ul className="list-disc list-inside px-2 md:px-3 text-sm md:text-[1rem]">
                 {bestTimeToVisit.map((time, index) => (
                   <li key={index} className="mt-2">
                     {time}
@@ -266,11 +266,11 @@ function TripDetails({ trip }: TripDetailsProps) {
             )}
           </div>
         </section>
-        <section className="mt-8">
-          <h1 className="text-2xl font-semibold">Weather Info</h1>
+        <section className="mt-4 sm:mt-8">
+          <h1 className="text-xl sm:text-2xl font-semibold">Weather Info</h1>
           <div className="mt-3">
             {weatherInfo && weatherInfo?.length > 0 ? (
-              <ul className="list-disc list-inside px-3">
+              <ul className="list-disc list-inside px-2 md:px-3 text-sm md:text-[1rem]">
                 {weatherInfo.map((info, index) => (
                   <li key={index} className="mt-2">
                     {info}
@@ -284,7 +284,7 @@ function TripDetails({ trip }: TripDetailsProps) {
             )}
           </div>
         </section>
-        <section className="mt-10 px-4">
+        <section className="mt-10 sm:px-4">
           <Map
             mapPins={
               location

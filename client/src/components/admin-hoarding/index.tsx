@@ -19,6 +19,7 @@ import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import Image from "next/image";
 import AdminCard from "../admin-card";
+import LoadingCard from "../loading-card";
 
 interface HoardingData {
   id: string;
@@ -33,6 +34,7 @@ interface HoardingData {
 function AdminHoarding() {
   const [user] = useAuthState(auth);
   const [loading, setLoading] = useState(false);
+  const [dataLoading, setDataLoading] = useState(false);
   const [hoardings, setHoardings] = useState<HoardingData[]>([]);
   const [hoarding, setHoarding] = useState({
     name: "",
@@ -214,6 +216,7 @@ function AdminHoarding() {
 
   async function fetchHoardings() {
     if (!user) return;
+    setDataLoading(true);
     const token = await user.getIdToken();
     try {
       const response = await axios.get(
@@ -227,6 +230,8 @@ function AdminHoarding() {
       setHoardings(response.data.data);
     } catch (error) {
       console.error("Error fetching hoardings:", error);
+    } finally {
+      setDataLoading(false);
     }
   }
 
@@ -357,21 +362,29 @@ function AdminHoarding() {
           </Dialog>
         </CardHeader>
 
-        <CardContent className="flex flex-wrap gap-2 md:gap-4 px-2 md:px-6">
+        <CardContent className="flex flex-col gap-2 md:gap-4 px-2 md:px-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
+                {dataLoading &&
+              Array.from({ length: 8 }).map((_, index) => (
+                <div className="w-full pt-2" key={index}>
+                  <LoadingCard />
+                </div>
+              ))}
           {hoardings.length > 0 &&
             hoardings.map((hoardingItem) => (
               <AdminCard
-                key={hoardingItem.id}
-                id={hoardingItem.id}
-                image={hoardingItem.photoUrl}
-                name={hoardingItem.name}
-                location={hoardingItem.location}
-                onEditNavigate={`/admin/hoardingItem/edit/${hoardingItem.id}`}
-                isEdit={false}
-                onDelete={handleDeleteHoarding}
-                publicId={hoardingItem.publicId}
+              key={hoardingItem.id}
+              id={hoardingItem.id}
+              image={hoardingItem.photoUrl}
+              name={hoardingItem.name}
+              location={hoardingItem.location}
+              onEditNavigate={`/admin/hoardingItem/edit/${hoardingItem.id}`}
+              isEdit={false}
+              onDelete={handleDeleteHoarding}
+              publicId={hoardingItem.publicId}
               />
             ))}
+            </div>
         </CardContent>
       </Card>
     </div>

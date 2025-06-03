@@ -77,7 +77,7 @@ function Admin() {
   return (
     <div className=" min-h-screen flex bg-gray-100">
       <aside
-        className={`fixed lg:static min-h-screen transition-all duration-300 ease-in-out ${
+        className={`fixed min-h-screen transition-all duration-300 ease-in-out ${
           toggleNav ? "w-12 md:w-18" : "w-48 md:w-64"
         } bg-white shadow-md md:block`}
       >
@@ -124,7 +124,7 @@ function Admin() {
           </nav>
         </div>
       </aside>
-      <main className="flex-1 ml-12 md:ml-0 p-1 md:p-8 pt-18 md:pt-30 overflow-y-auto">
+      <main className="flex-1 ml-12 sm:ml-16 lg:ml-64 p-1 md:p-8  overflow-y-auto">
         <div className="max-w-[82.1rem] mx-auto">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             {menuItems.map((item) => (

@@ -64,6 +64,10 @@ generator client {
 
     tripDetail String
     imageUrls String[]
+    city String
+    country String
+    groupType String
+    budget String
   }
 
   model UserTrip{

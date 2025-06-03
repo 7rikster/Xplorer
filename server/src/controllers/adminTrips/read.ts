@@ -20,24 +20,40 @@ const Read: Interfaces.Controllers.Async = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    return res
-      .status(500)
-      .json({ error: "Failed to fetch trip details!" });
+    return res.status(500).json({ error: "Failed to fetch trip details!" });
   }
 };
 
-const ReadAll: Interfaces.Controllers.Async = async (req, res, next) => {
+const PageBasedRead: Interfaces.Controllers.Async = async (req, res, next) => {
   try {
-    const trips = await prisma.adminTrip.findMany();
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 8;
+    const skip = (page - 1) * limit;
+
+    const [trips, totalItems] = await Promise.all([
+      prisma.adminTrip.findMany({
+        skip,
+        take: limit
+      }),
+      prisma.adminTrip.count(),
+    ]);
+
+    const totalPages = Math.ceil(totalItems / limit);
 
     return res.status(200).json({
-      message: "Trips retrieved successfully",
       data: trips,
+      pagination: {
+        totalItems,
+        totalPages,
+        currentPage: page,
+        pageSize: limit,
+        hasMore: page < totalPages,
+      },
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: "Failed to fetch trips!" });
+    return res.status(500).json({ error: "Failed to fetch trips" });
   }
 };
 
-export { Read, ReadAll };
+export { Read, PageBasedRead };

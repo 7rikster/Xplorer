@@ -103,6 +103,7 @@ function PlaceSearchBox({ setPlace }: PlaceSearchBoxProps) {
 
     try {
       const response = await axios.request(options);
+      // console.log("Place details response:", response.data);
       setPlace({
         location: response.data.formattedAddress || "",
         placeId: placeId,

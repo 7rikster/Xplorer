@@ -50,7 +50,7 @@ function AdminCard({
   const router = useRouter();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   return (
-    <Card className={`w-29 sm:w-40 md:w-68 p-1 md:p-2 gap-0 md:gap-4`}>
+    <Card className={`w-full p-1 md:p-2 gap-0 md:gap-4`}>
       <CardContent
         className={`px-1 py-0 flex flex-col items-center justify-start ${
           onClickNavigate ? "cursor-pointer" : ""
@@ -61,37 +61,37 @@ function AdminCard({
           src={image}
           alt={name}
           width={300}
-          height={10}
-          className="rounded-lg h-20 md:h-40"
+          height={100}
+          className="rounded-lg h-20 md:h-40 object-cover"
         />
 
         <div className="flex flex-col md:flex-row items-start justify-between md:items-center w-full mt-2 ">
           <div>
-            <p className="font-bold text-lg md:text-xl">{name}</p>
+            <p className="font-bold text-sm md:text-xl">{name}</p>
             {description && (
-              <p className="text-gray-600 text-sm md:text-md md:font-bold">
+              <p className="text-gray-600 text-xs md:text-md md:font-bold">
                 {description}
               </p>
             )}
 
             {location && (
-              <p className="text-gray-500 text-sm md:text-md md:font-semibold flex ">
+              <p className="text-gray-500 text-xs md:text-md md:font-semibold flex ">
                 <MapPin className="w-4 h-5 mr-0.5" />
                 {location}
               </p>
             )}
             {tags && tags.length > 0 && (
-              <p className=" text-sm md:text-sm md:font-semibold flex flex-wrap mt-2">
+              <p className=" text-xs md:text-sm md:font-semibold flex flex-wrap mt-2">
                 {tags.map((tag, index) => (
                   <span
                     key={index}
-                    className={`rounded-full px-2 py-1 mr-1 mb-1 ${
+                    className={`rounded-full px-1 sm:px-2 py-1 mr-1 mb-1 ${
                       index === 0
                         ? "bg-red-100 text-red-800"
                         : index === 1
                         ? "bg-purple-100 text-purple-700"
                         : "bg-blue-100 text-blue-800"
-                    } text-xs md:text-sm`}
+                    } text-[9px] md:text-sm`}
                   >
                     {getFirstWord(tag)}
                   </span>
