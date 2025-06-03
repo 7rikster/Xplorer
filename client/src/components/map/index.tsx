@@ -53,7 +53,7 @@ const Map: React.FC<MapProps> = ({ mapPins }) => {
           }
           zoom={10}
           id="map"
-          className="h-[70vh] w-100 rounded-xl shadow"
+          className="h-[70vh] w-full rounded-xl shadow"
         >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

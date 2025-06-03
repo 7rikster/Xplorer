@@ -2,7 +2,7 @@ import { getFirstWord } from "@/lib/utils";
 import { MapPin } from "lucide-react";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface HandpickedTripCardProps {
   image: string;
@@ -16,7 +16,6 @@ interface HandpickedTripCardProps {
 }
 
 function HandpickedTripCard({ trip }: { trip: HandpickedTripCardProps }) {
-  const router = useRouter();
 
   return (
     <div className="w-full rounded-xl shadow-lg flex flex-col  hover:shadow-xl transition-all duration-300 overflow-hidden hover:scale-105">
@@ -58,12 +57,13 @@ function HandpickedTripCard({ trip }: { trip: HandpickedTripCardProps }) {
           )}
         </div>
         <div className="flex justify-between items-center mt-1 mb-2">
+            <Link href={`/explore/tours/${trip.id}`}>
           <Button
             className="cursor-pointer w-12 h-6 text-[10px] sm:w-16 sm:h-7 md:text-xs lg:w-auto lg:h-auto lg:text-sm"
-            onClick={() => router.push(`/explore/tours/${trip.id}`)}
-          >
+            >
             {trip.buttonText || "Explore"}
           </Button>
+              </Link>
           {trip.price && (
             <h3 className="font-bold text-md sm:text-xl">{trip.price}</h3>
           )}
