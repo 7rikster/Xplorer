@@ -57,3 +57,14 @@ declare interface Trip {
   imageUrls: string[];
   createAt?: Date;
 }
+
+declare interface TripResponse {
+  id: string;
+  createdAt: Date;
+  tripDetail: string;
+  imageUrls: string[];
+  city: string;
+  country: string;
+  groupType: string;
+  budget: string;
+}

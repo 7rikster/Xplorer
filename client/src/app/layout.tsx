@@ -23,6 +23,7 @@ export const metadata: Metadata = {
 };
 
 import {registerLicense} from "@syncfusion/ej2-base";
+import Footer from "@/components/footer";
 registerLicense(process.env.NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY||"");
 
 export default function RootLayout({
@@ -39,6 +40,7 @@ export default function RootLayout({
           <AuthProvider>
             <Header />
             {children}
+            <Footer/>
             <Toaster />
           </AuthProvider>
         </Suspense>

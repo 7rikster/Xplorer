@@ -5,7 +5,7 @@ import PlaceSearchBox from "../place-search-box";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { ComboBoxComponent } from "@syncfusion/ej2-react-dropdowns";
-import { budget, groupTypes, interests, travelStyle } from "@/app/constants";
+import { budget, groupTypes, interests, travelStyle } from "@/constants";
 import Map from "../map";
 import { Button } from "../ui/button";
 import { toast } from "sonner";

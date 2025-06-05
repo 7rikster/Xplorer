@@ -20,17 +20,18 @@ export const ExplorePageHeaderContents = [
     icon: <MapPinHouse />,
   },
   {
-    title: "Events",
-    type: "text",
-    link: "/explore/events",
-    icon: <MicVocal />,
-  },
-  {
     title: "Tours",
     type: "text",
     link: "/explore/tours",
     icon: <MountainSnow />,
   },
+  {
+    title: "Events",
+    type: "text",
+    link: "/explore/events",
+    icon: <MicVocal />,
+  },
+
   {
     title: "Hotels",
     type: "text",
