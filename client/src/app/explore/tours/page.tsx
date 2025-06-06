@@ -46,7 +46,7 @@ function Tours() {
           {
             params: {
               cursor: null,
-              city: cityParam || undefined,
+              place: cityParam || undefined,
               budget: budgetParam || undefined,
               groupType: groupParam || undefined,
             },
@@ -83,7 +83,7 @@ function Tours() {
             .get(`${process.env.NEXT_PUBLIC_API_URL}/trip/get-all`, {
               params: {
                 cursor: nextCursor,
-                city: place || undefined,
+                place: place || undefined,
                 budget: selectedBudget || undefined,
                 groupType: selectedGroupType || undefined,
               },
@@ -153,7 +153,7 @@ function Tours() {
     <div className="flex flex-col items-center justify-center w-full bg-gray-100">
       <div className="w-full relative h-[90vh] overflow-hidden">
         <Image
-          src="/travel-specialist-bg.jpeg"
+          src="https://res.cloudinary.com/dqobuxkcj/image/upload/v1749151328/neikdmqtbo8mfp8y91fn.jpg"
           alt="Tours background"
           width={400}
           height={200}
@@ -195,10 +195,10 @@ function Tours() {
                 onChange={(e) => setPlace(e.target.value)}
               />
               <div className="flex gap-2 ">
-                <Button onClick={applyFilters} className="px-6">
+                <Button onClick={applyFilters} className="px-6 cursor-pointer">
                   Filter
                 </Button>
-                <Button onClick={resetFilters} className="px-6">
+                <Button onClick={resetFilters} className="px-6 cursor-pointer">
                   Reset <span className="hidden lg:block">filters</span>
                 </Button>
               </div>
@@ -239,7 +239,6 @@ function Tours() {
             </div>
           ))}
       </div>
-
     </div>
   );
 }

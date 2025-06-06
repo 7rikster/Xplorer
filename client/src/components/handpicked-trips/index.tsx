@@ -7,6 +7,8 @@ import LoadingCard from "../loading-card";
 import AdminCard from "../admin-card";
 import HandpickedTripCard from "./card";
 import TripsPagination from "../pagination";
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 function HandpickedTrips() {
   const [trips, setTrips] = useState<Trip[] | []>([]);
@@ -66,13 +68,16 @@ function HandpickedTrips() {
 
   return (
     <div className="w-full flex flex-col items-center justify-center pt-10 pb-6 px-2   ">
-      <div className="flex flex-col items-center justify-center mb-8 sm:mb-12 md:mb-16 space-y-1">
+      <div className="flex w-full flex-col items-center justify-center mb-8 sm:mb-12 md:mb-8 space-y-1">
         <h1 className="text-md sm:text-lg font-semibold text-gray-700">
           TOURS
         </h1>
         <h1 className="text-2xl sm:text-4xl font-bold text-center">
           Explore Handpicked Trips
         </h1>
+        <Link href="/explore/tours" className="ml-auto mr-24 cursor-pointer hidden md:block ">
+          <Button variant="outline" className="cursor-pointer hidden md:block ">View All</Button>
+        </Link>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-8 w-full px-3 sm:px-8 md:px-16 lg:px-24">
         {loading &&
@@ -98,11 +103,12 @@ function HandpickedTrips() {
             />
           ))}
       </div>
-      <div className="flex justify-center items-center mt-8">
+      <div className="flex justify-center items-center mt-8 w-full">
         <TripsPagination
           totalPages={totalPages || 1}
           onPageChange={fetchTrips}
         />
+        
       </div>
 
         

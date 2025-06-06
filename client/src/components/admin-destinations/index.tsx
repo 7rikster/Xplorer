@@ -188,6 +188,7 @@ function AdminDestination() {
     fetchDestinations();
     isDialogOpen && setIsDialogOpen(false);
   }
+  console.log(destinationData.photoUrl)
 
   async function handleDeleteDestination(id: string, publicId: string) {
     if (!user) return;

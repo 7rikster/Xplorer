@@ -19,7 +19,7 @@ export default function LoginLayout({
     if (authLoading) return;
     if (user) {
       setTimeout(() => {
-        toast("User already signed in");
+        // toast("User already signed in");
         redirect("/explore");
       }, 100);
     } else {
