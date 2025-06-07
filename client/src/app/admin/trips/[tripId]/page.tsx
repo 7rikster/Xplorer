@@ -21,39 +21,85 @@ function TripPage({ params }: { params: Promise<Params> }) {
   const { tripId } = use(params);
   const [trip, setTrip] = useState<Trip>();
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    const fetchTripDetails = async () => {
-      if (!user) return;
-      const token = await user.getIdToken();
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/trip/get/${tripId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        // console.log("Trip details: ",response.data.data);
-        const parsedTrip = parseTripData(response.data.data.tripDetail);
-        if (parsedTrip && parsedTrip.name) {
-          setTrip({
-            id: response.data.data.id,
-            ...parsedTrip,
-            imageUrls: response.data.data.imageUrls
-              ? response.data.data.imageUrls
-              : [],
-            createAt: response.data.data.createAt,
-          });
-        } else {
-          setTrip(undefined);
+
+  const fetchTripDetails = async () => {
+    if (!user) return;
+    const token = await user.getIdToken();
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/trip/get/${tripId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
-        setLoading(false);
+      );
+      // console.log("Trip details: ",response.data.data);
+      const parsedTrip = parseTripData(response.data.data.tripDetail);
+      if (parsedTrip && parsedTrip.name) {
+        setTrip({
+          id: response.data.data.id,
+          ...parsedTrip,
+          imageUrls: response.data.data.imageUrls
+            ? response.data.data.imageUrls
+            : [],
+          faqs: response.data.data.faqs,
+          createAt: response.data.data.createAt,
+        });
+      } else {
+        setTrip(undefined);
       }
-    };
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
+
+  async function addNewFaq(question: string, answer: string) {
+    if (!user) return;
+    const token = await user.getIdToken();
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/faq/add`,
+
+        {
+          question: question,
+          answer: answer,
+          tripId: trip?.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      fetchTripDetails();
+      console.log("New FAQ added: ", response.data);
+    } catch (error) {
+      console.error("Error adding FAQ: ", error);
+    }
+  }
+  async function deleteFaq(faqId: string) {
+    if (!user) return;
+    const token = await user.getIdToken();
+    try {
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/faq/delete/${faqId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      fetchTripDetails();
+      console.log("FAQ deleted: ", response.data);
+    } catch (error) {
+      console.error("Error deleting FAQ: ", error);
+    }
+  }
+
+  useEffect(() => {
     setLoading(true);
     void fetchTripDetails();
   }, [params]);
@@ -71,7 +117,7 @@ function TripPage({ params }: { params: Promise<Params> }) {
           </Button>
         </Link>
       </div>
-      <TripDetails trip={trip} />
+      <TripDetails trip={trip} viewFaqs={true} addFaq={addNewFaq} deleteFaq={deleteFaq} />
     </div>
   );
 }

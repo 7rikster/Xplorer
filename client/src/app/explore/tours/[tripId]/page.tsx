@@ -42,6 +42,7 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
     location,
     imageUrls,
     accommodation,
+    faqs,
   } = trip || {};
 
   const pillItems = [
@@ -74,6 +75,7 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
             imageUrls: response.data.data.imageUrls
               ? response.data.data.imageUrls
               : [],
+              faqs: response.data.data.faqs || [],
             createAt: response.data.data.createAt,
           });
         } else {
@@ -379,6 +381,10 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
                   : []
               }
             />
+          </section>
+          <section>
+            <h1 className="text-xl sm:text-2xl font-semibold">FAQs</h1>
+            
           </section>
         </div>
 

@@ -7,6 +7,7 @@ import {
   CalendarDays,
   ChevronDown,
   ChevronUp,
+  Delete,
   MapPin,
 } from "lucide-react";
 import Image from "next/image";
@@ -14,17 +15,37 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Map from "../map";
+import { Button } from "../ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+import { Label } from "../ui/label";
+import { toast } from "sonner";
+import axios from "axios";
 
 type TripDetailsProps = {
   trip?: Trip;
+  viewFaqs: boolean;
+  addFaq?: (question: string, answer: string) => void;
+  deleteFaq?: (faqId: string) => void;
 };
 
-function TripDetails({ trip }: TripDetailsProps) {
+function TripDetails({ trip, viewFaqs, addFaq, deleteFaq }: TripDetailsProps) {
   const router = useRouter();
   const [hotelPhoto, setHotelPhoto] = useState<string | null>(null);
   const [expandedDays, setExpandedDays] = useState<{ [key: number]: boolean }>(
     {}
   );
+  const [newFaq, setNewFaq] = useState<{ question: string; answer: string }>({
+    question: "",
+    answer: "",
+  });
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const {
     name,
@@ -41,6 +62,7 @@ function TripDetails({ trip }: TripDetailsProps) {
     location,
     imageUrls,
     accommodation,
+    faqs,
   } = trip || {};
 
   const pillItems = [
@@ -56,6 +78,21 @@ function TripDetails({ trip }: TripDetailsProps) {
       [index]: !prev[index],
     }));
   };
+
+  async function handleAddNewFaq(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newFaq.question || !newFaq.answer) {
+      toast("Please fill in both question and answer fields.");
+      return;
+    }
+    try {
+      addFaq?.(newFaq.question, newFaq.answer);
+      setNewFaq({ question: "", answer: "" });
+      setIsDialogOpen(false);
+    } catch (error) {
+      console.error("Error adding FAQ: ", error);
+    }
+  }
 
   useEffect(() => {
     if (accommodation) {
@@ -75,7 +112,9 @@ function TripDetails({ trip }: TripDetailsProps) {
     <div>
       <div className="bg-white p-4 md:p-8 rounded-lg shadow-md max-w-5xl w-full">
         <header className="mb-6">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 md:mb-4">{trip?.name}</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 md:mb-4">
+            {trip?.name}
+          </h1>
           <div className="flex gap-4">
             <p className="flex items-center text-xs sm:text-sm md:text-md text-gray-600">
               <CalendarDays className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 mr-1" />
@@ -149,7 +188,9 @@ function TripDetails({ trip }: TripDetailsProps) {
           <p className="mt-4 text-sm sm:text-lg px-2 sm:px-4">{description}</p>
 
           <section className="mt-5">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-1">Accommodation</h2>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-1">
+              Accommodation
+            </h2>
             <div className="flex items-center gap-4 justify-between px-2 sm:px-3">
               <div className="w-full ">
                 <h3 className="text-lg sm:text-lg md:text-2xl mb-1 font-semibold flex items-center justify-between">
@@ -176,7 +217,9 @@ function TripDetails({ trip }: TripDetailsProps) {
                     </svg>
                   ))}
                 </p>
-                <p className="text-gray-600 mt-2 text-sm sm:text-md md:text-lg">{accommodation?.location}</p>
+                <p className="text-gray-600 mt-2 text-sm sm:text-md md:text-lg">
+                  {accommodation?.location}
+                </p>
 
                 <div className="sm:w-2/3">
                   <h3 className="text-lg font-semibold mt-1">Amenities:</h3>
@@ -200,7 +243,9 @@ function TripDetails({ trip }: TripDetailsProps) {
           </section>
         </section>
         <section className="mt-4 sm:mt-8">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold">Itinerary</h1>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold">
+            Itinerary
+          </h1>
           <div className="flex flex-col gap-3 sm:gap-5 mt-2 sm:mt-4">
             {itinerary?.map((day, index) => (
               <div
@@ -211,8 +256,12 @@ function TripDetails({ trip }: TripDetailsProps) {
                   className=" py-2 sm:py-4 flex items-center gap-3 sm:gap-12 cursor-pointer"
                   onClick={() => toggleDay(index)}
                 >
-                  <h2 className="text-md sm:text-xl font-semibold">DAY {day.day}</h2>
-                  <h3 className="font-semibold text-md sm:text-lg">{day.location}</h3>
+                  <h2 className="text-md sm:text-xl font-semibold">
+                    DAY {day.day}
+                  </h2>
+                  <h3 className="font-semibold text-md sm:text-lg">
+                    {day.location}
+                  </h3>
                   <span className="ml-auto">
                     {expandedDays[index] ? (
                       <ChevronUp className="w-3 h-3 sm:w-5 sm:h-5 transition-transform duration-300" />
@@ -233,7 +282,10 @@ function TripDetails({ trip }: TripDetailsProps) {
                     >
                       <ul className="list-disc list-inside px-3 pb-2 sm:pb-4">
                         {day.activities.map((activity, activityIndex) => (
-                          <li key={activityIndex} className="mt-1 text-sm md:text-[1rem]">
+                          <li
+                            key={activityIndex}
+                            className="mt-1 text-sm md:text-[1rem]"
+                          >
                             <span className="font-semibold">
                               {activity.time}
                             </span>
@@ -249,7 +301,9 @@ function TripDetails({ trip }: TripDetailsProps) {
           </div>
         </section>
         <section className="mt-6 sm:mt-8">
-          <h1 className="text-xl sm:text-2xl font-semibold">Best Time to Visit</h1>
+          <h1 className="text-xl sm:text-2xl font-semibold">
+            Best Time to Visit
+          </h1>
           <div className="mt-3">
             {bestTimeToVisit && bestTimeToVisit?.length > 0 ? (
               <ul className="list-disc list-inside px-2 md:px-3 text-sm md:text-[1rem]">
@@ -299,6 +353,92 @@ function TripDetails({ trip }: TripDetailsProps) {
             }
           />
         </section>
+        {viewFaqs && (
+          <section>
+            <div className="flex items-center justify-between mt-6 sm:mt-8">
+              <h1 className="text-xl sm:text-2xl font-semibold">FAQs</h1>
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="cursor-pointer">Add FAQ</Button>
+                </DialogTrigger>
+                <DialogContent className="z-dialog">
+                  <DialogTitle>Add a New FAQ</DialogTitle>
+                  <form>
+                    <div className="mb-4">
+                      <Label className="block text-sm">Question</Label>
+                      <Input
+                        type="text"
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50"
+                        value={newFaq.question}
+                        onChange={(e) =>
+                          setNewFaq({ ...newFaq, question: e.target.value })
+                        }
+                        placeholder="Enter your question"
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <Label className="block text-sm font-medium">
+                        Answer
+                      </Label>
+                      <Textarea
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50"
+                        value={newFaq.answer}
+                        onChange={(e) =>
+                          setNewFaq({ ...newFaq, answer: e.target.value })
+                        }
+                        placeholder="Enter your answer"
+                      />
+                    </div>
+                    <div className="flex justify-end">
+                      <Button
+                        type="submit"
+                        onClick={handleAddNewFaq}
+                        className="cursor-pointer"
+                      >
+                        Add FAQ
+                      </Button>
+                    </div>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            </div>
+            <div className="mt-3">
+              {faqs && faqs?.length > 0 ? (
+                <ul className="list-disc list-inside px-2 md:px-3 text-sm md:text-[1rem]">
+                  {faqs.map((faq, index) => (
+                    <div
+                      key={index}
+                      className="border-b border-gray-200 pb-2 mb-2 flex justify-between items-center"
+                    >
+                      <li key={index} className="mt-2">
+                        <strong>{faq.question}</strong>
+                        <p className="text-gray-600 px-6">{faq.answer}</p>
+                      </li>
+                      <Button
+                        variant={"outline"}
+                        className="cursor-pointer "
+                        onClick={() => {
+                          deleteFaq?.(faq.id);
+                          const toastId = toast.loading("Deleting FAQ...");
+                          setTimeout(() => {
+                            toast.dismiss(toastId);
+                          }, 2000);
+                          setTimeout(() => {
+                            toast.success("FAQ deleted successfully!");
+                          }, 1000);
+                        }}
+                      >
+                       <Delete className="w-3 h-3 md:w-4 md:h-4" /> <span className="hidden sm:block">Delete</span> 
+                      </Button>
+                    </div>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-600 mt-2">No FAQs available.</p>
+              )}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

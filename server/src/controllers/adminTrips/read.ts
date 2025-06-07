@@ -8,6 +8,7 @@ const Read: Interfaces.Controllers.Async = async (req, res, next) => {
   try {
     const trip = await prisma.adminTrip.findUnique({
       where: { id },
+      include: { faqs: true, reviews: true},
     });
 
     if (!trip) {

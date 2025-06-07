@@ -44,7 +44,7 @@ const Map: React.FC<MapProps> = ({ mapPins }) => {
 
   return (
     <main>
-      <div className="flex flex-col-reverse md:flex-row overflow-hidden justify-between intems-center mt-2 mb-8">
+      <div className="flex flex-col-reverse md:flex-row overflow-visible justify-between intems-center mt-2 mb-8">
         <MapContainer
           center={
             locations && locations.length > 0

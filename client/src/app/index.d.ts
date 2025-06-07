@@ -38,6 +38,14 @@ declare interface Transport {
   notes?: string;
 }
 
+declare interface Faq{
+  id: string;
+  question: string;
+  answer: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 declare interface Trip {
   id: string;
   name: string;
@@ -56,6 +64,7 @@ declare interface Trip {
   weatherInfo: string[];
   imageUrls: string[];
   createAt?: Date;
+  faqs: Faq[];
 }
 
 declare interface TripResponse {

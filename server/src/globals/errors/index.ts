@@ -4,5 +4,6 @@ import * as Destination from "./destination";
 import * as Hoarding from "./hoarding";
 import * as User from "./user";
 import * as Trip from "./trip";
+import * as Faq from "./faq";
 
-export { System, Health, Destination, Hoarding, User, Trip };
+export { System, Health, Destination, Hoarding, User, Trip, Faq };

@@ -137,6 +137,10 @@
   .leaflet-container {
     @apply h-full w-full rounded-lg border border-border;
   }
+
+  .z-dialog {
+    z-index: 9999 !important;
+  }
 }
 
 .leaflet-container {
