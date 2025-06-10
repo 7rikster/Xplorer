@@ -31,11 +31,18 @@ import axios from "axios";
 type TripDetailsProps = {
   trip?: Trip;
   viewFaqs: boolean;
+  viewReviews: boolean;
   addFaq?: (question: string, answer: string) => void;
   deleteFaq?: (faqId: string) => void;
 };
 
-function TripDetails({ trip, viewFaqs, addFaq, deleteFaq }: TripDetailsProps) {
+function TripDetails({
+  trip,
+  viewFaqs,
+  addFaq,
+  deleteFaq,
+  viewReviews,
+}: TripDetailsProps) {
   const router = useRouter();
   const [hotelPhoto, setHotelPhoto] = useState<string | null>(null);
   const [expandedDays, setExpandedDays] = useState<{ [key: number]: boolean }>(
@@ -63,6 +70,7 @@ function TripDetails({ trip, viewFaqs, addFaq, deleteFaq }: TripDetailsProps) {
     imageUrls,
     accommodation,
     faqs,
+    reviews,  
   } = trip || {};
 
   const pillItems = [
@@ -428,13 +436,83 @@ function TripDetails({ trip, viewFaqs, addFaq, deleteFaq }: TripDetailsProps) {
                           }, 1000);
                         }}
                       >
-                       <Delete className="w-3 h-3 md:w-4 md:h-4" /> <span className="hidden sm:block">Delete</span> 
+                        <Delete className="w-3 h-3 md:w-4 md:h-4" />{" "}
+                        <span className="hidden sm:block">Delete</span>
                       </Button>
                     </div>
                   ))}
                 </ul>
               ) : (
                 <p className="text-gray-600 mt-2">No FAQs available.</p>
+              )}
+            </div>
+          </section>
+        )}
+
+        {viewReviews && (
+          <section className="mt-6 sm:mt-8 w-full">
+            <h1 className="text-xl sm:text-2xl font-semibold">Reviews</h1>
+            <div className="flex flex-col gap-3 mt-2 sm:mt-4">
+              {reviews && reviews.length > 0 ? (
+                reviews?.slice(0, 5).map((review, index) => (
+                  <div
+                    key={index}
+                    className="p-2 bg-gray-50  shadow-sm flex flex-col"
+                  >
+                    <div className="flex w-full">
+                      <div>
+                        <div className="flex items-center gap-1 sm:gap-2 mb-2">
+                          <Image
+                            src={review.userPhoto || "/default-avatar.png"}
+                            alt={review.userDisplayName}
+                            width={40}
+                            height={40}
+                            className="rounded-full mr-1 w-7 h-7 sm:w-10 sm:h-10 object-cover"
+                          />
+                          <div className="flex flex-col gap-0.5">
+                            <h1 className="font-semibold text-sm sm:text-lg ">
+                              {review.userDisplayName}
+                            </h1>
+                            <p className=" flex items-center">
+                              {Array.from(
+                                { length: review.rating ?? 0 },
+                                (_, i) => (
+                                  <svg
+                                    key={i}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 576 512"
+                                    className="w-[10px] h-[10px] sm:w-3 sm:h-3 text-yellow-400"
+                                  >
+                                    <path
+                                      fill="#FFD43B"
+                                      d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                                    />
+                                  </svg>
+                                )
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                        <p className="px-1 sm:px-2 text-sm sm:text-[1rem]">
+                          {review.comment}
+                        </p>
+                      </div>
+                      <div className="ml-auto flex items-center">
+                        {review.imageUrl && review.imageUrl !== "" && (
+                          <Image
+                            src={review.imageUrl}
+                            alt="Review Image"
+                            width={100}
+                            height={100}
+                            className="rounded-md ml-auto object-cover w-16 h-16"
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-600">No reviews found for this trip.</p>
               )}
             </div>
           </section>

@@ -46,6 +46,20 @@ declare interface Faq{
   updatedAt?: string;
 }
 
+declare interface Review{
+  id: string;
+  rating: number;
+  comment: string;
+  userId: string;
+  userDisplayName: string;
+  userPhoto: string;
+  tripId: string;
+  imageUrl?: string;
+  publicId?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 declare interface Trip {
   id: string;
   name: string;
@@ -65,6 +79,7 @@ declare interface Trip {
   imageUrls: string[];
   createAt?: Date;
   faqs: Faq[];
+  reviews: Review[];
 }
 
 declare interface TripResponse {

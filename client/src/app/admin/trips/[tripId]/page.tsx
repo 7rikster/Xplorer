@@ -44,6 +44,7 @@ function TripPage({ params }: { params: Promise<Params> }) {
             ? response.data.data.imageUrls
             : [],
           faqs: response.data.data.faqs,
+          reviews: response.data.data.reviews,
           createAt: response.data.data.createAt,
         });
       } else {
@@ -117,7 +118,7 @@ function TripPage({ params }: { params: Promise<Params> }) {
           </Button>
         </Link>
       </div>
-      <TripDetails trip={trip} viewFaqs={true} addFaq={addNewFaq} deleteFaq={deleteFaq} />
+      <TripDetails trip={trip} viewFaqs={true} viewReviews={true} addFaq={addNewFaq} deleteFaq={deleteFaq} />
     </div>
   );
 }

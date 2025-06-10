@@ -6,4 +6,5 @@ import * as Auth from "./auth";
 import * as AdminTrips from "./adminTrips"
 import * as AiGeneratedTrip from "./aitrip"
 import * as Faq from "./faq";
-export { Health, Destination, Media, Hoarding, Auth, AdminTrips, AiGeneratedTrip, Faq };
+import * as Review from "./reviews";
+export { Health, Destination, Media, Hoarding, Auth, AdminTrips, AiGeneratedTrip, Faq, Review };

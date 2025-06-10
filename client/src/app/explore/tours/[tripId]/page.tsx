@@ -1,22 +1,55 @@
 "use client";
 
+import dynamic from "next/dynamic";
+
+const Map = dynamic(() => import("@/components/map"), {
+  ssr: false,
+});
+
 import Loading from "@/app/loading";
-import Map from "@/components/map";
+import TourPlanTable from "@/components/tourPlanTable";
 import TripDetails from "@/components/trip-details";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
+import { useUser } from "@/context/authContext";
+import { auth } from "@/lib/firebase/firebaseConfig";
 import getPlacePhoto from "@/lib/placePhoto";
 import { getFirstWord, parseTripData } from "@/lib/utils";
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  ArrowLeft,
+  ChevronDown,
+  ChevronUp,
+  Delete,
+  Pencil,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { toast } from "sonner";
 
 type Params = {
   tripId: string;
 };
+
+interface Review {
+  rating: number;
+  comment: string;
+  imageUrl?: string;
+  publicId?: string;
+}
 
 function ClientTripPage({ params }: { params: Promise<Params> }) {
   const { tripId } = use(params);
@@ -26,6 +59,27 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
   const [expandedDays, setExpandedDays] = useState<{ [key: number]: boolean }>(
     {}
   );
+  const [expandedFaqs, setExpandedFaqs] = useState<{ [key: number]: boolean }>(
+    {}
+  );
+  const [reviewData, setReviewData] = useState<Review>({
+    comment: "",
+    rating: 0,
+    imageUrl: "",
+    publicId: "",
+  });
+  const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
+  const [isEditReviewDialogOpen, setIsEditReviewDialogOpen] = useState(false);
+  const [isImageUploading, setIsImageUploading] = useState(false);
+  const [addReviewLoading, setAddReviewLoading] = useState(false);
+  const [deleteReviewLoading, setDeleteReviewLoading] = useState(false);
+  const [editReviewLoading, setEditReviewLoading] = useState(false);
+
+  const [isDeleteReviewDialogOpen, setIsDeleteReviewDialogOpen] =
+    useState(false);
+
+  const { user: currentUser, loading: authLoading } = useUser();
+  const [user] = useAuthState(auth);
 
   const {
     name,
@@ -43,6 +97,7 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
     imageUrls,
     accommodation,
     faqs,
+    reviews,
   } = trip || {};
 
   const pillItems = [
@@ -59,34 +114,268 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
     }));
   };
 
-  useEffect(() => {
-    const fetchTripDetails = async () => {
-      setLoading(true);
+  const toggleFaq = (index: number) => {
+    setExpandedFaqs((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
+  async function handleReviewImageUploadChange(
+    event: React.ChangeEvent<HTMLInputElement>
+  ) {
+    const selectedImage = event.target.files ? event.target.files[0] : null;
+    if (selectedImage) {
+      setIsImageUploading(true);
+      const imageFormData = new FormData();
+      imageFormData.append("file", selectedImage);
+
       try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/trip/get/${tripId}`
+        const token = await user?.getIdToken();
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/media/upload`,
+          imageFormData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
-        // console.log("Trip details: ",response.data.data);
-        const parsedTrip = parseTripData(response.data.data.tripDetail);
-        if (parsedTrip && parsedTrip.name) {
-          setTrip({
-            id: response.data.data.id,
-            ...parsedTrip,
-            imageUrls: response.data.data.imageUrls
-              ? response.data.data.imageUrls
-              : [],
-              faqs: response.data.data.faqs || [],
-            createAt: response.data.data.createAt,
-          });
-        } else {
-          setTrip(undefined);
+        if (response.data) {
+          setReviewData((prev) => ({
+            ...prev,
+            imageUrl: response.data.data.secure_url,
+            publicId: response.data.data.public_id,
+          }));
         }
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
-        setLoading(false);
+      } catch (error) {
+        console.error("Error uploading image:", error);
       }
-    };
+      setIsImageUploading(false);
+    }
+  }
+
+  async function handleAddReview() {
+    if (!user) {
+      toast.error("You must be logged in to add a review.");
+      return;
+    }
+    setAddReviewLoading(true);
+    const token = await user.getIdToken();
+    if (!reviewData.comment || reviewData.comment === "") {
+      toast.error("Please enter a comment for the review.");
+      setAddReviewLoading(false);
+      return;
+    }
+    console.log("Review data: ", reviewData);
+    if (
+      !reviewData.rating ||
+      reviewData.rating === 0 ||
+      reviewData.rating < 1 ||
+      reviewData.rating > 5
+    ) {
+      setAddReviewLoading(false);
+      toast.error("Please enter a rating between 1 and 5 for the review.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/review/add`,
+        {
+          comment: reviewData.comment,
+          rating: reviewData.rating,
+          imageUrl: reviewData.imageUrl,
+          publicId: reviewData.publicId,
+          userDisplayName: currentUser?.name,
+          userPhoto: currentUser?.photoUrl,
+          userId: currentUser?.id,
+          tripId: tripId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.data) {
+        toast.success("Review added successfully!");
+      } else {
+        toast.error("Failed to add review.");
+      }
+    } catch (error) {
+      console.error("Error adding review:", error);
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "response" in error &&
+        (error as any).response?.status === 409
+      ) {
+        toast.error("You have already added a review for this trip.");
+      }
+    }
+    setAddReviewLoading(false);
+    setReviewData({
+      comment: "",
+      rating: 0,
+      imageUrl: "",
+      publicId: "",
+    });
+    fetchTripDetails();
+    isReviewDialogOpen && setIsReviewDialogOpen(false);
+  }
+
+  async function handleEditReview(reviewId: string) {
+    if (!user) {
+      toast.error("You must be logged in to edit a review.");
+      return;
+    }
+    setEditReviewLoading(true);
+    const token = await user.getIdToken();
+    if (!reviewData.comment || reviewData.comment === "") {
+      toast.error("Please enter a comment for the review.");
+      setEditReviewLoading(false);
+      return;
+    }
+    if (
+      !reviewData.rating ||
+      reviewData.rating === 0 ||
+      reviewData.rating < 1 ||
+      reviewData.rating > 5
+    ) {
+      setEditReviewLoading(false);
+      toast.error("Please enter a rating between 1 and 5 for the review.");
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/review/update/${reviewId}`,
+        {
+          comment: reviewData.comment,
+          rating: reviewData.rating,
+          userId: currentUser?.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.data) {
+        toast.success("Review updated successfully!");
+        fetchTripDetails();
+      } else {
+        toast.error("Failed to update review.");
+      }
+    } catch (error) {
+      console.error("Error updating review:", error);
+      toast.error("Failed to update review.");
+    } finally {
+      setEditReviewLoading(false);
+      setIsEditReviewDialogOpen(false);
+    }
+  }
+
+  async function handleDeleteReview(reviewId: string, publicId?: string) {
+    if (!user) {
+      toast.error("You must be logged in to delete a review.");
+      return;
+    }
+    setDeleteReviewLoading(true);
+    const token = await user.getIdToken();
+    try {
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/review/delete/${reviewId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (publicId && publicId !== "") {
+        const res = await axios.delete(
+          `${process.env.NEXT_PUBLIC_API_URL}/media/delete/${publicId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("Image deleted response: ", res.data);
+      }
+      if (response.data) {
+        toast.success("Review deleted successfully!");
+        fetchTripDetails();
+      } else {
+        toast.error("Failed to delete review.");
+      }
+    } catch (error) {
+      console.error("Error deleting review:", error);
+      toast.error("Failed to delete review.");
+    } finally {
+      setDeleteReviewLoading(false);
+      setIsDeleteReviewDialogOpen(false);
+    }
+  }
+
+  const fetchTripDetails = async () => {
+    // setLoading(true);
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/trip/get/${tripId}`
+      );
+      // console.log("Trip details: ",response.data.data);
+      const parsedTrip = parseTripData(response.data.data.tripDetail);
+      if (parsedTrip && parsedTrip.name) {
+        const sortedReviews = [...(response.data.data.reviews || [])].sort(
+          (a, b) => {
+            if (a.userId === currentUser?.id) return -1;
+            if (b.userId === currentUser?.id) return 1;
+            return 0;
+          }
+        );
+        setTrip({
+          id: response.data.data.id,
+          ...parsedTrip,
+          imageUrls: response.data.data.imageUrls
+            ? response.data.data.imageUrls
+            : [],
+          faqs: response.data.data.faqs || [],
+          reviews: sortedReviews,
+          createAt: response.data.data.createAt,
+        });
+      } else {
+        setTrip(undefined);
+      }
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (authLoading) return;
+    if (user) {
+      const sortedReviews = [...(trip?.reviews || [])].sort((a, b) => {
+        if (a.userId === currentUser?.id) return -1;
+        if (b.userId === currentUser?.id) return 1;
+        return 0;
+      });
+
+      setTrip((prevTrip) => {
+        if (!prevTrip) return prevTrip;
+        return {
+          ...prevTrip,
+          reviews: sortedReviews || [],
+        };
+      });
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
     setLoading(true);
     void fetchTripDetails();
   }, [params]);
@@ -105,6 +394,8 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
       // fetchPhoto();
     }
   }, [accommodation]);
+
+  useEffect(() => {}, [currentUser]);
 
   console.log("Trip data: ", trip);
 
@@ -233,7 +524,7 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
                   </span>
                 </h3>
                 <p className=" flex items-center">
-                  {Array.from({ length: accommodation?.stars }, (_, i) => (
+                  {Array.from({ length: accommodation?.stars ?? 0 }, (_, i) => (
                     <svg
                       key={i}
                       xmlns="http://www.w3.org/2000/svg"
@@ -382,9 +673,367 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
               }
             />
           </section>
-          <section>
+          <section className="mt-6 sm:mt-8">
+            <h1 className="text-xl sm:text-2xl font-semibold mb-4">
+              Tour Plan
+            </h1>
+            <TourPlanTable trip={trip!} />
+          </section>
+          <section className="mt-6 sm:mt-8">
             <h1 className="text-xl sm:text-2xl font-semibold">FAQs</h1>
-            
+            <div className="flex flex-col gap-3 mt-2 sm:mt-4">
+              {faqs && faqs.length > 0 ? (
+                faqs?.map((faq, index) => (
+                  <div
+                    key={index}
+                    className="px-2 sm:px-4 bg-gray-50 rounded-lg shadow-sm "
+                  >
+                    <div
+                      className={` pt-2 flex items-center gap-3 sm:gap-10 cursor-pointer ${
+                        expandedFaqs[index] ? "" : "pb-2"
+                      } transition-all duration-100`}
+                      onClick={() => toggleFaq(index)}
+                    >
+                      <h3 className="font-semibold text-md sm:text-lg">
+                        {faq.question}
+                      </h3>
+                      <span className="ml-auto">
+                        {expandedFaqs[index] ? (
+                          <ChevronUp className="w-3 h-3 sm:w-5 sm:h-5 transition-transform duration-300" />
+                        ) : (
+                          <ChevronDown className="w-3 h-3 sm:w-5 sm:h-5 transition-transform duration-300" />
+                        )}
+                      </span>
+                    </div>
+                    <AnimatePresence initial={false}>
+                      {expandedFaqs[index] && (
+                        <motion.div
+                          key="content"
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="overflow-hidden"
+                        >
+                          <p className="pb-2">{faq.answer}</p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-600">
+                  No FAQs available for this trip.
+                </p>
+              )}
+            </div>
+          </section>
+          <section className="mt-6 sm:mt-8 w-full">
+            <h1 className="text-xl sm:text-2xl font-semibold">Reviews</h1>
+            <div className="flex flex-col gap-3 mt-2 sm:mt-4">
+              {reviews && reviews.length > 0 ? (
+                reviews?.slice(0, 5).map((review, index) => (
+                  <div
+                    key={index}
+                    className={`p-2   shadow-sm flex flex-col ${review.userId === currentUser?.id ? "bg-blue-50" : "bg-gray-50"}`}
+                  >
+                    <div className="flex w-full">
+                      <div>
+                        <div className="flex items-center gap-1 sm:gap-2 mb-2">
+                          <Image
+                            src={review.userPhoto || "/default-avatar.png"}
+                            alt={review.userDisplayName}
+                            width={40}
+                            height={40}
+                            className="rounded-full mr-1 w-7 h-7 sm:w-10 sm:h-10 object-cover"
+                          />
+                          <div className="flex flex-col gap-0.5">
+                            <h1 className="font-semibold text-sm sm:text-lg ">
+                              {review.userDisplayName}
+                            </h1>
+                            <p className=" flex items-center">
+                              {Array.from(
+                                { length: review.rating ?? 0 },
+                                (_, i) => (
+                                  <svg
+                                    key={i}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 576 512"
+                                    className="w-[10px] h-[10px] sm:w-3 sm:h-3 text-yellow-400"
+                                  >
+                                    <path
+                                      fill="#FFD43B"
+                                      d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                                    />
+                                  </svg>
+                                )
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                        <p className="px-1 sm:px-2 text-sm sm:text-[1rem]">
+                          {review.comment}
+                        </p>
+                      </div>
+                      <div className="ml-auto flex items-center">
+                        {review.imageUrl && review.imageUrl !== "" && (
+                          <Image
+                            src={review.imageUrl}
+                            alt="Review Image"
+                            width={100}
+                            height={100}
+                            className="rounded-md ml-auto object-cover w-16 h-16"
+                          />
+                        )}
+                      </div>
+                    </div>
+                    {review.userId === currentUser?.id && (
+                      <div className="flex items-center mt-2 w-full justify-end gap-2">
+                        <Dialog
+                          open={isEditReviewDialogOpen}
+                          onOpenChange={setIsEditReviewDialogOpen}
+                        >
+                          <DialogTrigger asChild>
+                            <Button
+                              className="cursor-pointer px-2 md:px-4"
+                              variant={"outline"}
+                              onClick={()=>{
+                                setReviewData({
+                                  comment: review.comment,
+                                  rating: review.rating,
+                                });
+                              }}
+                            >
+                              <Pencil />{" "}
+                              <span className="hidden sm:block">Edit</span>
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[400px]">
+                            <DialogHeader>
+                              <DialogTitle>Edit Review</DialogTitle>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-2">
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="comment" className="text-right">
+                                  Comment
+                                </Label>
+                                <Textarea
+                                  id="comment"
+                                  value={reviewData.comment}
+                                  onChange={(event) =>
+                                    setReviewData((prev) => ({
+                                      ...prev,
+                                      comment: event.target.value,
+                                    }))
+                                  }
+                                  className="col-span-3"
+                                />
+                              </div>
+
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="rating" className="text-right">
+                                  Rating
+                                </Label>
+                                <Input
+                                  id="rating"
+                                  value={reviewData.rating}
+                                  onChange={(event) =>
+                                    setReviewData((prev) => ({
+                                      ...prev,
+                                      rating: Number(event.target.value),
+                                    }))
+                                  }
+                                  className="col-span-3"
+                                  type="number"
+                                />
+                              </div>
+                            </div>
+                            <Button
+                              onClick={() => handleEditReview(review.id)}
+                              className="cursor-pointer"
+                              disabled={editReviewLoading}
+                            >
+                              {editReviewLoading ? (
+                                <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                              ) : (
+                                "Update"
+                              )}
+                            </Button>
+                          </DialogContent>
+                        </Dialog>
+
+                        <Dialog
+                          open={isDeleteReviewDialogOpen}
+                          onOpenChange={setIsDeleteReviewDialogOpen}
+                        >
+                          <DialogTrigger asChild>
+                            <Button
+                              disabled={deleteReviewLoading}
+                              variant={"outline"}
+                              className={`w-8 h-8 md:w-20 md:h-9 ${
+                                loading
+                                  ? "opacity-50 cursor-not-allowed"
+                                  : "cursor-pointer"
+                              }`}
+                            >
+                              {loading ? (
+                                <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                              ) : (
+                                <>
+                                  <Delete />{" "}
+                                  <span className={`hidden md:block`}>
+                                    Delete
+                                  </span>
+                                </>
+                              )}
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[400px]">
+                            <DialogHeader>
+                              <DialogTitle className="text-md font-bold">
+                                Are you sure you want to delete your review?
+                              </DialogTitle>
+                            </DialogHeader>
+                            <div className="flex items-center justify-center gap-2">
+                              <Button
+                                disabled={deleteReviewLoading}
+                                className={`w-8 h-8 md:w-20 md:h-9 ${
+                                  deleteReviewLoading
+                                    ? "opacity-50 cursor-not-allowed"
+                                    : "cursor-pointer"
+                                }`}
+                                onClick={() => {
+                                  handleDeleteReview(
+                                    review.id,
+                                    review.publicId
+                                  );
+                                }}
+                              >
+                                {deleteReviewLoading ? (
+                                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                ) : (
+                                  <>YES</>
+                                )}
+                              </Button>
+                              <Button
+                                className="cursor-pointer w-8 h-8 md:w-20 md:h-9"
+                                onClick={() =>
+                                  setIsDeleteReviewDialogOpen(false)
+                                }
+                                disabled={deleteReviewLoading}
+                              >
+                                NO
+                              </Button>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-600">
+                  No reviews available for this trip.
+                </p>
+              )}
+            </div>
+            <div className="flex justify-end mt-2">
+              <Dialog
+                open={isReviewDialogOpen}
+                onOpenChange={setIsReviewDialogOpen}
+              >
+                <DialogTrigger asChild>
+                  <Button
+                    className="cursor-pointer px-2 md:px-4"
+                    variant={"outline"}
+                  >
+                    Leave a Review
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[400px]">
+                  <DialogHeader>
+                    <DialogTitle>Add a Review</DialogTitle>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-2">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="comment" className="text-right">
+                        Comment
+                      </Label>
+                      <Textarea
+                        id="comment"
+                        value={reviewData.comment}
+                        onChange={(event) =>
+                          setReviewData((prev) => ({
+                            ...prev,
+                            comment: event.target.value,
+                          }))
+                        }
+                        className="col-span-3"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="rating" className="text-right">
+                        Rating
+                      </Label>
+                      <Input
+                        id="rating"
+                        onChange={(event) =>
+                          setReviewData((prev) => ({
+                            ...prev,
+                            rating: Number(event.target.value),
+                          }))
+                        }
+                        className="col-span-3"
+                        type="number"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="image" className="text-right">
+                        {"Image (optional)"}
+                      </Label>
+                      {reviewData.imageUrl === "" ? (
+                        <Input
+                          onChange={(event) =>
+                            handleReviewImageUploadChange(event)
+                          }
+                          type="file"
+                          accept="image/*"
+                          className="col-span-3"
+                          name="image"
+                        />
+                      ) : (
+                        <Image
+                          src={reviewData.imageUrl || ""}
+                          width={300}
+                          height={100}
+                          alt="Review Image"
+                          className="col-span-3 object-cover h-36 w-full rounded-md"
+                        />
+                      )}
+                      {isImageUploading && (
+                        <div className="col-span-4 flex items-center justify-center gap-4">
+                          <h1>Uploading image </h1>
+                          <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <Button
+                    onClick={handleAddReview}
+                    className="cursor-pointer"
+                    disabled={addReviewLoading || isImageUploading}
+                  >
+                    {addReviewLoading ? (
+                      <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    ) : (
+                      "Add Review"
+                    )}
+                  </Button>
+                </DialogContent>
+              </Dialog>
+            </div>
           </section>
         </div>
 

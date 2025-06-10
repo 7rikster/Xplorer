@@ -27,6 +27,7 @@ app.use(`${Constants.System.ROOT}/media`, Routers.Media);
 app.use(`${Constants.System.ROOT}/hoarding`, Routers.Hoarding);
 app.use(`${Constants.System.ROOT}/trip`, Routers.AITrip);
 app.use(`${Constants.System.ROOT}/faq`, Routers.Faq);
+app.use(`${Constants.System.ROOT}/review`, Routers.Review);
 
 
 // Error Handlers

@@ -5,5 +5,6 @@ import Hoarding from "./hoarding";
 import Auth from "./auth";
 import AITrip from "./trip";
 import Faq from "./faq";
+import Review from "./review";
 
-export { Health, Destination, Media, Hoarding, Auth, AITrip, Faq };
+export { Health, Destination, Media, Hoarding, Auth, AITrip, Faq, Review };

@@ -151,7 +151,7 @@ function Tours() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full bg-gray-100">
-      <div className="w-full relative h-[90vh] overflow-hidden">
+      <div className="w-full relative h-[95vh] overflow-hidden">
         <Image
           src="https://res.cloudinary.com/dqobuxkcj/image/upload/v1749151328/neikdmqtbo8mfp8y91fn.jpg"
           alt="Tours background"
