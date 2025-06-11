@@ -24,11 +24,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { useUser } from "@/context/authContext";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import getPlacePhoto from "@/lib/placePhoto";
-import { getFirstWord, parseTripData } from "@/lib/utils";
+import { getFirstWord, parsePriceString, parseTripData } from "@/lib/utils";
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowLeft,
+  Book,
   ChevronDown,
   ChevronUp,
   Delete,
@@ -39,6 +40,7 @@ import Link from "next/link";
 import { use, useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { toast } from "sonner";
+import BookingWidget from "@/components/booking-widget";
 
 type Params = {
   tripId: string;
@@ -337,7 +339,7 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
           }
         );
         setTrip({
-          id: response.data.data.id,
+          // id: response.data.data.id,
           ...parsedTrip,
           imageUrls: response.data.data.imageUrls
             ? response.data.data.imageUrls
@@ -437,7 +439,7 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
       </div>
 
       <div className="flex flex-col lg:flex-row justify-center mt-4 gap-5 w-full p-2 sm:p-5">
-        <div className="flex-1 bg-white rounded-lg shadow-lg p-3 sm:p-6">
+        <div className=" bg-white rounded-lg shadow-lg p-3 sm:p-6">
           <section>
             <h1 className="text-xl sm:text-2xl md:text-4xl font-semibold">
               {duration}-Day {location?.city} {travelStyle}
@@ -735,7 +737,11 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
                 reviews?.slice(0, 5).map((review, index) => (
                   <div
                     key={index}
-                    className={`p-2   shadow-sm flex flex-col ${review.userId === currentUser?.id ? "bg-blue-50" : "bg-gray-50"}`}
+                    className={`p-2   shadow-sm flex flex-col ${
+                      review.userId === currentUser?.id
+                        ? "bg-blue-50"
+                        : "bg-gray-50"
+                    }`}
                   >
                     <div className="flex w-full">
                       <div>
@@ -751,24 +757,29 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
                             <h1 className="font-semibold text-sm sm:text-lg ">
                               {review.userDisplayName}
                             </h1>
-                            <p className=" flex items-center">
-                              {Array.from(
-                                { length: review.rating ?? 0 },
-                                (_, i) => (
-                                  <svg
-                                    key={i}
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 576 512"
-                                    className="w-[10px] h-[10px] sm:w-3 sm:h-3 text-yellow-400"
-                                  >
-                                    <path
-                                      fill="#FFD43B"
-                                      d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
-                                    />
-                                  </svg>
-                                )
-                              )}
-                            </p>
+                            <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+                              <p className="text-xs text-gray-500">
+                                {review.createdAt?.split("T")[0]}
+                              </p>
+                              <p className=" flex items-center">
+                                {Array.from(
+                                  { length: review.rating ?? 0 },
+                                  (_, i) => (
+                                    <svg
+                                      key={i}
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      viewBox="0 0 576 512"
+                                      className="w-[10px] h-[10px] sm:w-3 sm:h-3 text-yellow-400"
+                                    >
+                                      <path
+                                        fill="#FFD43B"
+                                        d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                                      />
+                                    </svg>
+                                  )
+                                )}
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <p className="px-1 sm:px-2 text-sm sm:text-[1rem]">
@@ -797,7 +808,7 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
                             <Button
                               className="cursor-pointer px-2 md:px-4"
                               variant={"outline"}
-                              onClick={()=>{
+                              onClick={() => {
                                 setReviewData({
                                   comment: review.comment,
                                   rating: review.rating,
@@ -1037,16 +1048,26 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
           </section>
         </div>
 
-        <div className="sticky top-4 w-60 lg:w-90 h-100 bg-white rounded-lg shadow-lg">
-          <ScrollArea className="h-full p-4">
-            {/* Your scrollable content here */}
-            <div className="space-y-4">
-              {/* Example content */}
-              {[...Array(20)].map((_, i) => (
-                <p key={i}>Scrollable item {i + 1}</p>
-              ))}
+        <div className="sticky top-4 h-full bg-gray-200 flex flex-col sm:flex-row sm:justify-between sm:w-full gap-4 sm:gap-8 lg:max-w-sm lg:flex-col lg:gap-0">
+          <BookingWidget
+            price={parsePriceString(trip?.estimatedPrice || "$1000") || 1000}
+          />
+          <div className="p-4 bg-white rounded-lg shadow-lg lg:mt-4 w-full h-52">
+            <div className="flex  items-center justify-center gap-2">
+              <Image
+              src={"/plane1.svg"}
+              width={100}
+              height={100}
+              alt="Airplane"
+              className="object-cover"
+              />
+              <h1 className="text-2xl font-semibold font-serif pr-4">Check Flights</h1>
             </div>
-          </ScrollArea>
+            <h1 className="text-lg font-semibold mt-4">Destination : {trip?.location.city}, {trip?.location.country}</h1>
+            <Link href={`/explore/flights`}>
+            <Button className="w-full mt-4 cursor-pointer">Check Flights</Button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

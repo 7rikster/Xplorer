@@ -4,11 +4,10 @@ import Loading from "@/app/loading";
 import TripDetails from "@/components/trip-details";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/firebase/firebaseConfig";
-import { getFirstWord, parseTripData } from "@/lib/utils";
+import { parseTripData } from "@/lib/utils";
 import axios from "axios";
-import { ArrowLeft, CalendarDays, MapPin } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 

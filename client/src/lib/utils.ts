@@ -35,3 +35,7 @@ export function parseMarkdownToJson(markdownText: string): unknown | null {
     console.error("No valid JSON found in markdown text.");
     return null;
 }
+
+export function parsePriceString(priceStr: string): number {
+  return parseFloat(priceStr.replace(/[^0-9.]/g, ""));
+}

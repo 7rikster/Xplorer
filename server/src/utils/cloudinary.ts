@@ -10,7 +10,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Function to upload media to Cloudinary
 export const uploadMediaToCloudinary = async (
   filePath: string
 ): Promise<UploadApiResponse> => {
@@ -25,7 +24,6 @@ export const uploadMediaToCloudinary = async (
   }
 };
 
-// Function to delete media from Cloudinary
 export const deleteMediaFromCloudinary = async (
   publicId: string
 ): Promise<void> => {

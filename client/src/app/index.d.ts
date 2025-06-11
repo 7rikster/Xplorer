@@ -56,8 +56,8 @@ declare interface Review{
   tripId: string;
   imageUrl?: string;
   publicId?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 declare interface Trip {
