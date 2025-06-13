@@ -105,12 +105,12 @@ function Header() {
     <div
       ref={navContainerRef}
       className={`fixed inset-x-2 top-2 sm:top-4 z-500 h-12 sm:h-18 border-none transition-all duration-700 sm:inset-x-6 ${
-        pathName.startsWith("/admin") ? " hidden" : ""
+        pathName.startsWith("/admin") || pathName.startsWith("/dashboard")? " hidden" : ""
       }`}
     >
       <header
         className={`absolute top-1/2 w-full -translate-y-1/2 px-4 ${
-          pathName.startsWith("/admin") ? "hidden" : ""
+          pathName.startsWith("/admin") || pathName.startsWith("/dashboard")? "hidden" : ""
         }`}
       >
         <nav className="flex size-full items-center justify-between p-1 sm:p-2">

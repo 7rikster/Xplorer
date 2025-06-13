@@ -758,9 +758,6 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
                               {review.userDisplayName}
                             </h1>
                             <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
-                              <p className="text-xs text-gray-500">
-                                {review.createdAt?.split("T")[0]}
-                              </p>
                               <p className=" flex items-center">
                                 {Array.from(
                                   { length: review.rating ?? 0 },
@@ -778,6 +775,9 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
                                     </svg>
                                   )
                                 )}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {review.createdAt?.split("T")[0]}
                               </p>
                             </div>
                           </div>
@@ -1055,17 +1055,23 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
           <div className="p-4 bg-white rounded-lg shadow-lg lg:mt-4 w-full h-52">
             <div className="flex  items-center justify-center gap-2">
               <Image
-              src={"/plane1.svg"}
-              width={100}
-              height={100}
-              alt="Airplane"
-              className="object-cover"
+                src={"/plane1.svg"}
+                width={100}
+                height={100}
+                alt="Airplane"
+                className="object-cover"
               />
-              <h1 className="text-2xl font-semibold font-serif pr-4">Check Flights</h1>
+              <h1 className="text-2xl font-semibold font-serif pr-4">
+                Check Flights
+              </h1>
             </div>
-            <h1 className="text-lg font-semibold mt-4">Destination : {trip?.location.city}, {trip?.location.country}</h1>
+            <h1 className="text-lg font-semibold mt-4">
+              Destination : {trip?.location.city}, {trip?.location.country}
+            </h1>
             <Link href={`/explore/flights`}>
-            <Button className="w-full mt-4 cursor-pointer">Check Flights</Button>
+              <Button className="w-full mt-4 cursor-pointer">
+                Check Flights
+              </Button>
             </Link>
           </div>
         </div>

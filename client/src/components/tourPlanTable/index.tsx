@@ -48,7 +48,7 @@ const TourPlanTable: React.FC<{ trip: Trip }> = ({ trip }) => {
               <User size={18} /> Age
             </div>
           </div>
-          <div className="ml-2 sm:ml-4 py-4">18+</div>
+          <div className="ml-2 sm:ml-4 py-4">{trip?.groupType == "Couple" || trip?.groupType == "Solo"  || trip?.groupType == "Friends" || trip?.groupType == "Business" ? "18+" : "All Ages"}</div>
         </div>
 
         {/* Included */}

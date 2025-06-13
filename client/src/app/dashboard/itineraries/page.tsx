@@ -17,7 +17,7 @@ function ClientDashboard() {
   },[user, router])
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-200">
+    <div className="flex flex-col items-center justify-center h-screen bg-black text-white">
       <h1 className="text-xl font-semibold mb-4">
         This is the Client Dashboard page
       </h1>

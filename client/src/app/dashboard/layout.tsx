@@ -1,3 +1,4 @@
+import SideNav from "@/components/dashboard-side-nav";
 import ProtectedRoute from "@/components/protectedRoutes";
 
 export default function ClientLayout({
@@ -7,6 +8,7 @@ export default function ClientLayout({
 }) {
   return (
     <ProtectedRoute allowedRoles={["CLIENT"]}>
+      <SideNav />
       <main>{children}</main>
     </ProtectedRoute>
   );
