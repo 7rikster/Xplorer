@@ -1,15 +1,20 @@
-import SideNav from "@/components/dashboard-side-nav";
-import ProtectedRoute from "@/components/protectedRoutes";
+"use client"; // this is mandatory
 
-export default function ClientLayout({
+import { SocketProvider } from "@/context/socketContext";
+import ProtectedRoute from "@/components/protectedRoutes";
+import SideNav from "@/components/dashboard-side-nav";
+
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <ProtectedRoute allowedRoles={["CLIENT"]}>
-      <SideNav />
-      <main>{children}</main>
-    </ProtectedRoute>
+    <SocketProvider>
+      <ProtectedRoute allowedRoles={["CLIENT"]}>
+        <SideNav />
+        <main>{children}</main>
+      </ProtectedRoute>
+    </SocketProvider>
   );
 }

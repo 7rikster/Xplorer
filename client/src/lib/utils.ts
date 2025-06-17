@@ -39,3 +39,4 @@ export function parseMarkdownToJson(markdownText: string): unknown | null {
 export function parsePriceString(priceStr: string): number {
   return parseFloat(priceStr.replace(/[^0-9.]/g, ""));
 }
+

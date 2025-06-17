@@ -23,6 +23,10 @@ generator client {
     reviews  Review[]
 
     userTrips   UserTrip[]
+
+    groupMemberships GroupMember[]
+    adminOf   Group[]    @relation("GroupAdmin")
+    messages  Message[]
   
   }
   
@@ -113,3 +117,61 @@ generator client {
     tripDetail String
     imageUrls String[]
   }
+
+  model Group {
+  id        String           @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+
+  photoUrl String
+
+  // Explicit join relation
+  members   GroupMember[]
+
+  admin     User             @relation("GroupAdmin", fields: [adminId], references: [id])
+  adminId   String           @db.ObjectId
+
+  messages  Message[]
+
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
+model GroupMember {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @db.ObjectId
+
+  group     Group    @relation(fields: [groupId], references: [id])
+  groupId   String   @db.ObjectId
+
+  joinedAt  DateTime @default(now())
+}
+
+model Message {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+
+  sender    User      @relation(fields: [senderId], references: [id])
+  senderId  String    @db.ObjectId
+
+  group     Group     @relation(fields: [groupId], references: [id])
+  groupId   String    @db.ObjectId
+
+  attachments Attachment[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Attachment {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  url        String
+  fileType   String
+
+  message    Message  @relation(fields: [messageId], references: [id])
+  messageId  String   @db.ObjectId
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}

@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import * as Middlewares from "./src/middlewares";
 import * as Routers from "./src/routers";
 import * as Constants from "./src/globals/constants";
+import setupSocket from "socket";
 
 const app = express();
 dotenv.config();
@@ -28,11 +29,15 @@ app.use(`${Constants.System.ROOT}/hoarding`, Routers.Hoarding);
 app.use(`${Constants.System.ROOT}/trip`, Routers.AITrip);
 app.use(`${Constants.System.ROOT}/faq`, Routers.Faq);
 app.use(`${Constants.System.ROOT}/review`, Routers.Review);
+app.use(`${Constants.System.ROOT}/user`, Routers.User);
+app.use(`${Constants.System.ROOT}/groupChat`, Routers.GroupChat);
 
 
 // Error Handlers
 app.use(Middlewares.Error.errorHandler);
 
-app.listen(Constants.System.PORT, () => {
+const server = app.listen(Constants.System.PORT, () => {
   console.log(`Server started on port ${Constants.System.PORT}`);
 });
+
+setupSocket(server);

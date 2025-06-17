@@ -6,5 +6,6 @@ import * as User from "./user";
 import * as Trip from "./trip";
 import * as Faq from "./faq";
 import * as Review from "./reviews";
+import * as GroupChat from "./groupChat";
 
-export { System, Health, Destination, Hoarding, User, Trip, Faq, Review };
+export { System, Health, Destination, Hoarding, User, Trip, Faq, Review, GroupChat };

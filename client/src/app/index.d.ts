@@ -38,7 +38,7 @@ declare interface Transport {
   notes?: string;
 }
 
-declare interface Faq{
+declare interface Faq {
   id: string;
   question: string;
   answer: string;
@@ -46,7 +46,7 @@ declare interface Faq{
   updatedAt?: string;
 }
 
-declare interface Review{
+declare interface Review {
   id: string;
   rating: number;
   comment: string;
@@ -92,3 +92,63 @@ declare interface TripResponse {
   groupType: string;
   budget: string;
 }
+
+declare interface User {
+  id: string;
+  name: string;
+  email: string;
+  firebaseId: string;
+  photoUrl?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  role: string;
+  reviews?: Review[];
+  messages?: Message[];
+  adminOf?: Group[];
+  groupMemberships?: GroupMember[];
+}
+
+declare interface Message {
+  id: string;
+  content: string;
+  sender: User;
+  senderId: string;
+  group: Group;
+  groupId: string;
+  attachments: Attachment[];
+  createdAt: DateTime;
+  updatedAt: DateTime;
+}
+
+declare interface Group {
+  id: string;
+  name: string;
+  photoUrl: string;
+  members: GroupMember[];
+  admin: User;
+  adminId: string;
+  messages: Message[];
+  createdAt: DateTime;
+  updatedAt: DateTime;
+}
+
+declare interface GroupMember {
+  id: string;
+  user: User;
+  userId: string;
+  group: Group;
+  groupId: string;
+  joinedAt: DateTime;
+}
+
+declare interface Attachment {
+  id: string;
+  url: string;
+  fileType: string;
+  message: Message;
+  messageId: string;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+}
+
+
