@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, createContext, useEffect, useRef } from "react";
+import { useContext, createContext, useEffect, useState, useRef } from "react";
 import { useUser } from "./authContext";
 import { io, Socket } from "socket.io-client";
 import { useAppStore } from "@/store";
@@ -16,41 +16,47 @@ export const useSocket = () => {
 };
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
+  const { user, loading } = useUser(); 
+  const [socket, setSocket] = useState<Socket | null>(null);
   const socketRef = useRef<Socket | null>(null);
 
-  const { user } = useUser();
-
   useEffect(() => {
-    if (user) {
-        console.log(`Connecting to socket server for user: ${user.id}`);
-      socketRef.current = io(process.env.NEXT_PUBLIC_SERVER_URL, {
+    if (!loading && user) {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
+
+      const newSocket = io(process.env.NEXT_PUBLIC_SERVER_URL!, {
         withCredentials: true,
         query: { userId: user.id },
       });
-      socketRef.current.on("connect", () => {
-        console.log(`Connected to socket server`);
+
+      newSocket.on("connect", () => {
+        console.log(`Connected to socket server with ID: ${newSocket.id}`);
       });
 
-      const handleReceiveGroupMessage = (message: Message) => {
-        const {selectedChatData, addMessage} = useAppStore.getState();
-        if(selectedChatData && selectedChatData.id === message.groupId) {
+      newSocket.on("receive-group-message", (message: Message) => {
+        const { selectedChatData, addMessage, addGroupinGroupList } =
+          useAppStore.getState();
+        if (selectedChatData && selectedChatData.id === message.groupId) {
           addMessage(message);
           console.log(`Received message in group ${message.groupId}:`, message);
         }
-      }
+        addGroupinGroupList(message);
+      });
 
-      socketRef.current.on("receive-group-message", handleReceiveGroupMessage);
-      return () => {
-        if (socketRef.current) {
-          socketRef.current.disconnect();
-        }
-      };
+      socketRef.current = newSocket;
+      setSocket(newSocket);
     }
-  }, [user]);
+
+    return () => {
+      socketRef.current?.disconnect();
+    };
+  }, [user, loading]);
+
+  if (!socket) return null;
 
   return (
-    <SocketContext.Provider value={socketRef.current}>
-      {children}
-    </SocketContext.Provider>
+    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
   );
 };

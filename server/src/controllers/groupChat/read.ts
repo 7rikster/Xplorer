@@ -25,6 +25,7 @@ const getGroupMessages: Interfaces.Controllers.Async = async (
       },
       include: {
         sender: true,
+        attachments: true,
       },
       orderBy: {
         createdAt: "asc",

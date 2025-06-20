@@ -1,4 +1,4 @@
-import Create from "./create";
+import {Create, UploadMany} from "./create";
 import Delete from "./delete";
 
-export { Create, Delete };
+export { Create, UploadMany, Delete };

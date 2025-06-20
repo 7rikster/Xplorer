@@ -20,6 +20,7 @@ const setupSocket: SetupSocket = (server: HttpServer): void => {
   });
 
   const userSocketMap = new Map<string, string>();
+  
 
   interface DisconnectFunction {
     (socket: import("socket.io").Socket): void;
@@ -73,6 +74,12 @@ const setupSocket: SetupSocket = (server: HttpServer): void => {
         admin: true,
       },
     });
+    await prisma.group.update({
+      where: { id: groupId },
+      data: {
+        updatedAt: new Date(),
+      },
+    });
     const finalMessage = await prisma.message.findUnique({
       where: { id: message.id },
       include: {
@@ -80,10 +87,11 @@ const setupSocket: SetupSocket = (server: HttpServer): void => {
         attachments: true,
       },
     });
+
     if (group && group.members) {
       group.members.forEach((member) => {
-        if (member.id === group.admin.id) return;
-        const memberSocketId = userSocketMap.get(member.id.toString());
+        if (member.userId === group.admin.id) return;
+        const memberSocketId = userSocketMap.get(member.userId.toString());
         if (memberSocketId) {
           io.to(memberSocketId).emit("receive-group-message", finalMessage);
         }
@@ -107,6 +115,7 @@ const setupSocket: SetupSocket = (server: HttpServer): void => {
     socket.on("send-group-message", sendGroupMessage);
     socket.on("disconnect", () => disconnect(socket));
   });
+  console.log(userSocketMap)
 };
 
 export default setupSocket;

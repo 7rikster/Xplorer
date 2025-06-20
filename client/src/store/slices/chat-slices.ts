@@ -8,6 +8,7 @@ export interface ChatSlice {
   addGroup: (group: Group) => void;
   addMessage: (message: Message) => void;
   closeChat: () => void;
+  addGroupinGroupList: (message: Message) => void;
 }
 
 export const createChatSlice = (
@@ -39,4 +40,13 @@ export const createChatSlice = (
   closeChat: () => {
     set({ selectedChatData: undefined, selectedChatMessages: [] });
   },
+  addGroupinGroupList: (message: Message) => {
+    const currentGroups = get().groups;
+    const data = currentGroups.find((group: Group) => group.id === message.groupId);
+    const index = currentGroups.findIndex((group: Group) => group.id === message.groupId);
+    if(index !== -1 && index !== undefined) {
+      currentGroups.splice(index, 1);
+      currentGroups.unshift(data as Group);
+    }
+  } 
 });
