@@ -46,6 +46,7 @@ function Tours() {
           {
             params: {
               cursor: null,
+              limit: limit,
               place: cityParam || undefined,
               budget: budgetParam || undefined,
               groupType: groupParam || undefined,
@@ -83,6 +84,7 @@ function Tours() {
             .get(`${process.env.NEXT_PUBLIC_API_URL}/trip/get-all`, {
               params: {
                 cursor: nextCursor,
+                limit: limit,
                 place: place || undefined,
                 budget: selectedBudget || undefined,
                 groupType: selectedGroupType || undefined,

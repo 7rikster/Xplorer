@@ -45,7 +45,7 @@ function MessageContainer() {
       return (
         <div key={index}>
           {showDate && (
-            <div className="text-center text-gray-500 my-2">
+            <div className="text-center text-gray-500 my-2 mt-3">
               {moment(message.createdAt).format("LL")}
             </div>
           )}
@@ -77,15 +77,15 @@ function MessageContainer() {
                   alt="User Avatar"
                   width={40}
                   height={40}
-                  className="rounded-full w-8 h-8 md:w-10 md:h-10"
+                  className="rounded-full w-7 h-7 md:w-10 md:h-10"
                 />
               </div>
             )}
             <div
               className={`${
                 isCurrentUser ? "bg-primary text-white" : "bg-white text-black"
-              } px-3 py-1 rounded-lg max-w-[70%] inline-block ${
-                isSameSender ? "ml-11 sm:ml-10 md:ml-12" : ""
+              } px-1 sm:px-3 py-1 rounded-lg max-w-[70%] inline-block ${
+                isSameSender ? "ml-10 sm:ml-10 md:ml-12" : ""
               }`}
             >
               {!isSameSender && message.sender.id !== userInfo?.id && (
@@ -93,10 +93,10 @@ function MessageContainer() {
                   {message.sender.name}
                 </div>
               )}
-              <div className="pb-1 text-sm md:text-[1rem]">
+              <div className="pb-1 text-[13px] md:text-[1rem]">
                 {message.content}
               </div>
-              <div className="text-[10px] sm:text-xs text-right">
+              <div className="text-[9px] sm:text-xs text-right">
                 {moment(message.createdAt).format("LT")}
               </div>
             </div>
@@ -258,13 +258,13 @@ function MessageContainer() {
       <div ref={scrollRef} className="w-full h-0"></div>
       {showImage && (
         <div className="fixed z-[1000] top-0 left-0 w-screen h-screen  backdrop-blur-lg  flex flex-col items-center justify-center">
-          <div>
+          <div >
             <Image
               src={imageUrl}
               alt="Selected Image"
               width={500}
               height={500}
-              className="w-[80vw] h-[80vh] object-contain"
+              className="w-[95vw] md:w-[80vw] h-[80vh] object-contain"
             />
           </div>
           <div className="flex gap-5 fixed top-0 mt-5 ">

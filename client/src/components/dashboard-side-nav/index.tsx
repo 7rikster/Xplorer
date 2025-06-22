@@ -91,7 +91,7 @@ function SideNav() {
   if (authLoading || !user) return <Loading />;
 
   return (
-    <div>
+    <div className="fixed z-1000">
       <div className="p-2 absolute">
         <Button
         variant={"outline"}
@@ -130,7 +130,7 @@ function SideNav() {
         </div>
 
         <Link href="/generate" className="mt-4">
-          <Button className="w-full gap-2 h-8 md:h-9">
+          <Button className="w-full gap-2 h-8 md:h-9 cursor-pointer">
             <Plus className="w-5 h-5" />
             <span className="md:hidden group-hover:inline transition-inline duration-500">
               New Trip

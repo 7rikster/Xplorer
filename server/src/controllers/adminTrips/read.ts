@@ -63,7 +63,7 @@ const CursorBasedRead: Interfaces.Controllers.Async = async (
   next
 ) => {
   try {
-    const limit = parseInt(req.query.limit as string) || 4;
+    const limit = parseInt(req.query.limit as string) || 8;
     const cursor = req.query.cursor as string | undefined;
 
     const place = req.query.place as string | undefined;

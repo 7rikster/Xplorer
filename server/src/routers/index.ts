@@ -8,5 +8,6 @@ import Faq from "./faq";
 import Review from "./review";
 import User from "./User";
 import GroupChat from "./groupChat";
+import UserTrip from "./userTrips";
 
-export { Health, Destination, Media, Hoarding, Auth, AITrip, Faq, Review, User, GroupChat };
+export { Health, Destination, Media, Hoarding, Auth, AITrip, Faq, Review, User, GroupChat, UserTrip };

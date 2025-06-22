@@ -13,12 +13,13 @@ interface HandpickedTripCardProps {
   days: number;
   price?: string;
   buttonText?: string;
+  buttonClickNavigate?: string;
 }
 
 function HandpickedTripCard({ trip }: { trip: HandpickedTripCardProps }) {
 
   return (
-    <div className="w-full rounded-xl shadow-lg flex flex-col  hover:shadow-xl transition-all duration-300 overflow-hidden hover:scale-105">
+    <div className="w-full rounded-xl shadow-lg bg-white flex flex-col  hover:shadow-xl transition-all duration-300 overflow-hidden hover:scale-105">
       <div className="relative w-full h-32 sm:h-46 overflow-hidden rounded-t-xl">
         <Image
           src={trip.image}
@@ -57,7 +58,7 @@ function HandpickedTripCard({ trip }: { trip: HandpickedTripCardProps }) {
           )}
         </div>
         <div className="flex justify-between items-center mt-1 mb-2">
-            <Link href={`/explore/tours/${trip.id}`}>
+            <Link href={trip.buttonClickNavigate || `/explore/tours/${trip.id}`}>
           <Button
             className="cursor-pointer w-12 h-6 text-[10px] sm:w-16 sm:h-7 md:text-xs lg:w-auto lg:h-auto lg:text-sm"
             >
@@ -65,7 +66,10 @@ function HandpickedTripCard({ trip }: { trip: HandpickedTripCardProps }) {
           </Button>
               </Link>
           {trip.price && (
+            <div className="flex flex-col items-end">
+              <h4 className="text-[12px] text-gray-500 hidden sm:block">Estimated price</h4>
             <h3 className="font-bold text-md sm:text-xl">{trip.price}</h3>
+            </div>
           )}
         </div>
       </div>

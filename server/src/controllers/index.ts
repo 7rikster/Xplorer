@@ -9,4 +9,5 @@ import * as Faq from "./faq";
 import * as Review from "./reviews";
 import * as User from "./user";
 import * as GroupChat from "./groupChat";
-export { Health, Destination, Media, Hoarding, Auth, AdminTrips, AiGeneratedTrip, Faq, Review, User, GroupChat };
+import * as UserTrips from "./userTrips";
+export { Health, Destination, Media, Hoarding, Auth, AdminTrips, AiGeneratedTrip, Faq, Review, User, GroupChat, UserTrips };

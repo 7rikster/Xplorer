@@ -12,6 +12,7 @@ export const authenticateFirebase: Interfaces.Middlewares.Async = async (req,res
   const authHeader = req.headers.authorization;
 
   if (!authHeader?.startsWith("Bearer ")) {
+    console.log("No authorization header found");
     return res.status(401).json({ message: "Unauthorized" });
   }
 

@@ -105,14 +105,14 @@ function Header() {
     <div
       ref={navContainerRef}
       className={`fixed inset-x-2 top-2 sm:top-4 z-500 h-12 sm:h-18 border-none transition-all duration-700 sm:inset-x-6 ${
-        pathName.startsWith("/dashboard") || pathName.startsWith("/admin")
+        pathName.startsWith("/dashboard") || pathName.startsWith("/admin") || pathName.startsWith("/generate")
           ? "hidden "
           : ""
       }`}
     >
       <header
         className={`absolute top-1/2 w-full -translate-y-1/2 px-4 ${
-          pathName.startsWith("/dashboard") || pathName.startsWith("/admin")
+          pathName.startsWith("/dashboard") || pathName.startsWith("/admin") || pathName.startsWith("/generate")
             ? "hidden "
             : ""
         }`}
@@ -142,6 +142,7 @@ function Header() {
                       (item) => item.type === "text"
                     ).map((item, index) => (
                       <Link href={item.link} key={index}>
+                        <SheetClose>
                         <Button
                           variant="ghost"
                           className="w-full flex justify-start"
@@ -149,12 +150,14 @@ function Header() {
                           <span className="mr-2">{item.icon}</span>
                           {item.title}
                         </Button>
+                        </SheetClose>
                       </Link>
                     ))}
                   {authLoading ? (
                     <Skeleton className="h-8 w-8 rounded-full" />
                   ) : user ? (
                     <div>
+                      <SheetClose>
                       <Button
                         variant="ghost"
                         className="w-full flex justify-start"
@@ -165,11 +168,14 @@ function Header() {
                         </span>
                         Dashboard
                       </Button>
+                      </SheetClose>
 
                       <div className="flex flex-col justify-center items-center space-y-2 mt-2">
+                        <SheetClose>
                         <Button className="px-9 " onClick={() => signOut()}>
                           Sign Out
                         </Button>
+                        </SheetClose>
                       </div>
                     </div>
                   ) : (

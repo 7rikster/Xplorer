@@ -4,7 +4,6 @@ import { useState } from "react";
 import PlaceSearchBox from "../place-search-box";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { ComboBoxComponent } from "@syncfusion/ej2-react-dropdowns";
 import { budget, groupTypes, interests, travelStyle } from "@/constants";
 import Map from "../map";
 import { Button } from "../ui/button";
@@ -13,6 +12,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import axios from "axios";
 import Loading from "@/app/loading";
+import SingleSelector from "../single-select";
 
 interface TripData {
   imageUrls: string[];
@@ -165,7 +165,7 @@ function NewTripForm({ saveTrip, loading: dbLoading }: NewTripFormProps) {
       >
         <PlaceSearchBox setPlace={setPlace} />
         <div>
-          <Label htmlFor="duration">Duration</Label>
+          <Label htmlFor="duration" className="mb-1">Duration</Label>
           <Input
             id="duration"
             name="duration"
@@ -176,110 +176,69 @@ function NewTripForm({ saveTrip, loading: dbLoading }: NewTripFormProps) {
           />
         </div>
 
-        <div>
-          <Label htmlFor="groupType">Group Type</Label>
-          <ComboBoxComponent
-            id="groupType"
-            dataSource={groupTypes.map((item) => ({ text: item, value: item }))}
-            fields={{ text: "text", value: "value" }}
+        <div className="w-full relative">
+          <Label htmlFor="groupType" className="mb-1">
+            Group Type
+          </Label>
+          <SingleSelector
+            options={groupTypes.map((item) => ({ label: item, value: item }))}
             placeholder="Select group type"
-            className="combo-box w-[92%] md:w-[96%] font-bold"
-            change={(e: { value: string | undefined }) => {
-              if (e.value) {
-                handleChange("groupType", e.value);
+            onChange={(option) => {
+              if (option && option.value) {
+                handleChange("groupType", option.value);
               }
-            }}
-            allowFiltering={true}
-            filtering={(e) => {
-              const userInput = e.text.toLowerCase();
-              e.updateData(
-                groupTypes
-                  .filter((item) => item.toLowerCase().includes(userInput))
-                  .map((item) => ({ text: item, value: item }))
-              );
             }}
           />
         </div>
 
-        <div>
-          <Label htmlFor="travelStyle">Travel Style</Label>
-          <ComboBoxComponent
-            id="travelStyle"
-            dataSource={travelStyle[
+        <div className="w-full relative">
+          <Label htmlFor="travelStyle" className="mb-1">
+            Travel Style
+          </Label>
+
+          <SingleSelector
+            options={travelStyle[
               (formData?.groupType as keyof typeof travelStyle) || "Friends"
-            ].map((item) => ({ text: item, value: item }))}
-            fields={{ text: "text", value: "value" }}
-            placeholder="Select travel style"
-            className="combo-box w-[92%] md:w-[96%] font-bold"
-            change={(e: { value: string | undefined }) => {
-              if (e.value) {
-                handleChange("travelStyle", e.value);
+            ].map((item) => ({ label: item, value: item }))}
+            placeholder="Select Travel Style"
+            onChange={(option) => {
+              if (option && option.value) {
+                handleChange("travelStyle", option.value);
               }
-            }}
-            allowFiltering={true}
-            filtering={(e) => {
-              const userInput = e.text.toLowerCase();
-              e.updateData(
-                travelStyle[
-                  (formData?.groupType as keyof typeof travelStyle) || "Friends"
-                ]
-                  .filter((item) => item.toLowerCase().includes(userInput))
-                  .map((item) => ({ text: item, value: item }))
-              );
             }}
           />
         </div>
 
-        <div>
-          <Label htmlFor="interest">Interest</Label>
-          <ComboBoxComponent
-            id="interest"
-            dataSource={interests[
+        <div className="w-full relative">
+          <Label htmlFor="interest" className="mb-1">
+            Interest
+          </Label>
+
+          <SingleSelector
+            options={interests[
               (formData?.groupType as keyof typeof interests) || "Friends"
-            ].map((item) => ({ text: item, value: item }))}
-            fields={{ text: "text", value: "value" }}
-            placeholder="Select interest"
-            className="combo-box w-[92%] md:w-[96%] font-bold"
-            change={(e: { value: string | undefined }) => {
-              if (e.value) {
-                handleChange("interest", e.value);
+            ].map((item) => ({ label: item, value: item }))}
+            placeholder="Select Interest "
+            onChange={(option) => {
+              if (option && option.value) {
+                handleChange("interest", option.value);
               }
-            }}
-            allowFiltering={true}
-            filtering={(e) => {
-              const userInput = e.text.toLowerCase();
-              e.updateData(
-                interests[
-                  (formData?.groupType as keyof typeof interests) || "Friends"
-                ]
-                  .filter((item) => item.toLowerCase().includes(userInput))
-                  .map((item) => ({ text: item, value: item }))
-              );
             }}
           />
         </div>
 
-        <div>
-          <Label htmlFor="budget">Budget</Label>
-          <ComboBoxComponent
-            id="budget"
-            dataSource={budget.map((item) => ({ text: item, value: item }))}
-            fields={{ text: "text", value: "value" }}
-            placeholder="Select budget"
-            className="combo-box w-[92%] md:w-[96%] font-bold"
-            change={(e: { value: string | undefined }) => {
-              if (e.value) {
-                handleChange("budget", e.value);
+        <div className="w-full relative">
+          <Label htmlFor="budget" className="mb-1">
+            Budget
+          </Label>
+
+          <SingleSelector
+            options={budget.map((item) => ({ label: item, value: item }))}
+            placeholder="Select Budget "
+            onChange={(option) => {
+              if (option && option.value) {
+                handleChange("budget", option.value);
               }
-            }}
-            allowFiltering={true}
-            filtering={(e) => {
-              const userInput = e.text.toLowerCase();
-              e.updateData(
-                budget
-                  .filter((item) => item.toLowerCase().includes(userInput))
-                  .map((item) => ({ text: item, value: item }))
-              );
             }}
           />
         </div>
