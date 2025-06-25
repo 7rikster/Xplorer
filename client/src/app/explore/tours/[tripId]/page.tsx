@@ -365,8 +365,8 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
 
   function getEndDate(startDate: string, totalDays: number): string {
     const start = new Date(startDate);
-    start.setDate(start.getDate() + totalDays - 1); 
-    return start.toISOString(); 
+    start.setDate(start.getDate() + totalDays - 1);
+    return start.toISOString();
   }
 
   async function handleBooking() {
@@ -383,7 +383,7 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
     }
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/booking/create`,
+        `${process.env.NEXT_PUBLIC_API_URL}/tripBooking/create`,
         {
           bookingId: tripId,
           bookingType: "trip",
@@ -394,7 +394,7 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
             adults,
             children: kids,
           },
-          totalAmount: adults*parsePriceString(estimatedPrice || "1000"),
+          totalAmount: adults * parsePriceString(estimatedPrice || "1000"),
         },
         {
           headers: {

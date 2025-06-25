@@ -9,6 +9,8 @@ import Review from "./review";
 import User from "./User";
 import GroupChat from "./groupChat";
 import UserTrip from "./userTrips";
-import Booking from "./booking";
+import TripBooking from "./tripBooking";
+import CreditsPuchase from "./creditsPurchase"
+import PaymentIntent from "./paymentIntent";
 
-export { Health, Destination, Media, Hoarding, Auth, AITrip, Faq, Review, User, GroupChat, UserTrip, Booking };
+export { Health, Destination, Media, Hoarding, Auth, AITrip, Faq, Review, User, GroupChat, UserTrip, TripBooking, CreditsPuchase, PaymentIntent };

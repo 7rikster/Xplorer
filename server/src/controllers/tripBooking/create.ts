@@ -27,6 +27,11 @@ const Create: Interfaces.Controllers.Async = async (req, res, next) => {
         automatic_payment_methods: {
           enabled: true,
         },
+        metadata:{
+          type: "trip",
+          tripId: bookingDetails.id.toString(),
+          userId: userId.toString(),
+        }
       });
       await prisma.tripBooking.create({
         data: {

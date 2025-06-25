@@ -32,7 +32,9 @@ app.use(`${Constants.System.ROOT}/review`, Routers.Review);
 app.use(`${Constants.System.ROOT}/user`, Routers.User);
 app.use(`${Constants.System.ROOT}/groupChat`, Routers.GroupChat);
 app.use(`${Constants.System.ROOT}/userTrip`, Routers.UserTrip);
-app.use(`${Constants.System.ROOT}/booking`, Routers.Booking);
+app.use(`${Constants.System.ROOT}/tripBooking`, Routers.TripBooking);
+app.use(`${Constants.System.ROOT}/creditsPurchase`, Routers.CreditsPuchase);
+app.use(`${Constants.System.ROOT}/paymentIntent`, Routers.PaymentIntent);
 
 
 // Error Handlers

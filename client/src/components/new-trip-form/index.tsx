@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PlaceSearchBox from "../place-search-box";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
@@ -13,6 +13,9 @@ import { auth } from "@/lib/firebase/firebaseConfig";
 import axios from "axios";
 import Loading from "@/app/loading";
 import SingleSelector from "../single-select";
+import { useUser } from "@/context/authContext";
+import { Dialog, DialogHeader, DialogTitle, DialogContent } from "../ui/dialog";
+import { useRouter } from "next/navigation";
 
 interface TripData {
   imageUrls: string[];
@@ -54,10 +57,18 @@ function NewTripForm({ saveTrip, loading: dbLoading }: NewTripFormProps) {
     budget: "",
   });
   const [loading, setLoading] = useState(false);
+  const [credits, setCredits] = useState(0);
+  const { user: userInfo } = useUser();
+  const [buyCreditsDialogOpen, setBuyCreditsDialogOpen] = useState(false);
+  const router = useRouter();
 
   async function handleGenerateTrip(e: React.FormEvent) {
     e.preventDefault();
     if (!user) return;
+    if(userInfo && userInfo.role !== "ADMIN" && credits <= 0){
+      setBuyCreditsDialogOpen(true);
+      return;
+    } 
     setLoading(true);
     if (
       !place ||
@@ -150,6 +161,35 @@ function NewTripForm({ saveTrip, loading: dbLoading }: NewTripFormProps) {
     });
   }
 
+  async function fetchCredits() {
+    const token = await user?.getIdToken();
+    if (!token) {
+      console.error("User is not authenticated");
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/credits`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.data.data) {
+        setCredits(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching credits:", error);
+    }
+  }
+
+  useEffect(() => {
+    if (userInfo && userInfo.role !== "ADMIN") {
+      fetchCredits();
+    }
+  }, []);
+
   if (loading)
     return (
       <Loading
@@ -165,7 +205,9 @@ function NewTripForm({ saveTrip, loading: dbLoading }: NewTripFormProps) {
       >
         <PlaceSearchBox setPlace={setPlace} />
         <div>
-          <Label htmlFor="duration" className="mb-1">Duration</Label>
+          <Label htmlFor="duration" className="mb-1">
+            Duration
+          </Label>
           <Input
             id="duration"
             name="duration"
@@ -274,6 +316,29 @@ function NewTripForm({ saveTrip, loading: dbLoading }: NewTripFormProps) {
           )}
         </Button>
       </form>
+      <Dialog open={buyCreditsDialogOpen} onOpenChange={setBuyCreditsDialogOpen}>
+        <DialogContent className="z-1000 w-96">
+          <DialogHeader>
+            <DialogTitle className="text-center">Ooops!! You ran out of Credits</DialogTitle>
+          </DialogHeader>
+          <div className="md:p-6 text-center space-y-4">
+            <p className="text-gray-600 mb-4">
+              You need to buy credits to generate itineraries. Please purchase
+              credits to continue.
+            </p>
+            <Button
+            
+              onClick={() => {
+                setBuyCreditsDialogOpen(false);
+                router.push("/dashboard/credits-buy");
+              }}
+              className="w-full cursor-pointer"
+            >
+              Buy Credits
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

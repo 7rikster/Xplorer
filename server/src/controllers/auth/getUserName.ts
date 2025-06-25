@@ -33,7 +33,6 @@ const GetUserName: Interfaces.Controllers.Async = async (req, res, next) => {
 };
 
 const GetUser: Interfaces.Controllers.Async = async (req, res, next) => {
-
   const auth: string | undefined = req?.headers?.authorization;
   if (!auth) {
     return next(Errors.User.badRequest("Auth token is missing"));
@@ -63,6 +62,6 @@ const GetUser: Interfaces.Controllers.Async = async (req, res, next) => {
   } catch (error) {
     return console.error(error);
   }
-}
+};
 
-export  {GetUserName, GetUser};
+export { GetUserName, GetUser };

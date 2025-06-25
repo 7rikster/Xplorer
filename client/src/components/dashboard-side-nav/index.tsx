@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import {
   BarChart,
   CalendarDays,
+  CircleDollarSign,
   LogOut,
   Luggage,
   MapPin,
@@ -94,11 +95,11 @@ function SideNav() {
     <div className="fixed z-1000">
       <div className="p-2 absolute">
         <Button
-        variant={"outline"}
+          variant={"outline"}
           className="absolute md:hidden h-7 w-7"
           onClick={() => setToggleNav(!toggleNav)}
         >
-          <Menu className="w-4 h-4"/>
+          <Menu className="w-4 h-4" />
         </Button>
       </div>
       <div
@@ -184,13 +185,23 @@ function SideNav() {
 
         {/* Logout */}
         <div className="mt-auto">
+          <Link href={"/dashboard/credits-buy"}>
+            <Button
+              variant={pathName === "/dashboard/credits-buy" ? "default" : "ghost"}
+              className={`w-full justify-start gap-2 ${pathName === "/dashboard/credits-buy" ? "text-white" : "text-gray-500"} cursor-pointer`}
+              onClick={() => setToggleNav(false)}
+            >
+              <CircleDollarSign className="w-5 h-5" />
+              <span className="md:hidden group-hover:inline">Buy Credits</span>
+            </Button>
+          </Link>
           <Button
             onClick={() => {
               signOut();
               setToggleNav(false);
             }}
             variant={"ghost"}
-            className="w-full justify-start gap-2 text-red-500 hover:text-red-600 cursor-pointer"
+            className="w-full justify-start gap-2 text-red-500 hover:text-red-600 cursor-pointer mt-1"
           >
             <LogOut className="w-5 h-5" />
             <span className="md:hidden group-hover:inline">Log out</span>

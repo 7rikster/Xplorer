@@ -52,7 +52,7 @@ function ClientDashboard() {
     }
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/booking/user/get-trips`,
+        `${process.env.NEXT_PUBLIC_API_URL}/tripBooking/user/get-trips`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

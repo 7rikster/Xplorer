@@ -48,7 +48,7 @@ function PlaceSearchBox({ setPlace }: PlaceSearchBoxProps) {
       const options = {
         method: "POST",
         headers: {
-          "x-rapidapi-key": process.env.NEXT_PUBLIC_RAPID_API_KEY_4,
+          "x-rapidapi-key": process.env.NEXT_PUBLIC_RAPID_API_KEY_3,
           "x-rapidapi-host": "google-map-places-new-v2.p.rapidapi.com",
           "Content-Type": "application/json",
           "X-Goog-FieldMask": "*",
@@ -105,7 +105,7 @@ function PlaceSearchBox({ setPlace }: PlaceSearchBoxProps) {
       method: "GET",
       url: `https://google-map-places-new-v2.p.rapidapi.com/v1/places/${placeId}`,
       headers: {
-        "x-rapidapi-key": process.env.NEXT_PUBLIC_RAPID_API_KEY_4,
+        "x-rapidapi-key": process.env.NEXT_PUBLIC_RAPID_API_KEY_3,
         "x-rapidapi-host": "google-map-places-new-v2.p.rapidapi.com",
         "X-Goog-FieldMask": "*",
       },

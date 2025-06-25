@@ -124,3 +124,33 @@ export const budget = [
     "Luxury",
     "Premium",
 ]
+
+export const creditPlans = [
+  {
+    name: "Basic",
+    price: 10,
+    credits: 3,
+    description: "Get 3 credits for $10",
+    itineraryEdit: false,
+    customerSupport: false,
+    updates: false,
+  },
+  {
+    name: "Pro",
+    price: 50,
+    credits: 20,
+    description: "Get 20 credits for $50",
+    itineraryEdit: true,
+    customerSupport: false,
+    updates: false,
+  },
+  {
+    name: "Premium",
+    price: 100,
+    credits: 50,
+    description: "Get 50 credits for $100",
+    itineraryEdit: true,
+    customerSupport: true,
+    updates: true,
+  },
+]

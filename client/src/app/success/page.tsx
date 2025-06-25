@@ -4,7 +4,7 @@ import { auth } from "@/lib/firebase/firebaseConfig";
 import axios from "axios";
 import { Check } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 function SuccessPage() {
@@ -12,9 +12,12 @@ function SuccessPage() {
   const searchParams = useSearchParams();
   const paymentIntent = searchParams.get("payment_intent");
   const [user] = useAuthState(auth);
+  const hasRun = useRef(false)
 
   useEffect(() => {
-    async function updatePaymentStatus() {
+    if (hasRun.current || !paymentIntent) return;
+    hasRun.current = true; 
+    async function updateTripPaymentStatus() {
       const token = await user?.getIdToken();
       if (!token) {
         console.error("User is not authenticated");
@@ -22,7 +25,7 @@ function SuccessPage() {
       }
       try {
         await axios.patch(
-          `${process.env.NEXT_PUBLIC_API_URL}/booking/update`,
+          `${process.env.NEXT_PUBLIC_API_URL}/tripBooking/update`,
           { paymentIntent },
           {
             headers: {
@@ -31,17 +34,70 @@ function SuccessPage() {
           }
         );
 
-        setTimeout(()=>{
-            router.push("/dashboard");
+        setTimeout(() => {
+          router.push("/dashboard");
         }, 3000);
-     
-
       } catch (error) {
         console.error("Error updating payment status:", error);
       }
     }
+
+    async function fetchMetaData() {
+      const token = await user?.getIdToken();
+      if (!token) {
+        console.error("User is not authenticated");
+        return;
+      }
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/paymentIntent/get/${paymentIntent}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const metaData = res.data.metadata;
+      if (metaData.type === "trip") {
+        await updateTripPaymentStatus();
+      } else if (metaData.type === "credits") {
+        await axios.patch(
+          `${process.env.NEXT_PUBLIC_API_URL}/creditsPurchase/update`,
+          { paymentIntent },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const credits = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/user/credits`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("Credits data:", credits.data.data);
+        console.log("Meta data credits:", metaData.credits);
+        const updatedCredits =
+          Number(credits.data.data) + Number(metaData.credits);
+        console.log("Updated Credits:", updatedCredits);
+        await axios.patch(
+          `${process.env.NEXT_PUBLIC_API_URL}/user/credits`,
+          { credits: updatedCredits },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 3000);
+      }
+    }
     if (paymentIntent) {
-      updatePaymentStatus();
+      fetchMetaData();
     }
   }, [paymentIntent, router]);
 

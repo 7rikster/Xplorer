@@ -1,0 +1,28 @@
+import * as Interfaces from "../../interfaces";
+import * as Errors from "../../globals/errors";
+import { prisma } from "../../utils";
+
+const UpdateUserCredits: Interfaces.Controllers.Async = async (req, res, next) => {
+  const firebaseId = req.firebaseId;
+  const { credits } = req.body;
+
+  try {
+    const user = await prisma.user.update({
+      where: { firebaseId: firebaseId },
+      data:{
+        credits: credits
+      }
+    });
+    if(!user){
+        return next(Errors.User.userNotFound);
+    }
+    res.status(200).json({
+      message: "User credits retrieved successfully"
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Failed to fetch user credits!" });
+  }
+};
+
+export { UpdateUserCredits };
