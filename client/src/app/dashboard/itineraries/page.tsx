@@ -170,6 +170,8 @@ function ClientItineraries() {
               price: trip.estimatedPrice,
               buttonText: limit === 4?"View":"View Itinerary",
               buttonClickNavigate: `/dashboard/itineraries/${trip.id}`,
+              showPrice: true,
+              showBooking: false,
             }}
           />
         ))}

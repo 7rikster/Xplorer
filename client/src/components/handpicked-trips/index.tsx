@@ -99,6 +99,8 @@ function HandpickedTrips() {
                 days: trip.duration,
                 price: trip.estimatedPrice,
                 buttonText: "Explore",
+                showPrice: true,
+                showBooking: false,
               }}
             />
           ))}

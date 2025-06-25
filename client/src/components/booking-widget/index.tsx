@@ -6,17 +6,39 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./bookingWidget.css";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
+import { useUser } from "@/context/authContext";
+import { usePathname, useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-export default function BookingWidget({ price }: { price: number }) {
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [adults, setAdults] = useState(2);
-  const [kids, setKids] = useState(0);
-  console.log("BookingWidget price:", price);
-  const handleBooking = () => {
-    alert(
-      `Bookings will begin soon! Stay tuned!`
-    );
-  };
+interface BookingWidgetProps {
+  price: number;
+  startDate: Date | null;
+  setStartDate: (date: Date | null) => void;
+  adults: number;
+  setAdults: (count: number) => void;
+  kids: number;
+  setKids: (count: number) => void;
+  handleBooking: () => void;
+}
+
+export default function BookingWidget({
+  bookingWidgetProps,
+}: {
+  bookingWidgetProps: BookingWidgetProps;
+}) {
+  const {
+    price,
+    startDate,
+    setStartDate,
+    adults,
+    setAdults,
+    kids,
+    setKids,
+    handleBooking,
+  } = bookingWidgetProps;
+  const { user } = useUser();
+  const router = useRouter();
+  const pathname = usePathname();
 
   return (
     <div className="bg-white rounded-2xl shadow-lg w-full lg:max-w-sm mx-auto p-4">
@@ -68,12 +90,24 @@ export default function BookingWidget({ price }: { price: number }) {
         </div>
       </div>
       <div className="grid grid-cols-2 justify-between items-center mt-5">
-        <h1 className="text-3xl font-bold text-center">${price*adults}</h1>
+        <h1 className="text-3xl font-bold text-center">${price * adults}</h1>
         <Button
-          onClick={handleBooking}
+          onClick={() => {
+            if (!user) {
+              router.push(
+                `/auth/login?redirect=${encodeURIComponent(pathname)}`
+              );
+              return;
+            }
+            if(user.role === "ADMIN"){
+              toast.error("Admins cannot book trips.");
+              return;
+            }
+            handleBooking();
+          }}
           className=" hover:bg-red-600 font-semibold transition duration-300 cursor-pointer"
         >
-          Book Now
+          {user ? "Book Now" : "Login to Book"}
         </Button>
       </div>
     </div>

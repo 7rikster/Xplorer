@@ -41,6 +41,7 @@ import { use, useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { toast } from "sonner";
 import BookingWidget from "@/components/booking-widget";
+import { useRouter } from "next/navigation";
 
 type Params = {
   tripId: string;
@@ -76,6 +77,10 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
   const [addReviewLoading, setAddReviewLoading] = useState(false);
   const [deleteReviewLoading, setDeleteReviewLoading] = useState(false);
   const [editReviewLoading, setEditReviewLoading] = useState(false);
+  const [startDate, setStartDate] = useState<Date | null>(new Date());
+  const [adults, setAdults] = useState(2);
+  const [kids, setKids] = useState(0);
+  const router = useRouter();
 
   const [isDeleteReviewDialogOpen, setIsDeleteReviewDialogOpen] =
     useState(false);
@@ -357,6 +362,56 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
       setLoading(false);
     }
   };
+
+  function getEndDate(startDate: string, totalDays: number): string {
+    const start = new Date(startDate);
+    start.setDate(start.getDate() + totalDays - 1); 
+    return start.toISOString(); 
+  }
+
+  async function handleBooking() {
+    const isoEndDate = getEndDate(startDate?.toISOString() || "", duration!);
+    const isoDate = startDate?.toISOString();
+    if (!isoDate) {
+      toast.error("Please select a start date for the trip.");
+      return;
+    }
+    const token = await user?.getIdToken();
+    if (!token) {
+      toast.error("You must be logged in to book a trip.");
+      return;
+    }
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/booking/create`,
+        {
+          bookingId: tripId,
+          bookingType: "trip",
+          userId: currentUser?.id,
+          details: {
+            startDate: isoDate,
+            endDate: isoEndDate,
+            adults,
+            children: kids,
+          },
+          totalAmount: adults*parsePriceString(estimatedPrice || "1000"),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.data.client_secret) {
+        router.push(`/checkout?client_secret=${response.data.client_secret}`);
+      } else {
+        toast.error("Failed to book trip.");
+      }
+    } catch (error) {
+      console.error("Error booking trip:", error);
+      toast.error("Failed to book trip.");
+    }
+  }
 
   useEffect(() => {
     if (authLoading) return;
@@ -1050,7 +1105,16 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
 
         <div className="sticky top-4 h-full bg-gray-200 flex flex-col sm:flex-row sm:justify-between sm:w-full gap-4 sm:gap-8 lg:max-w-sm lg:flex-col lg:gap-0">
           <BookingWidget
-            price={parsePriceString(trip?.estimatedPrice || "$1000") || 1000}
+            bookingWidgetProps={{
+              price: parsePriceString(trip?.estimatedPrice || "$1000") || 1000,
+              startDate,
+              setStartDate,
+              adults,
+              setAdults,
+              kids,
+              setKids,
+              handleBooking,
+            }}
           />
           <div className="p-4 bg-white rounded-lg shadow-lg lg:mt-4 w-full h-52">
             <div className="flex  items-center justify-center gap-2">

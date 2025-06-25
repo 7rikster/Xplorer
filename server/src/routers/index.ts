@@ -9,5 +9,6 @@ import Review from "./review";
 import User from "./User";
 import GroupChat from "./groupChat";
 import UserTrip from "./userTrips";
+import Booking from "./booking";
 
-export { Health, Destination, Media, Hoarding, Auth, AITrip, Faq, Review, User, GroupChat, UserTrip };
+export { Health, Destination, Media, Hoarding, Auth, AITrip, Faq, Review, User, GroupChat, UserTrip, Booking };

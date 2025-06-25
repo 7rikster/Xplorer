@@ -15,7 +15,7 @@ type Params = {
   tripId: string;
 };
 
-function ItineraryPage({ params }: { params: Promise<Params> }) {
+function BookedTripsPage({ params }: { params: Promise<Params> }) {
   const [user] = useAuthState(auth);
   const { tripId } = use(params);
   const [trip, setTrip] = useState<Trip>();
@@ -26,7 +26,7 @@ function ItineraryPage({ params }: { params: Promise<Params> }) {
     const token = await user.getIdToken();
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/userTrip/get/${tripId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/trip/get/${tripId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -55,8 +55,7 @@ function ItineraryPage({ params }: { params: Promise<Params> }) {
       setLoading(false);
     }
   };
-
-  
+  console.log(trip)
 
   useEffect(() => {
     setLoading(true);
@@ -70,21 +69,22 @@ function ItineraryPage({ params }: { params: Promise<Params> }) {
   console.log("Trip data: ", trip);
 
   return (
-    <div className="min-h-screen flex flex-col items-center w-full pt-10 p-2 md:p-6 bg-gray-200 md:pl-20">
+    <div className="    min-h-screen flex flex-col items-center w-full pt-10 p-2 md:p-6 bg-gray-200 md:pl-20">
       <div className="hidden md:flex justify-between items-center w-full mb-2 md:mb-6">
-        <Link href="/dashboard/itineraries">
+        <Link href="/dashboard/trips">
           <Button className="cursor-pointer md:ml-0">
-            <ArrowLeft /> Back to Itineraries
+            <ArrowLeft /> Back to Booked Trips
           </Button>
         </Link>
       </div>
       {
         trip ? <TripDetails trip={trip} viewFaqs={false} viewReviews={false} />: <div className="flex items-center justify-center h-[80vh] w-full">
-            <h1 className="text-2xl font-semibold">The Itinerary does not exist..  </h1>
+            <h1 className="text-2xl font-semibold">The trip does not exist..  </h1>
         </div>
       }
+      
     </div>
   );
 }
 
-export default ItineraryPage;
+export default BookedTripsPage;
