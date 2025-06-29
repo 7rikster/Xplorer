@@ -35,6 +35,7 @@ app.use(`${Constants.System.ROOT}/userTrip`, Routers.UserTrip);
 app.use(`${Constants.System.ROOT}/tripBooking`, Routers.TripBooking);
 app.use(`${Constants.System.ROOT}/creditsPurchase`, Routers.CreditsPuchase);
 app.use(`${Constants.System.ROOT}/paymentIntent`, Routers.PaymentIntent);
+app.use(`${Constants.System.ROOT}/expense`, Routers.Expense);
 
 
 // Error Handlers

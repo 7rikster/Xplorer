@@ -1,4 +1,5 @@
 import Create from "./create";
 import Update from "./update";
+import ReadUserCreditPurchases from "./read";
 
-export {Create, Update}
+export {Create, Update, ReadUserCreditPurchases}

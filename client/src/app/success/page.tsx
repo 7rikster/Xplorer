@@ -6,18 +6,22 @@ import { Check } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { toast } from "sonner";
 
 function SuccessPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const paymentIntent = searchParams.get("payment_intent");
   const [user] = useAuthState(auth);
-  const hasRun = useRef(false)
+  const hasRun = useRef(false);
 
   useEffect(() => {
     if (hasRun.current || !paymentIntent) return;
-    hasRun.current = true; 
-    async function updateTripPaymentStatus() {
+    hasRun.current = true;
+    async function updateTripPaymentStatus(
+      location?: string,
+      totalAmount?: number
+    ) {
       const token = await user?.getIdToken();
       if (!token) {
         console.error("User is not authenticated");
@@ -33,6 +37,20 @@ function SuccessPage() {
             },
           }
         );
+        if (location !== "" && totalAmount !== 0) {
+          await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/expense/create`,
+            {
+              title: `${location} Package`,
+              amount: parseFloat(totalAmount?.toString() || "0"),
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+        }
 
         setTimeout(() => {
           router.push("/dashboard");
@@ -58,42 +76,57 @@ function SuccessPage() {
       );
       const metaData = res.data.metadata;
       if (metaData.type === "trip") {
-        await updateTripPaymentStatus();
+        await updateTripPaymentStatus(metaData.location, metaData.totalAmount);
       } else if (metaData.type === "credits") {
-        await axios.patch(
-          `${process.env.NEXT_PUBLIC_API_URL}/creditsPurchase/update`,
-          { paymentIntent },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        try {
+          const response = await axios.patch(
+            `${process.env.NEXT_PUBLIC_API_URL}/creditsPurchase/update`,
+            { paymentIntent },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          const credits = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}/user/credits`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          console.log("Credits data:", credits.data.data);
+          console.log("Meta data credits:", metaData.credits);
+          const updatedCredits =
+            Number(credits.data.data) + Number(metaData.credits);
+          console.log("Updated Credits:", updatedCredits);
+          await axios.patch(
+            `${process.env.NEXT_PUBLIC_API_URL}/user/credits`,
+            { credits: updatedCredits },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setTimeout(() => {
+            router.push("/dashboard");
+          }, 3000);
+        } catch (error) {
+          console.error("Error updating credits purchase:", error);
+          if (
+            axios.isAxiosError(error) &&
+            error.response &&
+            error.response.status === 400
+          ) {
+            toast.error("Credit purchase already completed");
           }
-        );
-        const credits = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/user/credits`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log("Credits data:", credits.data.data);
-        console.log("Meta data credits:", metaData.credits);
-        const updatedCredits =
-          Number(credits.data.data) + Number(metaData.credits);
-        console.log("Updated Credits:", updatedCredits);
-        await axios.patch(
-          `${process.env.NEXT_PUBLIC_API_URL}/user/credits`,
-          { credits: updatedCredits },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setTimeout(() => {
-          router.push("/dashboard");
-        }, 3000);
+          setTimeout(() => {
+            router.push("/dashboard");
+          }, 1000);
+        }
       }
     }
     if (paymentIntent) {

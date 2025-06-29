@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.post("/create", authenticateFirebase, Controllers.CreditsPurchase.Create);
 router.patch("/update", authenticateFirebase, Controllers.CreditsPurchase.Update);
+router.get("/get-user-purchases", authenticateFirebase, Controllers.CreditsPurchase.ReadUserCreditPurchases);
 
 
 

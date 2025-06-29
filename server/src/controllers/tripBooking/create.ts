@@ -31,6 +31,8 @@ const Create: Interfaces.Controllers.Async = async (req, res, next) => {
           type: "trip",
           tripId: bookingDetails.id.toString(),
           userId: userId.toString(),
+          location: details.location || "",
+          totalAmount: Number(totalAmount),
         }
       });
       await prisma.tripBooking.create({

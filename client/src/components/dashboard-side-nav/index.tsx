@@ -93,7 +93,7 @@ function SideNav() {
 
   return (
     <div className="fixed z-1000">
-      <div className="p-2 absolute">
+      <div className="p-1 absolute">
         <Button
           variant={"outline"}
           className="absolute md:hidden h-7 w-7"
@@ -140,7 +140,7 @@ function SideNav() {
         </Link>
 
         {/* General Section */}
-        <div className="mt-8">
+        <div className="mt-6 md:mt-8">
           <h2 className="text-gray-500 font-bold mb-2 text-xs md:text-sm md:opacity-0 group-hover:opacity-100 transition-opacity duration-100">
             GENERAL
           </h2>
@@ -163,7 +163,7 @@ function SideNav() {
         </div>
 
         {/* Discover Section */}
-        <div className="mt-8">
+        <div className="md:mt-8 mt-4">
           <h2 className="text-gray-500 font-bold mb-2 text-xs md:text-sm md:opacity-0 group-hover:opacity-100 transition-opacity duration-100">
             DISCOVER
           </h2>
@@ -187,8 +187,14 @@ function SideNav() {
         <div className="mt-auto">
           <Link href={"/dashboard/credits-buy"}>
             <Button
-              variant={pathName === "/dashboard/credits-buy" ? "default" : "ghost"}
-              className={`w-full justify-start gap-2 ${pathName === "/dashboard/credits-buy" ? "text-white" : "text-gray-500"} cursor-pointer`}
+              variant={
+                pathName === "/dashboard/credits-buy" ? "default" : "ghost"
+              }
+              className={`w-full justify-start gap-2 ${
+                pathName === "/dashboard/credits-buy"
+                  ? "text-white"
+                  : "text-gray-500"
+              } cursor-pointer text-xs md:text-sm h-8 md:h-9`}
               onClick={() => setToggleNav(false)}
             >
               <CircleDollarSign className="w-5 h-5" />
@@ -201,7 +207,7 @@ function SideNav() {
               setToggleNav(false);
             }}
             variant={"ghost"}
-            className="w-full justify-start gap-2 text-red-500 hover:text-red-600 cursor-pointer mt-1"
+            className="w-full justify-start gap-2 text-red-500 hover:text-red-600 cursor-pointer mt-1 text-xs md:text-sm h-8 md:h-9"
           >
             <LogOut className="w-5 h-5" />
             <span className="md:hidden group-hover:inline">Log out</span>

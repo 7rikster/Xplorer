@@ -2,22 +2,26 @@ import * as Interfaces from "../../interfaces";
 import * as Errors from "../../globals/errors";
 import { prisma } from "../../utils";
 
-const UpdateUserCredits: Interfaces.Controllers.Async = async (req, res, next) => {
+const UpdateUserCredits: Interfaces.Controllers.Async = async (
+  req,
+  res,
+  next
+) => {
   const firebaseId = req.firebaseId;
   const { credits } = req.body;
 
   try {
     const user = await prisma.user.update({
       where: { firebaseId: firebaseId },
-      data:{
-        credits: credits
-      }
+      data: {
+        credits: credits,
+      },
     });
-    if(!user){
-        return next(Errors.User.userNotFound);
+    if (!user) {
+      return next(Errors.User.userNotFound);
     }
     res.status(200).json({
-      message: "User credits retrieved successfully"
+      message: "User credits retrieved successfully",
     });
   } catch (error) {
     console.error(error);
@@ -25,4 +29,29 @@ const UpdateUserCredits: Interfaces.Controllers.Async = async (req, res, next) =
   }
 };
 
-export { UpdateUserCredits };
+const UpdateUserInfo: Interfaces.Controllers.Async = async (req, res, next) => {
+  const firebaseId = req.firebaseId;
+  const { name, username, photoUrl } = req.body;
+
+  try {
+    const user = await prisma.user.update({
+      where: { firebaseId: firebaseId },
+      data: {
+        name: name,
+        userName: username,
+        photoUrl: photoUrl,
+      },
+    });
+    if (!user) {
+      return next(Errors.User.userNotFound);
+    }
+    res.status(200).json({
+      message: "User info updated successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Failed to fetch user info!" });
+  }
+};
+
+export { UpdateUserCredits, UpdateUserInfo };

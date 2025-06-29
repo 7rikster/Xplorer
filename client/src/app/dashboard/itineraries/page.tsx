@@ -18,9 +18,6 @@ import { auth } from "@/lib/firebase/firebaseConfig";
 import Link from "next/link";
 
 function ClientItineraries() {
-  const [selectedGroupType, setSelectedGroupType] = useState("");
-  const [selectedBudget, setSelectedBudget] = useState("");
-  const [place, setPlace] = useState("");
   const [loading, setLoading] = useState(false);
   const [trips, setTrips] = useState<Trip[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);

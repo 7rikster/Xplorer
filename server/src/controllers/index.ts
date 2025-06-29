@@ -13,4 +13,5 @@ import * as UserTrips from "./userTrips";
 import * as TripBooking from "./tripBooking";
 import * as CreditsPurchase from "./creditsPurchase"
 import * as PaymentIntent from "./paymentIntent";
-export { Health, Destination, Media, Hoarding, Auth, AdminTrips, AiGeneratedTrip, Faq, Review, User, GroupChat, UserTrips, TripBooking, CreditsPurchase, PaymentIntent };
+import * as Expense from "./expense";
+export { Health, Destination, Media, Hoarding, Auth, AdminTrips, AiGeneratedTrip, Faq, Review, User, GroupChat, UserTrips, TripBooking, CreditsPurchase, PaymentIntent, Expense };

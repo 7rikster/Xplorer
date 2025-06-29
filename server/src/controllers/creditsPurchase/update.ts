@@ -9,6 +9,14 @@ const Update: Interfaces.Controllers.Async = async (req, res, next) => {
         return next(Errors.Destination.badRequest("Missing required fields"));
     }
   try {
+    const history = await prisma.creditsPurchase.findFirst({
+      where: { paymentIntent: paymentIntent },
+    });
+    if(history?.isCompleted) {
+      return res.status(400).json({
+        message: "Credit purchase already completed",
+      });
+    }
     await prisma.creditsPurchase.update({
       where: { paymentIntent: paymentIntent },
         data: {

@@ -77,7 +77,7 @@ declare interface Trip {
   estimatedPrice: string;
   weatherInfo: string[];
   imageUrls: string[];
-  createAt?: Date;
+  createdAt?: Date;
   faqs: Faq[];
   reviews: Review[];
 }

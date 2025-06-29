@@ -19,11 +19,17 @@ interface User {
   name: string;
   photoUrl: string;
   role: string;
+  credits: number;
 }
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  getUser: (
+    email: string | null,
+    token: string | null,
+    retries?: number
+  ) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -82,7 +88,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading: firebaseAuthLoading || userLoading }}
+      value={{ user, loading: firebaseAuthLoading || userLoading, getUser }}
     >
       {children}
     </AuthContext.Provider>

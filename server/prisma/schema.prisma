@@ -32,6 +32,7 @@ generator client {
     messages  Message[]
 
     creditsPurchase CreditsPurchase[]
+    expenses Expense[]
   
   }
   
@@ -218,4 +219,14 @@ model CreditsPurchase {
   paymentIntent String @unique
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+}
+
+model Expense{
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  user        User       @relation(fields: [userId], references: [id])
+  userId      String     @db.ObjectId
+
+  title       String
+  amount      Int
+  createdAt   DateTime    @default(now())
 }

@@ -393,6 +393,7 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
             endDate: isoEndDate,
             adults,
             children: kids,
+            location: `${location?.city}, ${location?.country}`,
           },
           totalAmount: adults * parsePriceString(estimatedPrice || "1000"),
         },

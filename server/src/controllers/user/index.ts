@@ -1,5 +1,5 @@
 import {SearchUsers, getAllUsers} from "./searchUsers";
-import { GetUserCredits } from "./get";
-import { UpdateUserCredits } from "./update";
+import { GetUserCredits, getUserItinerariesCount, getUserlatestItinerary } from "./get";
+import { UpdateUserCredits, UpdateUserInfo } from "./update";
 
-export { SearchUsers, getAllUsers, GetUserCredits, UpdateUserCredits };
+export { SearchUsers, getAllUsers, GetUserCredits, getUserItinerariesCount, getUserlatestItinerary, UpdateUserCredits, UpdateUserInfo };
