@@ -119,7 +119,7 @@ function ExpenseCard() {
 
   return (
     <div className="bg-white shadow-md rounded-lg p-4 flex flex-col items-center justify-center h-full w-full">
-      <h1 className="text-2xl font-semibold">Total Credits Purchase</h1>
+      <h1 className="text-2xl font-semibold">Total Expense</h1>
       <h1 className="text-4xl font-semibold">$ {totalExpenses.toFixed(2)}</h1>
       <div className="mt-2 flex gap-2">
         <Button

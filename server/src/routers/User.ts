@@ -11,5 +11,6 @@ router.patch("/credits", authenticateFirebase, Controllers.User.UpdateUserCredit
 router.patch("/profile", authenticateFirebase, Controllers.User.UpdateUserInfo);
 router.get("/itineraries-count", authenticateFirebase, Controllers.User.getUserItinerariesCount);
 router.get("/latest-itinerary", authenticateFirebase, Controllers.User.getUserlatestItinerary);
+router.post("/mood-destination/generate", authenticateFirebase, Controllers.AISuggestion.Generate);
 
 export default router;

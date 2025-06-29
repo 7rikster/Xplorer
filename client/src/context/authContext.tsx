@@ -86,6 +86,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => checkAuthState();
   }, []);
 
+  
+
   return (
     <AuthContext.Provider
       value={{ user, loading: firebaseAuthLoading || userLoading, getUser }}

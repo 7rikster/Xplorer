@@ -123,12 +123,12 @@ function UpcomingTrip() {
           <p className="text-gray-500">Loading...</p>
         </div>
       ) : upcomingTrip ? (
-        <div className="flex relative flex-col items-center justify-between h-full">
+        <div className="flex relative flex-col items-center justify-between flex-1">
           <Image
             src={upcomingTrip.imageUrls[0] || "/placeholder.png"}
             alt="Trip Image"
             width={500}
-            height={400}
+            height={100}
             className=" object-cover rounded-lg h-60"
           />
           <div className="absolute top-4 left-4">
@@ -144,7 +144,7 @@ function UpcomingTrip() {
             Booked on: {moment(upcomingTrip.createdAt).format("LL")}
             </h1>
           </div>
-          <div className="absolute bottom-4 left-4 right-4 justify-between flex items-center gap-4 ">
+          <div className="absolute top-48 left-4 right-4 justify-between flex items-center gap-4 ">
             <h1 className="text-gray-100 text-lg flex">
               <CalendarDays className="mr-2" /> {animatedDaysLeft} {daysLeft && daysLeft === 1 ? "day" : "days"} left
             </h1>

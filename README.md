@@ -10,6 +10,9 @@ Xplorer is a full-stack travel platform built using modern web technologies, off
 - 🧠 **AI Trip Planner**  
   Generate personalized travel itineraries using **Gemini AI**, tailored to your preferences, budget, and duration.
 
+- 🧠 **AI Destination Suggestion**  
+  Generate mood based destination suggestion using **Gemini AI**, based on your mood of travel
+
 - 💬 **Real-time Group Chat**  
   Coordinate with fellow travelers using **WebSocket-based group chat** — view messages instantly and track the latest conversations.
 

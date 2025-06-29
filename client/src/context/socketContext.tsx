@@ -54,7 +54,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, [user, loading]);
 
-  if (!socket) return null;
+  // if (!socket) return null;
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>

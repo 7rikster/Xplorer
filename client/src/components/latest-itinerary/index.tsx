@@ -32,7 +32,7 @@ function LatestItinerary() {
             },
           }
         );
-        console.log("Latest Itinerary Response:", response.data);
+
         setLatestItinerary({
           id: response.data.data.id,
           ...parseTripData(response.data.data.tripDetail),
@@ -72,11 +72,14 @@ function LatestItinerary() {
               {latestItinerary.location?.city},{" "}
               {latestItinerary.location?.country}
             </h1>
-            <h1 className="text-gray-100 text-lg  ">{latestItinerary?.groupType}, {latestItinerary?.travelStyle}</h1>
+            <h1 className="text-gray-100 text-lg  ">
+              {latestItinerary?.groupType}, {latestItinerary?.travelStyle}
+            </h1>
           </div>
-          <div className="absolute bottom-4 left-4 right-4 justify-between flex items-center gap-4 ">
+          <div className="absolute top-48 left-4 right-4 justify-between flex items-center gap-4 ">
             <h1 className="text-gray-100 text-lg flex">
-              <CalendarDays className="mr-2" /> {latestItinerary?.duration} {latestItinerary?.duration === 1 ? "day" : "days"} trip 
+              <CalendarDays className="mr-2" /> {latestItinerary?.duration}{" "}
+              {latestItinerary?.duration === 1 ? "day" : "days"} trip
             </h1>
             <Link href={`/dashboard/itineraries/${latestItinerary.id}`}>
               <Button className="cursor-pointer h-8 w-25 sm:w-auto sm:h-9">

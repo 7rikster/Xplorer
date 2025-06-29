@@ -8,5 +8,6 @@ import * as Faq from "./faq";
 import * as Review from "./reviews";
 import * as GroupChat from "./groupChat";
 import * as AdminTrip from "./adminTrip";
+import * as MoodDestination from "./moodDestination";
 
-export { System, Health, Destination, Hoarding, User, Trip, Faq, Review, GroupChat, AdminTrip };
+export { System, Health, Destination, Hoarding, User, Trip, Faq, Review, GroupChat, AdminTrip, MoodDestination };

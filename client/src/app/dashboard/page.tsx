@@ -3,6 +3,7 @@
 import CreditsPurchasedCard from "@/components/creditsPurchased-card";
 import ExpenseCard from "@/components/expense-card";
 import LatestItinerary from "@/components/latest-itinerary";
+import MoodDestinationCard from "@/components/moodDestination";
 import ProfileCard from "@/components/profile-card";
 import UpcomingTrip from "@/components/upcoming-trip";
 import { useUser } from "@/context/authContext";
@@ -37,7 +38,9 @@ function ClientDashboard() {
             <CreditsPurchasedCard/>
           </div>
         </div>
-        <div className="bg-black h-full"></div>
+        <div className=" h-full sm:col-span-2 lg:col-span-1 w-full">
+          <MoodDestinationCard/>
+        </div>
       </div>
     </div>
   );
