@@ -1,33 +1,128 @@
-import { useState } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { Textarea } from "../ui/textarea";
+import axios from "axios";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/lib/firebase/firebaseConfig";
+import { toast } from "sonner";
+import Image from "next/image";
 
 interface DestinationResponse {
-    place: string;
-    country: string;
-    description: string;
+  place: string;
+  country: string;
+  description: string;
+  imageUrl?: string;
 }
 
-export default function MoodBasedSuggestion() {
+export default function MoodSuggestionCard() {
   const [mood, setMood] = useState("");
-  const [destination, setDestination] = useState<DestinationResponse | null>(null);
+  const [destination, setDestination] = useState<DestinationResponse | null>(
+    null
+  );
+  const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [user] = useAuthState(auth);
 
   const handleSubmit = async () => {
-    const response = {
-      place: "Queenstown",
-      country: "New Zealand",
-      description:
-        "Queenstown is known as the adventure capital of the world. It's perfect for an adventurous mood with thrilling activities like bungee jumping, skydiving, white-water rafting, and mountain biking. The stunning landscapes of mountains and lakes add to the adrenaline-fueled experience.",
-    };
-    setDestination(response);
+    const token = await user?.getIdToken();
+    if (!token) {
+      console.error("User is not authenticated");
+      return;
+    }
+    if (!mood.trim()) {
+      toast.error("Mood cannot be empty");
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/mood-destination/generate`,
+        {
+          mood,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Response from AI:", response.data);
+      setDestination({
+        place: response.data.data.place,
+        country: response.data.data.country,
+        description: response.data.data.description,
+        imageUrl: response.data.data.imageUrl
+          ? response.data.data.imageUrl[0]
+          : "",
+      });
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/moodDestination/create`,
+        {
+          imageUrl: response.data.data.imageUrl
+            ? response.data.data.imageUrl[0]
+            : "",
+          place: response.data.data.place,
+          country: response.data.data.country,
+          description: response.data.data.description,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error fetching destination:", error);
+      toast.error("Failed to fetch destination. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
+  useEffect(() => {
+    const fetchDestination = async () => {
+      if (!user) return;
+      setInitialLoading(true);
+      const token = await user.getIdToken();
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/moodDestination/get`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setDestination(response.data.data);
+      } catch (error) {
+        console.error("Error fetching destination:", error);
+        toast.error("Failed to fetch destination. Please try again.");
+      }
+      finally{
+        setInitialLoading(false);
+      }
+    };
+    fetchDestination();
+  }, [user]);
+
+  
+
+  if (initialLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center  shadow-lg rounded-lg bg-gradient-to-br from-blue-100 to-purple-200 px-4 py-2 w-full h-100">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col items-center justify-center h-full shadow-lg rounded-lg bg-gradient-to-br from-blue-100 to-purple-200 p-6">
+    <div className="flex flex-col items-center justify-center h-full w-full shadow-lg rounded-lg bg-gradient-to-br from-blue-100 to-purple-200 px-4 py-8">
       {" "}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -36,43 +131,94 @@ export default function MoodBasedSuggestion() {
         className="text-center max-w-xl"
       >
         {" "}
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">
           {" "}
           Where Should You Go Based on Your Mood?{" "}
         </h1>{" "}
-        <p className="text-gray-600 text-lg mb-6">
-          {" "}
-          Your mood is the compass. Let us find the destination.{" "}
-        </p>{" "}
-        <div className="flex gap-2 items-center">
-          {" "}
-          <Textarea
-            className="w-full rounded-2xl shadow-md"
-            placeholder="Tell us about your mood... (e.g., adventurous, relaxed, romantic)"
-            value={mood}
-            onChange={(e) => setMood(e.target.value)}
-          />{" "}
-          <Button onClick={handleSubmit} className="rounded-2xl">
-            {" "}
-            <Sparkles className="mr-1 w-4 h-4" /> Suggest{" "}
-          </Button>{" "}
-        </div>{" "}
+        {!destination && (
+          <div>
+            <p className="text-gray-600 text-lg mb-6">
+              {" "}
+              In the mood for adventure? Romance? Relaxation? Let us match your
+              emotions with the perfect escape .{" "}
+            </p>{" "}
+            <div className="flex gap-2 items-center">
+              {" "}
+              <Textarea
+                className="w-full rounded-2xl "
+                placeholder="Tell us about your mood... (e.g., adventurous, relaxed, romantic)"
+                value={mood}
+                onChange={(e) => setMood(e.target.value)}
+              />{" "}
+              <Button
+                onClick={handleSubmit}
+                className="rounded-xl cursor-pointer w-24"
+                disabled={loading || !mood.trim()}
+              >
+                {loading ? (
+                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <div className="flex items-center">
+                    <Sparkles className="mr-1 w-4 h-4" /> Suggest{" "}
+                  </div>
+                )}
+              </Button>{" "}
+            </div>
+          </div>
+        )}
       </motion.div>
       {destination && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="mt-10 w-full max-w-md"
+          className=" w-1/2 flex flex-col h-full"
         >
-          <Card className="rounded-2xl shadow-xl bg-white">
-            <CardContent className="p-6">
-              <h2 className="text-2xl font-semibold text-gray-800">
+          <div className="rounded-2xl shadow-xl bg-white flex flex-col md:flex-row">
+            <div className="relative">
+              <Image
+                src={destination.imageUrl || "/placeholder-image.jpg"}
+                alt={`Image of ${destination.place}`}
+                width={500}
+                height={300}
+                className="w-full h-full object-cover rounded-t-2xl md:rounded-none md:rounded-l-2xl"
+              />
+              <h2 className="text-2xl font-semibold  absolute bottom-4 left-4 text-gray-100">
                 {destination.place}, {destination.country}
               </h2>
-              <p className="text-gray-600 mt-2">{destination.description}</p>
-            </CardContent>
-          </Card>
+            </div>
+            <div className="p-2 w-[80%]">
+              <p className="text-gray-600 ">{destination.description}</p>
+            </div>
+          </div>
+          <div className=" flex justify-center gap-3 items-center mt-4 lg:mt-3">
+            <h1 className="text-gray-600 text-lg ">Mood Changed?</h1>
+            <Button
+            disabled={loading}
+              onClick={async () => {
+                setLoading(true);
+                const token = await user?.getIdToken();
+                await axios.delete(
+                  `${process.env.NEXT_PUBLIC_API_URL}/moodDestination/delete`,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                  }
+                );
+                setMood("");
+                setLoading(false);
+                setDestination(null);
+              }}
+              className="cursor-pointer w-24"
+            >
+              {loading ? (
+                <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                "Reset mood"
+              )}
+            </Button>
+          </div>
         </motion.div>
       )}
     </div>
