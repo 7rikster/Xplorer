@@ -18,7 +18,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
-import { AlignLeft, LogOut, UserRound } from "lucide-react";
+import { AlignLeft, LogOut, Sparkles, UserRound } from "lucide-react";
 import { useUser } from "@/context/authContext";
 import { signOut } from "@/lib/firebase/auth";
 import {
@@ -105,14 +105,22 @@ function Header() {
     <div
       ref={navContainerRef}
       className={`fixed inset-x-2 top-2 sm:top-4 z-500 h-12 sm:h-18 border-none transition-all duration-700 sm:inset-x-6 ${
-        pathName.startsWith("/dashboard") || pathName.startsWith("/admin") || pathName.startsWith("/generate") || pathName.startsWith("/checkout") || pathName.startsWith("/success")
+        pathName.startsWith("/dashboard") ||
+        pathName.startsWith("/admin") ||
+        pathName.startsWith("/generate") ||
+        pathName.startsWith("/checkout") ||
+        pathName.startsWith("/success")
           ? "hidden "
           : ""
       }`}
     >
       <header
         className={`absolute top-1/2 w-full -translate-y-1/2 px-4 ${
-          pathName.startsWith("/dashboard") || pathName.startsWith("/admin") || pathName.startsWith("/generate") || pathName.startsWith("/checkout") || pathName.startsWith("/success")
+          pathName.startsWith("/dashboard") ||
+          pathName.startsWith("/admin") ||
+          pathName.startsWith("/generate") ||
+          pathName.startsWith("/checkout") ||
+          pathName.startsWith("/success")
             ? "hidden "
             : ""
         }`}
@@ -143,38 +151,51 @@ function Header() {
                     ).map((item, index) => (
                       <Link href={item.link} key={index}>
                         <SheetClose>
-                        <Button
-                          variant="ghost"
-                          className="w-full flex justify-start"
-                        >
-                          <span className="mr-2">{item.icon}</span>
-                          {item.title}
-                        </Button>
+                          <Button
+                            variant="ghost"
+                            className="w-full flex justify-start"
+                          >
+                            <span className="mr-2">{item.icon}</span>
+                            {item.title}
+                          </Button>
                         </SheetClose>
                       </Link>
                     ))}
                   {authLoading ? (
                     <Skeleton className="h-8 w-8 rounded-full" />
                   ) : user ? (
-                    <div>
+                    <div className="flex flex-col space-y-1">
                       <SheetClose>
-                      <Button
-                        variant="ghost"
-                        className="w-full flex justify-start"
-                        onClick={handleDashboardClick}
-                      >
-                        <span className="mr-2">
-                          <UserRound />
-                        </span>
-                        Dashboard
-                      </Button>
+                        <Link href="/generate">
+                          <Button
+                            variant="ghost"
+                            className="w-full flex justify-start"
+                          >
+                            <span className="mr-2">
+                              <Sparkles />
+                            </span>
+                            Generate
+                          </Button>
+                        </Link>
+                      </SheetClose>
+                      <SheetClose>
+                        <Button
+                          variant="ghost"
+                          className="w-full flex justify-start"
+                          onClick={handleDashboardClick}
+                        >
+                          <span className="mr-2">
+                            <UserRound />
+                          </span>
+                          Dashboard
+                        </Button>
                       </SheetClose>
 
                       <div className="flex flex-col justify-center items-center space-y-2 mt-2">
                         <SheetClose>
-                        <Button className="px-9 " onClick={() => signOut()}>
-                          Sign Out
-                        </Button>
+                          <Button className="px-9 " onClick={() => signOut()}>
+                            Sign Out
+                          </Button>
                         </SheetClose>
                       </div>
                     </div>
@@ -239,8 +260,9 @@ function Header() {
             </div>
           </div>
           <div className="flex h-full flex-col items-center ">
-            <div className="flex">
-              {headerContents &&
+            <div className="flex gap-2">
+              {user &&
+                headerContents &&
                 headerContents.length > 0 &&
                 headerContents
                   .filter((item) => item.type === "button")
@@ -255,6 +277,15 @@ function Header() {
                       </Button>
                     </Link>
                   ))}
+              {user && (
+                <Button
+                  onClick={handleDashboardClick}
+                  variant="ghost"
+                  className="bg-transparent text-white cursor-pointer border border-white hidden md:flex"
+                >
+                  Dashboard
+                </Button>
+              )}
               {authLoading ? (
                 <Skeleton className="h-8 w-8 rounded-full" />
               ) : user ? (

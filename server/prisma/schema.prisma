@@ -242,3 +242,12 @@ model MoodDestination{
   description String
   imageUrl    String
 }
+
+model destinationDetails{
+  id      String      @id @default(auto()) @map("_id") @db.ObjectId
+  placeId String  @unique
+  city    String
+  country String
+  imageUrls String[]
+  attractions Json
+}

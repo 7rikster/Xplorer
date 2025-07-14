@@ -18,7 +18,7 @@ type Place = {
 };
 
 interface PlaceSearchBoxProps {
-  setPlace: Dispatch<SetStateAction<Place | null>>;
+  setPlace: (place: Place | null) => void;
 }
 
 function PlaceSearchBox({ setPlace }: PlaceSearchBoxProps) {
@@ -81,7 +81,7 @@ function PlaceSearchBox({ setPlace }: PlaceSearchBoxProps) {
       const response = await axios.post(url, options.data, {
         headers: options.headers,
       });
-      console.log("Api called for place details:");
+      console.log("Suggestions response: ", response.data);
       const suggestions = response.data.suggestions || [];
 
       return suggestions
@@ -113,7 +113,7 @@ function PlaceSearchBox({ setPlace }: PlaceSearchBoxProps) {
 
     try {
       const response = await axios.request(options);
-      console.log("Hiii");
+      console.log("Place details: ", response.data);
       setPlace({
         location: response.data.formattedAddress || "",
         placeId: placeId,
@@ -127,10 +127,6 @@ function PlaceSearchBox({ setPlace }: PlaceSearchBoxProps) {
 
   return (
     <div className="w-full relative">
-      <Label htmlFor="place" className="mb-1">
-        Place
-      </Label>
-
       <SingleSelector
         options={places}
         placeholder="Search for a place"

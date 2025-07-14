@@ -83,6 +83,7 @@ function TopDestinations() {
                       photoUrl={item.photoUrl}
                       rating={item.rating}
                       location={item.location}
+                      placeId={item.placeId}
                     />
                   </div>
                 </CarouselItem>
@@ -117,6 +118,7 @@ function TopDestinations() {
                       photoUrl="https://res.cloudinary.com/dqobuxkcj/image/upload/v1744534530/u6c4rwk7yhakk0b3oe6h.webp"
                       rating={5}
                       location="France"
+                      placeId="ChIJD7fiBh9u5kcRYJSMaMOCCwQ"
                     />
                   </div>
                 </CarouselItem>

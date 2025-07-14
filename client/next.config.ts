@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
       "res.cloudinary.com",
       "images.unsplash.com",
       "lh3.googleusercontent.com",
+      "media-cdn.tripadvisor.com"
     ],
   },
   ssr: {

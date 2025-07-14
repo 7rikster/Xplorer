@@ -65,13 +65,17 @@ function NewTripForm({ saveTrip, loading: dbLoading }: NewTripFormProps) {
   async function handleGenerateTrip(e: React.FormEvent) {
     e.preventDefault();
     if (!user) return;
-    if(userInfo && userInfo.role !== "ADMIN" && credits <= 0){
+    if (userInfo && userInfo.role !== "ADMIN" && credits <= 0) {
       setBuyCreditsDialogOpen(true);
       return;
-    } 
+    }
     setLoading(true);
+    if(!place){
+      setLoading(false);
+      toast.error("Please select a place from the search box");
+      return;
+    }
     if (
-      !place ||
       !formData.budget ||
       !formData.duration ||
       !formData.groupType ||
@@ -203,6 +207,9 @@ function NewTripForm({ saveTrip, loading: dbLoading }: NewTripFormProps) {
         className="p-6 bg-white rounded-lg shadow-md space-y-4"
         onSubmit={handleGenerateTrip}
       >
+        <Label htmlFor="place" className="mb-1">
+          Place
+        </Label>
         <PlaceSearchBox setPlace={setPlace} />
         <div>
           <Label htmlFor="duration" className="mb-1">
@@ -316,10 +323,15 @@ function NewTripForm({ saveTrip, loading: dbLoading }: NewTripFormProps) {
           )}
         </Button>
       </form>
-      <Dialog open={buyCreditsDialogOpen} onOpenChange={setBuyCreditsDialogOpen}>
+      <Dialog
+        open={buyCreditsDialogOpen}
+        onOpenChange={setBuyCreditsDialogOpen}
+      >
         <DialogContent className="z-1000 w-96">
           <DialogHeader>
-            <DialogTitle className="text-center">Ooops!! You ran out of Credits</DialogTitle>
+            <DialogTitle className="text-center">
+              Ooops!! You ran out of Credits
+            </DialogTitle>
           </DialogHeader>
           <div className="md:p-6 text-center space-y-4">
             <p className="text-gray-600 mb-4">
@@ -327,7 +339,6 @@ function NewTripForm({ saveTrip, loading: dbLoading }: NewTripFormProps) {
               credits to continue.
             </p>
             <Button
-            
               onClick={() => {
                 setBuyCreditsDialogOpen(false);
                 router.push("/dashboard/credits-buy");

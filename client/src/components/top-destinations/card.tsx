@@ -1,15 +1,30 @@
+"use client";
+
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { MapPin } from "lucide-react";
+import Link from "next/link";
+import { useDestination } from "@/context/destinationContext";
+import { useRouter } from "next/navigation";
 
 interface CardProps {
   name: string;
   photoUrl: string;
   rating: number;
   location?: string;
+  placeId: string;
 }
 
-function DestinationsCard({ name, photoUrl, rating, location }: CardProps) {
+function DestinationsCard({
+  name,
+  photoUrl,
+  rating,
+  location,
+  placeId,
+}: CardProps) {
+  const { setPlace } = useDestination();
+  const router = useRouter();
+
   return (
     <div className="w-full rounded-xl shadow-lg flex flex-col  hover:shadow-xl transition-all duration-300 overflow-hidden hover:scale-105">
       <div className="w-full h-32 sm:h-46 overflow-hidden rounded-t-xl">
@@ -25,14 +40,15 @@ function DestinationsCard({ name, photoUrl, rating, location }: CardProps) {
         <div className="flex flex-col items-start justify-center py-1">
           <h1 className="text-sm sm:text-lg">{name}</h1>
           {location && (
-              <p className="text-gray-600 text-sm md:text-md  flex ">
-                <MapPin className="w-4 h-5 mr-0.5"/>
-                {location}
-              </p>
-            )}
+            <p className="text-gray-600 text-sm md:text-md  flex ">
+              <MapPin className="w-4 h-5 mr-0.5" />
+              {location}
+            </p>
+          )}
           <div className="flex items-center justify-center mt-1">
             {Array.from({ length: rating }).map((_, index) => (
-              <svg key={index}
+              <svg
+                key={index}
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 576 512"
                 className="w-2 h-2 sm:w-3 sm:h-3 text-yellow-400"
@@ -46,7 +62,21 @@ function DestinationsCard({ name, photoUrl, rating, location }: CardProps) {
           </div>
         </div>
         <div>
-          <Button className="cursor-pointer w-12 h-6 text-[10px] sm:w-16 sm:h-7 md:text-xs lg:w-auto lg:h-auto lg:text-sm">
+          <Button
+            className="cursor-pointer w-12 h-6 text-[10px] sm:w-16 sm:h-7 md:text-xs lg:w-auto lg:h-auto lg:text-sm"
+            onClick={() => {
+              const queryParams = new URLSearchParams({
+                location: `${name}, ${location}`,
+              }).toString();
+              setPlace({
+                location: `${name}, ${location}`,
+                placeId,
+                latitude: 0,
+                longitude: 0,
+              });
+              router.push(`/explore/destinations/${placeId}?${queryParams}`);
+            }}
+          >
             Explore
           </Button>
         </div>

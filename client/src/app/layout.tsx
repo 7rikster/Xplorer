@@ -27,6 +27,7 @@ export const metadata: Metadata = {
 import { registerLicense } from "@syncfusion/ej2-base";
 import Footer from "@/components/footer";
 import { SocketProvider } from "@/context/socketContext";
+import { DestinationProvider } from "@/context/destinationContext";
 registerLicense(process.env.NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY || "");
 
 export default function RootLayout({
@@ -42,10 +43,12 @@ export default function RootLayout({
         <Suspense fallback={<Loading />}>
           <AuthProvider>
             <SocketProvider>
-              <Header />
-              {children}
-              <Footer />
-              <Toaster />
+              <DestinationProvider>
+                <Header />
+                {children}
+                <Footer />
+                <Toaster />
+              </DestinationProvider>
             </SocketProvider>
           </AuthProvider>
         </Suspense>

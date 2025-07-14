@@ -37,6 +37,8 @@ app.use(`${Constants.System.ROOT}/creditsPurchase`, Routers.CreditsPuchase);
 app.use(`${Constants.System.ROOT}/paymentIntent`, Routers.PaymentIntent);
 app.use(`${Constants.System.ROOT}/expense`, Routers.Expense);
 app.use(`${Constants.System.ROOT}/moodDestination`, Routers.MoodDestination);
+app.use(`${Constants.System.ROOT}/destinationDetails`, Routers.DestinationDetails);
+
 
 
 // Error Handlers

@@ -16,4 +16,5 @@ import * as PaymentIntent from "./paymentIntent";
 import * as Expense from "./expense";
 import * as AISuggestion from "./aiDestinationSuggestion"
 import * as MoodDestination from "./moodDestination";
-export { Health, Destination, Media, Hoarding, Auth, AdminTrips, AiGeneratedTrip, Faq, Review, User, GroupChat, UserTrips, TripBooking, CreditsPurchase, PaymentIntent, Expense, AISuggestion, MoodDestination };
+import * as DestinationDetails from "./destinationDetails";
+export { Health, Destination, Media, Hoarding, Auth, AdminTrips, AiGeneratedTrip, Faq, Review, User, GroupChat, UserTrips, TripBooking, CreditsPurchase, PaymentIntent, Expense, AISuggestion, MoodDestination, DestinationDetails };

@@ -31,9 +31,10 @@ interface MapPin {
 
 interface MapProps {
   mapPins: MapPin[];
+  zoom?: number;
 }
 
-const Map: React.FC<MapProps> = ({ mapPins }) => {
+const Map: React.FC<MapProps> = ({ mapPins, zoom=10 }) => {
   const [locations, setLocations] = useState<MapPin[]>([]);
 
   useEffect(() => {
@@ -51,7 +52,7 @@ const Map: React.FC<MapProps> = ({ mapPins }) => {
               ? [locations[0].latitude!, locations[0].longitude!]
               : [48.8566, 2.3522]
           }
-          zoom={10}
+          zoom={zoom}
           id="map"
           className="h-[70vh] w-full rounded-xl shadow"
         >

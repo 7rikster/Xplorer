@@ -17,8 +17,8 @@ const errorHandler: ErrorRequestHandler = async (
     console.log(`Error | Code: ${500}, Message: ${err.message}`);
     return res.status(500).json(Errors.System.serverError);
   } else if (err) {
-    console.log(`Error -> Code: ${err.status}, Message: ${err.msg}`);
-    return res.status(err.status).json(err);
+    console.log(`Error -> Code: ${err.status || 500}, Message: ${err}`);
+    return res.status(err.status || 500).json(err);
   } else {
     return next();
   }

@@ -14,5 +14,6 @@ import CreditsPuchase from "./creditsPurchase"
 import PaymentIntent from "./paymentIntent";
 import Expense from "./expense";
 import MoodDestination from "./moodDestination";
+import DestinationDetails  from "./destinationDetails";
 
-export { Health, Destination, Media, Hoarding, Auth, AITrip, Faq, Review, User, GroupChat, UserTrip, TripBooking, CreditsPuchase, PaymentIntent, Expense, MoodDestination };
+export { Health, Destination, Media, Hoarding, Auth, AITrip, Faq, Review, User, GroupChat, UserTrip, TripBooking, CreditsPuchase, PaymentIntent, Expense, MoodDestination, DestinationDetails };

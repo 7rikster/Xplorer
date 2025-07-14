@@ -55,6 +55,11 @@ export const ExplorePageHeaderContents = [
     type: "button",
     link: "/generate",
   },
+  // {
+  //   title: "Dashboard",
+  //   type: "button",
+  //   link: "/dashboard",
+  // },
 ];
 
 export const GeneratePageHeaderContents = [

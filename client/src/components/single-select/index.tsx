@@ -194,7 +194,7 @@ const SingleSelector = React.forwardRef<HTMLDivElement, SingleSelectorProps>(
           </button>
         </div>
 
-        {open && displayItems.length > 0 && (
+        {open && (
           <CommandList className="absolute z-10000 top-[40px] mt-1 w-full rounded-md border bg-popover text-popover-foreground shadow-md">
             {isLoading ? (
               <div>{loadingIndicator}</div>
