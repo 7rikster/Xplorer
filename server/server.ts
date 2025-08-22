@@ -21,6 +21,9 @@ app
   .use(express.urlencoded({ extended: true }));
 
 // Routers
+app.get("/", (_, res) => {
+  res.send("✅ Xplorer API is live. Use /api for endpoints.");
+});
 app.use(`${Constants.System.ROOT}/`, Routers.Health);
 app.use(`${Constants.System.ROOT}/auth`, Routers.Auth);
 app.use(`${Constants.System.ROOT}/destination`, Routers.Destination);
