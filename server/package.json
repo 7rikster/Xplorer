@@ -14,7 +14,7 @@
     "lint": "eslint . --ext .ts --fix",
     "pretty": "pnpm prettier --write .",
     "precommit": "lint-staged",
-    "prepare": "npx simple-git-hooks",
+    "prepare": "npx simple-git-hooks && prisma generate",
     "db:update": "prisma migrate dev"
   },
   "type": "module",
