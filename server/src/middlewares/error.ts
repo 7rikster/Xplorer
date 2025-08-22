@@ -1,7 +1,7 @@
 import { ErrorRequestHandler } from "express";
 
-import * as Interfaces from "../interfaces";
-import * as Errors from "../globals/errors";
+import * as Interfaces from "../interfaces/index.js";
+import * as Errors from "../globals/errors/index.js";
 
 const errorHandler: ErrorRequestHandler = async (
   err: Error | Interfaces.JSON.Response,

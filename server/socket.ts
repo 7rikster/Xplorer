@@ -1,8 +1,7 @@
 import { Server as HttpServer } from "http";
 import { Server as SocketIOServer } from "socket.io";
-import { prisma } from "./src/utils";
+import { prisma } from "./src/utils/index.js";
 import dotenv from "dotenv";
-import { connect } from "http2";
 
 dotenv.config();
 

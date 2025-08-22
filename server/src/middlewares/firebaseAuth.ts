@@ -1,6 +1,5 @@
-import * as Interfaces from "../interfaces";
-import admin from "../utils/firebaseAdmin";
-import { Request } from "express";
+import * as Interfaces from "../interfaces/index.js";
+import admin from "../utils/firebaseAdmin.js";
 
 declare module "express" {
   export interface Request {
@@ -8,7 +7,11 @@ declare module "express" {
   }
 }
 
-export const authenticateFirebase: Interfaces.Middlewares.Async = async (req,res, next) => {
+export const authenticateFirebase: Interfaces.Middlewares.Async = async (
+  req,
+  res,
+  next
+) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader?.startsWith("Bearer ")) {
@@ -20,8 +23,8 @@ export const authenticateFirebase: Interfaces.Middlewares.Async = async (req,res
 
   try {
     const decodedToken = await admin.auth().verifyIdToken(token);
-    req.firebaseId = decodedToken.uid; 
-    next();
+    req.firebaseId = decodedToken.uid;
+    return next();
   } catch (error) {
     console.error("Token verification failed", error);
     return res.status(401).json({ message: "Invalid token" });

@@ -1,3 +1,3 @@
-import Create from "./create";
-import {GetUserName, GetUser} from "./getUserName";
+import Create from "./create.js";
+import {GetUserName, GetUser} from "./getUserName.js";
 export { Create, GetUserName, GetUser };

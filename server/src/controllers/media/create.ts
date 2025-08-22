@@ -1,7 +1,7 @@
-import * as Interfaces from "../../interfaces";
-import * as Errors from "../../globals/errors";
+import * as Interfaces from "../../interfaces/index.js";
+import * as Errors from "../../globals/errors/index.js";
 import { Request } from "express";
-import { uploadMediaToCloudinary } from "src/utils/cloudinary";
+import { uploadMediaToCloudinary } from "../../utils/cloudinary.js";
 import fs from "fs/promises";
 
 interface MulterRequest extends Request {

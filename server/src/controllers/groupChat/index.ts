@@ -1,4 +1,4 @@
-import {Create, getUserGroups}  from "./create";
-import getGroupMessages from "./read";
+import {Create, getUserGroups}  from "./create.js";
+import getGroupMessages from "./read.js";
 
 export { Create, getUserGroups, getGroupMessages };

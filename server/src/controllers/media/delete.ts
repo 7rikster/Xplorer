@@ -1,7 +1,7 @@
-import * as Interfaces from "../../interfaces";
-import * as Errors from "../../globals/errors";
+import * as Interfaces from "../../interfaces/index.js";
+import * as Errors from "../../globals/errors/index.js";
 
-import { deleteMediaFromCloudinary } from "src/utils/cloudinary";
+import { deleteMediaFromCloudinary } from "../../utils/cloudinary.js";
 
 
 const Delete : Interfaces.Controllers.Async = async (req, res, next) => {

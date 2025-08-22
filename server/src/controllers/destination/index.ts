@@ -1,5 +1,5 @@
-import Create from "./create";
-import Delete from "./delete";
-import { Read, ReadAll } from "./read";
+import Create from "./create.js";
+import Delete from "./delete.js";
+import { Read, ReadAll } from "./read.js";
 
 export { Create, Delete, Read, ReadAll };

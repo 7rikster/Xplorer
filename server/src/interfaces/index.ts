@@ -1,8 +1,8 @@
-import * as Controllers from "./controller";
-import * as Middlewares from "./middleware";
-import * as JSON from "./json";
-import * as Health from "./health";
-import * as MulterRequest from "./multerRequest";
-import * as User from "./user";
+import * as Controllers from "./controller.js";
+import * as Middlewares from "./middleware.js";
+import * as JSON from "./json.js";
+import * as Health from "./health.js";
+import * as MulterRequest from "./multerRequest.js";
+import * as User from "./user.js";
 
 export { Controllers, Middlewares, JSON, Health, MulterRequest, User };

@@ -4,10 +4,10 @@ import helmet from "helmet";
 import morgan from "morgan";
 import dotenv from "dotenv";
 
-import * as Middlewares from "./src/middlewares";
-import * as Routers from "./src/routers";
-import * as Constants from "./src/globals/constants";
-import setupSocket from "socket";
+import * as Middlewares from "./src/middlewares/index.js";
+import * as Routers from "./src/routers/index.js";
+import * as Constants from "./src/globals/constants/index.js";
+import setupSocket from "./socket.js";
 
 const app = express();
 dotenv.config();

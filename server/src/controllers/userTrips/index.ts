@@ -1,4 +1,4 @@
-import Create from "./create";
-import { Read, CursorBasedRead} from "./read";
+import Create from "./create.js";
+import { Read, CursorBasedRead} from "./read.js";
 
 export { Create, Read, CursorBasedRead };

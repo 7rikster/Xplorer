@@ -89,7 +89,8 @@ function UpcomingTrip() {
             },
           }
         );
-        setUpcomingTrip({
+        if (response.data.data.upcomingTrip) {
+          setUpcomingTrip({
           id: response.data.data.upcomingTrip.id,
           tripId: response.data.data.upcomingTrip.tripId,
           userId: response.data.data.upcomingTrip.userId,
@@ -103,6 +104,8 @@ function UpcomingTrip() {
           imageUrls: response.data.data.upcomingTrip.trip.imageUrls || [],
           trip: parseTripData(response.data.data.upcomingTrip.trip.tripDetail),
         });
+        }
+        
       } catch (error) {
         console.error("Error fetching upcoming trip:", error);
       } finally {

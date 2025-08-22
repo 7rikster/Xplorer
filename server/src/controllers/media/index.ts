@@ -1,4 +1,4 @@
-import {Create, UploadMany} from "./create";
-import Delete from "./delete";
+import {Create, UploadMany} from "./create.js";
+import Delete from "./delete.js";
 
 export { Create, UploadMany, Delete };

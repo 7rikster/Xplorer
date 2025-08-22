@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import * as Controlers from "../controllers";
+import * as Controlers from "../controllers/index.js";
 
 const router = express.Router();
 const upload = multer({ dest: "uploads/" });

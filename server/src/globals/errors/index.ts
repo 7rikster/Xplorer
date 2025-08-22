@@ -1,13 +1,13 @@
-import * as System from "./system";
-import * as Health from "./health";
-import * as Destination from "./destination";
-import * as Hoarding from "./hoarding";
-import * as User from "./user";
-import * as Trip from "./trip";
-import * as Faq from "./faq";
-import * as Review from "./reviews";
-import * as GroupChat from "./groupChat";
-import * as AdminTrip from "./adminTrip";
-import * as MoodDestination from "./moodDestination";
+import * as System from "./system.js";
+import * as Health from "./health.js";
+import * as Destination from "./destination.js";
+import * as Hoarding from "./hoarding.js";
+import * as User from "./user.js";
+import * as Trip from "./trip.js";
+import * as Faq from "./faq.js";
+import * as Review from "./reviews.js";
+import * as GroupChat from "./groupChat.js";
+import * as AdminTrip from "./adminTrip.js";
+import * as MoodDestination from "./moodDestination.js";
 
 export { System, Health, Destination, Hoarding, User, Trip, Faq, Review, GroupChat, AdminTrip, MoodDestination };

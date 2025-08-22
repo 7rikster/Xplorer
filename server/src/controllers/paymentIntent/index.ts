@@ -1,3 +1,3 @@
-import GetPaymentIntent from "./get";
+import GetPaymentIntent from "./get.js";
 
 export { GetPaymentIntent };

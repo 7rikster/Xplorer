@@ -1,12 +1,12 @@
-import * as Interfaces from "../../interfaces";
-import * as Errors from "../../globals/errors";
+import * as Interfaces from "../../interfaces/index.js";
+import * as Errors from "../../globals/errors/index.js";
 import Stripe from "stripe";
 import dotenv from "dotenv";
 dotenv.config();
 
 
 const stripe = new Stripe(process.env.STRIPE_KEY as string, {
-  apiVersion: "2025-05-28.basil",
+  apiVersion: "2025-05-28.basil"
 });
 
 const GetPaymentIntent: Interfaces.Controllers.Async = async (req, res, next) => {

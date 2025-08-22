@@ -1,7 +1,6 @@
-import * as Interfaces from "../../interfaces";
-import * as Errors from "../../globals/errors";
-import { getAISuggestedDestination } from "src/utils/moodBasedSuggestion";
-import { prisma } from "src/utils";
+import * as Interfaces from "../../interfaces/index.js";
+import * as Errors from "../../globals/errors/index.js";
+import { getAISuggestedDestination } from "../../utils/moodBasedSuggestion.js";
 
 const Generate: Interfaces.Controllers.Async = async (req, res, next) => {
   const { mood } = req.body;

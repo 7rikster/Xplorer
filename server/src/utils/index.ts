@@ -1,4 +1,4 @@
-import * as Response from "./response";
-import prisma from "./prisma";
+import * as Response from "./response.js";
+import prisma from "./prisma.js";
 
 export { Response, prisma };

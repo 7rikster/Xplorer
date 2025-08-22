@@ -1,4 +1,4 @@
-import * as Utils from "../../utils";
+import * as Utils from "../../utils/index.js";
 
 const moodDestinationAlreadyExists = Utils.Response.error(
   "Mood destination already exists",

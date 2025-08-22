@@ -1,4 +1,4 @@
-import * as Interfaces from "../interfaces";
+import * as Interfaces from "../interfaces/index.js";
 
 function response<T>(msg: T, status: number): Interfaces.JSON.Response<T> {
   return {

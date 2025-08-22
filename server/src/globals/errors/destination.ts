@@ -1,4 +1,4 @@
-import * as Utils from "../../utils";
+import * as Utils from "../../utils/index.js";
 
 const destinationAlreadyExists = Utils.Response.error(
   "Destination already exists",

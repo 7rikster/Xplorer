@@ -1,6 +1,6 @@
-import * as Interfaces from "../../interfaces";
-import * as Errors from "../../globals/errors";
-import { getAIGeneratedTrip } from "src/utils/AImodal";
+import * as Interfaces from "../../interfaces/index.js";
+import * as Errors from "../../globals/errors/index.js";
+import { getAIGeneratedTrip } from "../../utils/AImodal.js";
 
 const Generate: Interfaces.Controllers.Async = async (req, res, next) => {
   const auth: string | undefined = req?.headers?.authorization;

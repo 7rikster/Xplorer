@@ -1,6 +1,6 @@
-import * as Interfaces from "../../interfaces";
-import * as Errors from "../../globals/errors";
-import { prisma } from "../../utils";
+import * as Interfaces from "../../interfaces/index.js";
+import * as Errors from "../../globals/errors/index.js";
+import { prisma } from "../../utils/index.js";
 
 const Delete: Interfaces.Controllers.Async = async (req, res, next) => {
   const firebaseId = req.firebaseId;

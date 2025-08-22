@@ -1,6 +1,6 @@
-import * as Interfaces from "../../interfaces";
-import * as Errors from "../../globals/errors";
-import { prisma } from "../../utils";
+import * as Interfaces from "../../interfaces/index.js";
+import * as Errors from "../../globals/errors/index.js";
+import { prisma } from "../../utils/index.js";
 
 const Create: Interfaces.Controllers.Async = async (req, res, next) => {
   try {
@@ -25,7 +25,6 @@ const Create: Interfaces.Controllers.Async = async (req, res, next) => {
     photoUrl = photoUrl?.trim() || "";
     firebaseId = firebaseId?.trim();
 
-    const idToken: string = (auth as string).split(" ")[1];
 
     const existingUser = await prisma.user.findFirst({
       where: {

@@ -1,6 +1,6 @@
-import * as Interfaces from "../../interfaces";
-import * as Errors from "../../globals/errors";
-import * as Success from "../../globals/success";
+import * as Interfaces from "../../interfaces/index.js";
+import * as Errors from "../../globals/errors/index.js";
+import * as Success from "../../globals/success/index.js";
 
 const check: Interfaces.Controllers.Async = async (_req, res) => {
   return res.json(Success.Health.api);

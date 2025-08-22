@@ -1,4 +1,4 @@
-import * as Utils from "../../utils";
+import * as Utils from "../../utils/index.js";
 
 const faqAlreadyExists = Utils.Response.error(
   "Faq already exists",

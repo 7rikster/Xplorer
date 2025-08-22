@@ -1,4 +1,4 @@
-import * as Utils from "../../utils";
+import * as Utils from "../../utils/index.js";
 
 const adminTripAlreadyExists = Utils.Response.error(
   "Trip already exists",

@@ -1,6 +1,6 @@
-import * as Interfaces from "../../interfaces";
-import * as Errors from "../../globals/errors";
-import { prisma } from "../../utils";
+import * as Interfaces from "../../interfaces/index.js";
+import * as Errors from "../../globals/errors/index.js";
+import { prisma } from "../../utils/index.js";
 
 const Read: Interfaces.Controllers.Async = async (req, res, next) => {
   const { id } = req.params;
@@ -25,7 +25,7 @@ const Read: Interfaces.Controllers.Async = async (req, res, next) => {
   }
 };
 
-const PageBasedRead: Interfaces.Controllers.Async = async (req, res, next) => {
+const PageBasedRead: Interfaces.Controllers.Async = async (req, res) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 8;
@@ -59,8 +59,7 @@ const PageBasedRead: Interfaces.Controllers.Async = async (req, res, next) => {
 
 const CursorBasedRead: Interfaces.Controllers.Async = async (
   req,
-  res,
-  next
+  res
 ) => {
   try {
     const limit = parseInt(req.query.limit as string) || 8;
