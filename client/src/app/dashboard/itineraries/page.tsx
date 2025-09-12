@@ -8,7 +8,7 @@ import LoadingCard from "@/components/loading-card";
 import HandpickedTripCard from "@/components/handpicked-trips/card";
 import axios from "axios";
 import { parseTripData } from "@/lib/utils";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import Link from "next/link";
