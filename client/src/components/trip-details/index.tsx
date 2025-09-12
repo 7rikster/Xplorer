@@ -1,5 +1,5 @@
 "use client";
-
+/* eslint-disable @typescript-eslint/no-unused-vars*/
 import getPlacePhoto from "@/lib/placePhoto";
 import { getFirstWord, parseTripData } from "@/lib/utils";
 import {

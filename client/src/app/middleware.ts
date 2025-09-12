@@ -1,8 +1,6 @@
-import { useUser } from "@/context/authContext";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export function middleware(request: NextRequest) {
-  const { user } = useUser();
+export function middleware() {
 
   const isAuthenticated = false;
 

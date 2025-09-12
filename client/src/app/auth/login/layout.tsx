@@ -3,7 +3,6 @@
 import { useUser } from "@/context/authContext";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import Loading from "../../loading";
 
 export default function LoginLayout({

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+
+
 import { useUser } from "@/context/authContext";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -10,7 +13,6 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import axios from "axios";
 import { toast } from "sonner";
-import { set } from "date-fns";
 
 function ProfileCard() {
   const { user: userInfo, getUser } = useUser();
@@ -208,7 +210,7 @@ function ProfileCard() {
           Welcome, {userInfo?.name}
         </h1>
         <p className="text-xs md:text-[1rem] md:mt-1 text-[#555252]">
-          "Travel is the only thing you buy that makes you Richer"
+          &quot;Travel is the only thing you buy that makes you Richer&quot;
         </p>
       </div>
       <div className="flex items-center justify-between w-full">
@@ -218,7 +220,7 @@ function ProfileCard() {
               Welcome, {userInfo?.name}
             </h1>
             <p className="text-xs md:text-[1rem] md:mt-1 text-[#555252]">
-              "Travel is the only thing you buy that makes you Richer"
+              &quot;Travel is the only thing you buy that makes you Richer&quot;
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-center justify-center mt-4 gap-4 md:gap-8 lg:gap-12">

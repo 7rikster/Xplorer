@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any*/
+
 import { auth } from "@/lib/firebase/firebaseConfig";
 import axios from "axios";
 import { onAuthStateChanged } from "firebase/auth";

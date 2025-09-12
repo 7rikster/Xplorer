@@ -1,5 +1,8 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+
 import { useEffect, useRef, useState } from "react";
 import { useWindowScroll } from "react-use";
 import gsap from "gsap";
@@ -29,7 +32,6 @@ import {
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Skeleton } from "../ui/skeleton";
-import axios from "axios";
 
 interface HeaderItem {
   title?: string;

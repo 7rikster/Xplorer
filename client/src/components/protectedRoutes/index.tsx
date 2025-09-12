@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+
 import { useUser } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

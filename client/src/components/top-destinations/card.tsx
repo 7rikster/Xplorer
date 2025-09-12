@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { MapPin } from "lucide-react";
-import Link from "next/link";
 import { useDestination } from "@/context/destinationContext";
 import { useRouter } from "next/navigation";
 

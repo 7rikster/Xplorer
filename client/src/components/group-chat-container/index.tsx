@@ -12,7 +12,6 @@ import type { Option } from "../multiple-select";
 import { useAppStore } from "@/store";
 import { toast } from "sonner";
 import Image from "next/image";
-import { set } from "date-fns";
 
 interface User {
   id: string;

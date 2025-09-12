@@ -3,7 +3,6 @@ import Services from "@/components/explore-services";
 import TopDestinations from "@/components/top-destinations";
 import HandpickedTrips from "@/components/handpicked-trips";
 import GenerateYourOwnItinerary from "@/components/generateYourOwnItinerary";
-import MoodSuggestionCard from "@/components/moodSuggestion";
 
 function Explore() {
   return (

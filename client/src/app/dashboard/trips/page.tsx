@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import HandpickedTripCard from "@/components/handpicked-trips/card";
 import LoadingCard from "@/components/loading-card";
 import { Button } from "@/components/ui/button";
@@ -7,9 +9,7 @@ import { useUser } from "@/context/authContext";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import { parseTripData } from "@/lib/utils";
 import axios from "axios";
-import { set } from "date-fns";
 import { useRouter } from "next/navigation";
-import { parse } from "path";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { toast } from "sonner";
@@ -132,7 +132,7 @@ function ClientDashboard() {
         )}
         {!loading && bookings && bookings.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-8 w-full sm:px-8 md:px-12 md:mt-6">
-            {bookings.map((booking: Booking, index) => (
+            {bookings.map((booking: Booking) => (
               <HandpickedTripCard
                 key={booking.id}
                 trip={{

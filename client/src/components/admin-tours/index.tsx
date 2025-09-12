@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useAuthState } from "react-firebase-hooks/auth";
 import AdminCard from "../admin-card";
 import { Button } from "../ui/button";
@@ -7,7 +9,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import { parseTripData } from "@/lib/utils";
 import Link from "next/link";
 import TripsPagination from "../pagination";
@@ -21,7 +22,7 @@ function AdminTours() {
   const [limit, setLimit] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
-  async function handleDeletetrip(id: string, publicId: string) {
+  async function handleDeletetrip(id: string) {
     if (!user) return;
     const token = await user.getIdToken();
     try {

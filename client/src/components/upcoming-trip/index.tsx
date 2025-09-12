@@ -9,7 +9,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { parseTripData } from "@/lib/utils";
 import moment from "moment";
-import { set } from "date-fns";
 import { CalendarDays } from "lucide-react";
 
 interface Booking {

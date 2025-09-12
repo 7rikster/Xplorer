@@ -79,7 +79,7 @@ function SuccessPage() {
         await updateTripPaymentStatus(metaData.location, metaData.totalAmount);
       } else if (metaData.type === "credits") {
         try {
-          const response = await axios.patch(
+          await axios.patch(
             `${process.env.NEXT_PUBLIC_API_URL}/creditsPurchase/update`,
             { paymentIntent },
             {

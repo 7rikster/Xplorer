@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Label } from "../../../components/ui/label";
 import { Input } from "../../../components/ui/input";
 import { Button } from "../../../components/ui/button";
+import { FirebaseError } from "firebase/app";
 import {
   Card,
   CardContent,
@@ -36,7 +37,7 @@ function Register() {
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
 
-  async function handleSignIn(event: any) {
+  async function handleSignIn(event: React.FormEvent<HTMLButtonElement>) {
     event.preventDefault();
     setLogging(true);
 
@@ -67,7 +68,7 @@ function Register() {
           const token = await user.getIdToken();
 
           try {
-            const response = await axios.post(
+            await axios.post(
               `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,
               {
                 name,
@@ -103,7 +104,11 @@ function Register() {
         } else {
           toast("Something went wrong");
         }
-      } catch (e: any) {
+      } catch (e) {
+        if(!(e instanceof FirebaseError)) {
+          toast.error("An unexpected error occurred");
+          return;
+        }
         setLogging(false);
         console.log(e);
         const errorCode = e.code;
@@ -125,7 +130,7 @@ function Register() {
     }
   }
 
-  async function handleSignUpWithGoogle(event: any) {
+  async function handleSignUpWithGoogle(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
 
     try {
@@ -136,7 +141,7 @@ function Register() {
         const username = user.email.split("@")[0];
 
         try {
-          const response = await axios.post(
+          await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,
             {
               name: user.displayName,
@@ -199,7 +204,7 @@ function Register() {
               your email to continue.
             </p>
             <p className="text-center">
-              If you didn't receive the email, please check your spam folder or
+              If you didn&apos;t receive the email, please check your spam folder or
               click the button below to resend the verification email.
             </p>
             <Button

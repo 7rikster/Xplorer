@@ -1,5 +1,9 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+
 import dynamic from "next/dynamic";
 
 const Map = dynamic(() => import("@/components/map"), {
@@ -8,7 +12,6 @@ const Map = dynamic(() => import("@/components/map"), {
 
 import Loading from "@/app/loading";
 import TourPlanTable from "@/components/tourPlanTable";
-import TripDetails from "@/components/trip-details";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -19,7 +22,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { useUser } from "@/context/authContext";
 import { auth } from "@/lib/firebase/firebaseConfig";
@@ -28,8 +30,6 @@ import { getFirstWord, parsePriceString, parseTripData } from "@/lib/utils";
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  ArrowLeft,
-  Book,
   ChevronDown,
   ChevronUp,
   Delete,
@@ -101,7 +101,6 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
     bestTimeToVisit,
     weatherInfo,
     location,
-    imageUrls,
     accommodation,
     faqs,
     reviews,
@@ -449,7 +448,7 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
         setHotelPhoto(url);
       };
 
-      // fetchPhoto();
+      fetchPhoto();
     }
   }, [accommodation]);
 

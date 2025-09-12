@@ -3,7 +3,6 @@
 
 import { ReactNode, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { useContext } from "react";
 import { useDestination } from "@/context/destinationContext";
 
 export default function DestinationLayout({

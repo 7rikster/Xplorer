@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Label } from "../../../components/ui/label";
 import { Input } from "../../../components/ui/input";
 import { Button } from "../../../components/ui/button";
+import { FirebaseError } from "firebase/app";
 import {
   Card,
   CardContent,
@@ -33,7 +34,7 @@ function LogIn() {
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
 
-  async function handleSignIn(event: any) {
+  async function handleSignIn(event: React.FormEvent<HTMLButtonElement>) {
     event.preventDefault();
     setLogging(true);
 
@@ -65,9 +66,13 @@ function LogIn() {
         } else {
           toast("Something went wrong");
         }
-      } catch (e: any) {
+      } catch (e) {
         setLogging(false);
         console.log(e);
+        if(!(e instanceof FirebaseError)) {
+          toast.error("An unexpected error occurred");
+          return;
+        }
         const errorCode = e.code;
         const errorMessage = e.message;
         if (errorCode === "auth/invalid-credential") {
@@ -86,7 +91,7 @@ function LogIn() {
     }
   }
 
-  async function handleSignInWithGoogle(event: any) {
+  async function handleSignInWithGoogle(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
 
     try {
@@ -101,7 +106,7 @@ function LogIn() {
         );
         if (!response.data?.data) {
         try {
-          const response = await axios.post(
+          await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,
             {
               name: user.displayName,
@@ -158,7 +163,7 @@ function LogIn() {
               your email to continue.
             </p>
             <p className="text-center">
-              If you didn't receive the email, please check your spam folder or
+              If you didn&apos;t receive the email, please check your spam folder or
               click the button below to resend the verification email.
             </p>
             <Button
@@ -239,7 +244,7 @@ function LogIn() {
         <CardFooter className="flex items-center justify-center">
           <Link href="/auth/register">
             <p className="text-center">
-              Don't have an account? Create an account
+              Don&apos;t have an account? Create an account
             </p>
           </Link>
         </CardFooter>

@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { Command as CommandPrimitive, useCommandState } from "cmdk";
 import { X, ChevronDown } from "lucide-react";
 import * as React from "react";

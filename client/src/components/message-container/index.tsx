@@ -1,5 +1,8 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+
 import { useUser } from "@/context/authContext";
 import { useAppStore } from "@/store";
 import { useEffect, useRef, useState } from "react";
@@ -8,7 +11,6 @@ import Image from "next/image";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import axios from "axios";
-import { set } from "date-fns";
 import { Button } from "../ui/button";
 import { Download, X } from "lucide-react";
 

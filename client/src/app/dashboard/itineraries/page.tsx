@@ -2,11 +2,7 @@
 
 import { useUser } from "@/context/authContext";
 import { toast } from "sonner";
-import ComboBoxComponent from "@/components/comboboxCompo";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { budget, groupTypes } from "@/constants";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import LoadingCard from "@/components/loading-card";
 import HandpickedTripCard from "@/components/handpicked-trips/card";
@@ -27,7 +23,7 @@ function ClientItineraries() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const paramsString = searchParams.toString();
+  // const paramsString = searchParams.toString();
 
   const { user:userInfo } = useUser();
   const [user] = useAuthState(auth);

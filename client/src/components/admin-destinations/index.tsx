@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+
 import AdminCard from "../admin-card";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
@@ -157,7 +159,7 @@ function AdminDestination() {
     }
     const place_Id = await getPlaceId(destinationData.name);
     try {
-      const response = await axios.post(
+      await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/destination/add`,
         {
           name: destinationData.name,
@@ -202,7 +204,7 @@ function AdminDestination() {
           },
         }
       );
-      const response = await axios.delete(
+      await axios.delete(
         `${process.env.NEXT_PUBLIC_API_URL}/media/delete/${publicId}`,
         {
           headers: {

@@ -6,14 +6,13 @@ import GroupChatContainer from "@/components/group-chat-container";
 import { useUser } from "@/context/authContext";
 import { SocketProvider } from "@/context/socketContext";
 import { useAppStore } from "@/store";
-import { Group } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
 function Chat() {
   // Add a type argument or cast to the correct type if available, e.g. useAppStore<{ selectedChatData: YourType }>
-  const { selectedChatData } = useAppStore() as { selectedChatData: any };
+  const { selectedChatData } = useAppStore() as { selectedChatData: Group | undefined };
   const router = useRouter();
   const { user } = useUser();
 

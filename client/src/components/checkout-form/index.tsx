@@ -1,4 +1,6 @@
 // @ts-nocheck
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 
 import React, { useEffect, useState } from "react";
 import {
@@ -16,7 +18,7 @@ export default function CheckoutForm({
   const stripe = useStripe();
   const elements = useElements();
 
-  const [message, setMessage] = useState(null);
+  // const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {

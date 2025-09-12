@@ -1,13 +1,13 @@
 "use client";
 
-import { Dispatch, SetStateAction } from "react";
-import { useEffect, useState } from "react";
-import { Label } from "../ui/label";
-import { ComboBoxComponent } from "@syncfusion/ej2-react-dropdowns";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+
+import {  useState } from "react";
 import "@syncfusion/ej2-base/styles/material.css";
 import "@syncfusion/ej2-react-dropdowns/styles/material.css";
 import axios from "axios";
-import { get } from "http";
 import SingleSelector from "../single-select";
 
 type Place = {

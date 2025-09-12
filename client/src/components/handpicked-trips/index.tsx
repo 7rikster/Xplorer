@@ -1,10 +1,12 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+
 import { parseTripData } from "@/lib/utils";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import LoadingCard from "../loading-card";
-import AdminCard from "../admin-card";
 import HandpickedTripCard from "./card";
 import TripsPagination from "../pagination";
 import { Button } from "../ui/button";

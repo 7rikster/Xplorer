@@ -1,8 +1,11 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
-import { ImagePlus, Paperclip, SendHorizontal, SmilePlus } from "lucide-react";
+import { ImagePlus, SendHorizontal, SmilePlus } from "lucide-react";
 import EmojiPicker, { Theme } from "emoji-picker-react";
 import { useSocket } from "@/context/socketContext";
 import { useUser } from "@/context/authContext";
@@ -11,7 +14,6 @@ import { Input } from "../ui/input";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import axios from "axios";
-import { set } from "date-fns";
 import Image from "next/image";
 import { toast } from "sonner";
 

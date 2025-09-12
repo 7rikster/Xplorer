@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+
 import { auth } from "@/lib/firebase/firebaseConfig";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -156,7 +158,7 @@ function AdminHoarding() {
     }
     const place_Id = await getPlaceId(hoarding.name);
     try {
-      const response = await axios.post(
+      await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/hoarding/add`,
         {
           name: hoarding.name,
@@ -200,7 +202,7 @@ function AdminHoarding() {
           },
         }
       );
-      const response = await axios.delete(
+      await axios.delete(
         `${process.env.NEXT_PUBLIC_API_URL}/media/delete/${publicId}`,
         {
           headers: {

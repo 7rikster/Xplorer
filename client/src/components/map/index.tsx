@@ -1,9 +1,12 @@
 "use client";
-import dynamic from "next/dynamic";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L, { map } from "leaflet";
+import L from "leaflet";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
