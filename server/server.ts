@@ -13,7 +13,10 @@ const app = express();
 dotenv.config();
 
 // Middlewares
-const allowedOrigins = (process.env.ORIGIN || "").split(",");
+const allowedOrigins = [
+  "https://xplorer-eight.vercel.app",
+  "http://localhost:3000", // keep for dev
+];
 app
   .use(cors({
     origin: allowedOrigins,
