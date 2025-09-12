@@ -13,8 +13,13 @@ const app = express();
 dotenv.config();
 
 // Middlewares
+const allowedOrigins = (process.env.ORIGIN || "").split(",");
 app
-  .use(cors())
+  .use(cors({
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  }))
   .use(helmet())
   .use(morgan("dev"))
   .use(express.json())
