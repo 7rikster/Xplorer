@@ -21,7 +21,6 @@ function ClientItineraries() {
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   // const paramsString = searchParams.toString();
 
