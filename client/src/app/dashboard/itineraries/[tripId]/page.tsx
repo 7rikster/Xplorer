@@ -37,14 +37,12 @@ function ItineraryPage({ params }: { params: Promise<Params> }) {
       const parsedTrip = parseTripData(response.data.data.tripDetail);
       if (parsedTrip && parsedTrip.name) {
         setTrip({
-          id: response.data.data.id,
           ...parsedTrip,
           imageUrls: response.data.data.imageUrls
             ? response.data.data.imageUrls
             : [],
           faqs: [],
           reviews: [],
-          createAt: response.data.data.createAt,
         });
       } else {
         setTrip(undefined);

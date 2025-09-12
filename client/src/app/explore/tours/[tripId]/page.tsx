@@ -350,7 +350,6 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
             : [],
           faqs: response.data.data.faqs || [],
           reviews: sortedReviews,
-          createAt: response.data.data.createAt,
         });
       } else {
         setTrip(undefined);

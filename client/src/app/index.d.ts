@@ -71,13 +71,12 @@ declare interface Trip {
   interests: string;
   itinerary: DayPlan[];
   location: Location;
-  transport: Transport;
+  transport?: Transport;
   travelStyle: string;
   duration: number;
   estimatedPrice: string;
   weatherInfo: string[];
   imageUrls: string[];
-  createdAt?: Date;
   faqs: Faq[];
   reviews: Review[];
 }

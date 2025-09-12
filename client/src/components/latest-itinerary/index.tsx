@@ -32,11 +32,31 @@ function LatestItinerary() {
           }
         );
 
+        const parsedTrip = parseTripData(response.data.data.tripDetail);
+        if (!parsedTrip) {
+          setLatestItinerary(null);
+          setLoading(false);
+          return;
+        }
         setLatestItinerary({
           id: response.data.data.id,
-          ...parseTripData(response.data.data.tripDetail),
+          name: parsedTrip.name ?? "Untitled Trip",
+          accommodation: parsedTrip.accommodation,
+          bestTimeToVisit: parsedTrip.bestTimeToVisit,
+          budget: parsedTrip.budget,
+          description: parsedTrip.description,
+          duration: parsedTrip.duration,
+          groupType: parsedTrip.groupType,
           imageUrls: response.data.data.imageUrls || [],
-          createAt: response.data.data.createdAt,
+          itinerary: parsedTrip.itinerary,
+          location: parsedTrip.location,
+          reviews: parsedTrip.reviews,
+          travelStyle: parsedTrip.travelStyle,
+          interests: parsedTrip.interests,
+          estimatedPrice: parsedTrip.estimatedPrice,
+          weatherInfo: parsedTrip.weatherInfo,
+          faqs: parsedTrip.faqs,
+          transport: parsedTrip.transport,
         });
       } catch (error) {
         console.error("Error fetching latest itinerary:", error);
