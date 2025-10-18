@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "tsx watch server.ts",
     "build": "pnpm compile && pnpm esbuild",
+    "start": "node build/server.js",
     "esbuild": "node esbuild.mjs",
     "compile": "tsc -b",
     "lint": "eslint . --ext .ts --fix",

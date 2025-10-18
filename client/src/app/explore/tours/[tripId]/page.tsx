@@ -1115,6 +1115,7 @@ function ClientTripPage({ params }: { params: Promise<Params> }) {
               handleBooking,
             }}
           />
+          
           <div className="p-4 bg-white rounded-lg shadow-lg lg:mt-4 w-full h-52">
             <div className="flex  items-center justify-center gap-2">
               <Image
