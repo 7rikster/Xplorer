@@ -89,7 +89,7 @@ const setupSocket: SetupSocket = (server: HttpServer): void => {
 
     if (group && group.members) {
       group.members.forEach((member) => {
-        if (member.userId === group.admin.id) return;
+        if (member.userId === group.admin.id) {return;}
         const memberSocketId = userSocketMap.get(member.userId.toString());
         if (memberSocketId) {
           io.to(memberSocketId).emit("receive-group-message", finalMessage);

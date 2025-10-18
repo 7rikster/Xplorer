@@ -19,6 +19,7 @@ const Create: Interfaces.Controllers.Async = async (req, res, next) => {
   photoUrl = photoUrl.trim();
   publicId = publicId.trim();
   location = location.trim();
+  rating = Number(rating);
 
   const destinationExists = await prisma.destination.count({
     where: {

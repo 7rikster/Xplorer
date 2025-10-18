@@ -22,6 +22,7 @@ const Create: Interfaces.Controllers.Async = async (req, res, next) => {
     userDisplayName = userDisplayName.trim();
     userPhoto = userPhoto.trim();
     tripId = tripId.trim();
+    rating = Number(rating);
     const reviewExists = await prisma.review.count({
         where: {
             userId: userId,

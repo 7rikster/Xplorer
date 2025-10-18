@@ -28,6 +28,7 @@ const Create: Interfaces.Controllers.Async = async (req, res, next) => {
     );
   }
   title = title.trim();
+  amount = Number(amount);
   try {
     const expense = await prisma.expense.create({
       data: {
