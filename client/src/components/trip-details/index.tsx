@@ -163,7 +163,7 @@ function TripDetails({
                 key={index}
                 className={`rounded-full px-4 py-1 mr-1 ${item.bg} text-xs md:text-sm`}
               >
-                {getFirstWord(item.text)}
+                {typeof item?.text === "string" ? getFirstWord(item.text) : ""}
               </span>
             ))}
           </p>

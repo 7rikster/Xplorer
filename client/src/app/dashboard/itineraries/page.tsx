@@ -65,17 +65,17 @@ function ClientItineraries() {
       }
     };
 
-    fetchFirstPage();
+    fetchFirstPage(); 
   }, []);
 
   useEffect(() => {
     if (!nextCursor) return;
 
     const observer = new IntersectionObserver(
-      (entries) => {
+      async (entries) => {
         if (entries[0].isIntersecting) {
           setLoading(true);
-          const token = user?.getIdToken();
+          const token = await user?.getIdToken();
           axios
             .get(`${process.env.NEXT_PUBLIC_API_URL}/userTrip/get-all`, {
               params: {
@@ -139,7 +139,7 @@ function ClientItineraries() {
   }, [userInfo, router]);
 
   return (
-    <div className="flex flex-col  w-full h-screen bg-gray-100 gap-2 md:gap-4">
+    <div className="flex flex-col  w-full min-h-screen bg-gray-100 gap-2 md:gap-4">
       <div className="justify-end flex items-center gap-2 p-4">
         <Link href={"/generate"}>
           <Button className="cursor-pointer md:h-auto md:w-auto h-7 text-[11px] px-2 md:text-sm">Create a new Itinerary</Button>

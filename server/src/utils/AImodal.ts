@@ -123,7 +123,7 @@ export const getAIGeneratedTrip = async ({location, numberOfDays, travelStyle, i
     - Do not include markdown or extra text — **output only pure JSON**.
     `;
 
-    const textResult = await genAI.getGenerativeModel({model: "gemini-2.0-flash"}).generateContent([prompt]);
+    const textResult = await genAI.getGenerativeModel({model: "gemini-2.5-flash"}).generateContent([prompt]);
 
     const trip = parseMarkdownToJson(textResult.response.text());
     const city = location.split(",")[0].trim();
