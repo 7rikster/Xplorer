@@ -10,9 +10,6 @@ const nextConfig: NextConfig = {
       "media-cdn.tripadvisor.com"
     ],
   },
-  ssr: {
-    noExternal: [/@syncfusion/],
-  },
 };
 
 export default nextConfig;
