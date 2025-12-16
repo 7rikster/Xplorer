@@ -1,5 +1,5 @@
 "use client";
-
+/* eslint-disable react-hooks/set-state-in-effect */
 import Loading from "@/app/loading";
 import TripDetails from "@/components/trip-details";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,7 @@ function TripPage({ params }: { params: Promise<Params> }) {
 
   const fetchTripDetails = async () => {
     if (!user) return;
+    setLoading(true);
     const token = await user.getIdToken();
     try {
       const response = await axios.get(
@@ -98,7 +99,6 @@ function TripPage({ params }: { params: Promise<Params> }) {
   }
 
   useEffect(() => {
-    setLoading(true);
     void fetchTripDetails();
   }, [params]);
 

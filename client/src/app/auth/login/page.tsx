@@ -1,5 +1,5 @@
 "use client";
-
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Label } from "../../../components/ui/label";
@@ -69,12 +69,13 @@ function LogIn() {
       } catch (e) {
         setLogging(false);
         console.log(e);
-        if(!(e instanceof FirebaseError)) {
+        if (!(e instanceof FirebaseError)) {
           toast.error("An unexpected error occurred");
           return;
         }
-        const errorCode = e.code;
-        const errorMessage = e.message;
+        const error = e as FirebaseError;
+        const errorCode = error.code;
+        const errorMessage = error.message;
         if (errorCode === "auth/invalid-credential") {
           toast("Invalid credentials!");
         } else if (errorCode === "auth/invalid-email") {
@@ -91,7 +92,9 @@ function LogIn() {
     }
   }
 
-  async function handleSignInWithGoogle(event: React.MouseEvent<HTMLButtonElement>) {
+  async function handleSignInWithGoogle(
+    event: React.MouseEvent<HTMLButtonElement>
+  ) {
     event.preventDefault();
 
     try {
@@ -105,25 +108,25 @@ function LogIn() {
           `${process.env.NEXT_PUBLIC_API_URL}/auth/username/${username}`
         );
         if (!response.data?.data) {
-        try {
-          await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,
-            {
-              name: user.displayName,
-              email: user.email,
-              userName: username,
-              photoUrl: user.photoURL,
-              firebaseId: user.uid,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
+          try {
+            await axios.post(
+              `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,
+              {
+                name: user.displayName,
+                email: user.email,
+                userName: username,
+                photoUrl: user.photoURL,
+                firebaseId: user.uid,
               },
-            }
-          );
-        } catch (error) {
-          console.error("Error creating user:", error);
-        }
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+          } catch (error) {
+            console.error("Error creating user:", error);
+          }
         }
 
         if (!loading) {
@@ -144,11 +147,11 @@ function LogIn() {
 
   useEffect(() => {
     const user = auth.currentUser;
-    if (user?.emailVerified) {
-      setVerifyEmail(false);
-      setLogging(false);
-    }
-  }, []);
+    if (!user?.emailVerified) return;
+
+    setVerifyEmail((prev) => (prev ? false : prev));
+    setLogging((prev) => (prev ? false : prev));
+  }, [auth.currentUser?.emailVerified]);
 
   return (
     <main className="h-screen flex items-center justify-center bg-[url(/cover-photo.jpg)] bg-cover bg-center">
@@ -163,8 +166,8 @@ function LogIn() {
               your email to continue.
             </p>
             <p className="text-center">
-              If you didn&apos;t receive the email, please check your spam folder or
-              click the button below to resend the verification email.
+              If you didn&apos;t receive the email, please check your spam
+              folder or click the button below to resend the verification email.
             </p>
             <Button
               onClick={async () => {

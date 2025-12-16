@@ -26,21 +26,27 @@ function TopDestinations() {
   const [list, setList] = useState<DestinationList[] | []>([]);
   const [loading, setLoading] = useState(true);
 
-  async function fetchDestinations() {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/destination/get`,
-        {}
-      );
-      setList(response.data.data);
-    } catch (error) {
-      console.error("Error fetching destinations:", error);
-    }
-    setLoading(false);
-  }
-
   useEffect(() => {
+    let isMounted = true; // Track if component is still mounted
+
+    const fetchDestinations = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/destination/get`
+        );
+        if (isMounted) setList(response.data.data);
+      } catch (error) {
+        console.error("Error fetching destinations:", error);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
     fetchDestinations();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (

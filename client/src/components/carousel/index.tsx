@@ -14,16 +14,7 @@ interface Hoarding {
 }
 
 function Carousel() {
-  const [hoarding, setHoarding] = useState<Hoarding[]>([]);
-  const [buttonClicked, setButtonClicked] = useState<string | null>(null);
-  const firstImageref = useRef<HTMLImageElement>(null);
-  const secondImageref = useRef<HTMLImageElement>(null);
-  const lastImageref = useRef<HTMLDivElement>(null);
-  const firstThumbnailImageref = useRef<HTMLDivElement>(null);
-  const thumbnailref = useRef<HTMLDivElement>(null);
-  const contentContainerref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    setHoarding([
+  const [hoarding, setHoarding] = useState<Hoarding[]>([
       {
         placeId: "1",
         title: "Hoarding 1",
@@ -57,30 +48,38 @@ function Carousel() {
         location: "Location 4",
       },
     ]);
-  }, []);
+  const directionRef = useRef<"next" | "prev" | null>(null);
+  const firstImageref = useRef<HTMLImageElement>(null);
+  const secondImageref = useRef<HTMLImageElement>(null);
+  const lastImageref = useRef<HTMLDivElement>(null);
+  const firstThumbnailImageref = useRef<HTMLDivElement>(null);
+  const thumbnailref = useRef<HTMLDivElement>(null);
+  const contentContainerref = useRef<HTMLDivElement>(null);
 
   const handleNext = () => {
-    const [first, ...rest] = hoarding;
-    setHoarding([...rest, first]);
+  directionRef.current = "next";
+  setHoarding(prev => {
+    const [first, ...rest] = prev;
+    return [...rest, first];
+  });
+};
 
-    setButtonClicked("next");
-  };
-
-  const handlePrev = () => {
-    const last = hoarding[hoarding.length - 1];
-    const rest = hoarding.slice(0, hoarding.length - 1);
-    setHoarding([last, ...rest]);
-
-    setButtonClicked("prev");
-  };
+const handlePrev = () => {
+  directionRef.current = "prev";
+  setHoarding(prev => {
+    const last = prev[prev.length - 1];
+    return [last, ...prev.slice(0, -1)];
+  });
+};
 
   useEffect(() => {
-    if (buttonClicked === "next" && firstImageref.current) {
+    const dir = directionRef.current;
+  if (!dir) return;
+    if (dir === "next" && firstImageref.current) {
       firstImageref.current.classList.add("next");
       lastImageref.current?.classList.add("next-thumbnail-img");
       thumbnailref.current?.classList.add("next-thumbnail");
       contentContainerref.current?.classList.add("hidden");
-      setButtonClicked(null);
       setTimeout(() => {
         firstImageref.current?.classList.remove("next");
         lastImageref.current?.classList.remove("next-thumbnail-img");
@@ -88,12 +87,11 @@ function Carousel() {
         contentContainerref.current?.classList.remove("hidden");
         contentContainerref.current?.classList.add("hoarding-content");
       }, 500);
-    } else if (buttonClicked === "prev" && secondImageref.current) {
+    } else if (dir === "prev" && secondImageref.current) {
       secondImageref.current?.classList.add("prev");
       firstThumbnailImageref.current?.classList.add("prev-thumbnail-img");
       contentContainerref.current?.classList.add("hidden");
 
-      setButtonClicked(null);
       setTimeout(() => {
         secondImageref.current?.classList.remove("prev");
         firstThumbnailImageref.current?.classList.remove("prev-thumbnail-img");

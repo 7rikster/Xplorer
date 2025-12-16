@@ -20,7 +20,6 @@ export default function ProtectedRoute({
   redirectTo = "/auth/login",
 }: ProtectedRouteProps) {
   const { user, loading: authLoading } = useUser();
-  const [checking, setChecking] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -42,9 +41,8 @@ export default function ProtectedRoute({
       return;
     }
 
-    setChecking(false);
   }, [authLoading, user, allowedRoles, redirectTo, router]);
 
-  if (authLoading || checking) return <Loading />;
+  if (authLoading) return <Loading />;
   return <>{children}</>;
 }

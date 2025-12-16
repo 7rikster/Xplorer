@@ -11,7 +11,6 @@ export default function RegisterLayout({
   children: React.ReactNode;
 }>) {
   const { user, loading: authLoading } = useUser();
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     console.log(user);
@@ -21,10 +20,7 @@ export default function RegisterLayout({
         // toast("User already signed in");
         redirect("/explore");
       }, 100);
-    } else {
-      setLoading(false);
-    }
+    } 
   }, [authLoading]);
-  if (loading) return <Loading />;
   return <main>{children}</main>;
 }

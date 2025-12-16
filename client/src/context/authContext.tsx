@@ -72,7 +72,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 }
 
   useEffect(() => {
-    setFirebaseAuthLoading(true);
     const checkAuthState = onAuthStateChanged(auth, async (authUser) => {
       if (authUser) {
         const token = await authUser.getIdToken();

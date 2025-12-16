@@ -70,7 +70,7 @@ function NewTripForm({ saveTrip, loading: dbLoading }: NewTripFormProps) {
       return;
     }
     setLoading(true);
-    if(!place){
+    if (!place) {
       setLoading(false);
       toast.error("Please select a place from the search box");
       return;
@@ -165,34 +165,33 @@ function NewTripForm({ saveTrip, loading: dbLoading }: NewTripFormProps) {
     });
   }
 
-  async function fetchCredits() {
-    const token = await user?.getIdToken();
-    if (!token) {
-      console.error("User is not authenticated");
-      return;
-    }
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/credits`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.data.data) {
-        setCredits(response.data.data);
-      }
-    } catch (error) {
-      console.error("Error fetching credits:", error);
-    }
-  }
-
   useEffect(() => {
     if (userInfo && userInfo.role !== "ADMIN") {
+      async function fetchCredits() {
+        const token = await user?.getIdToken();
+        if (!token) {
+          console.error("User is not authenticated");
+          return;
+        }
+        try {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}/user/credits`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          if (response.data.data) {
+            setCredits(response.data.data);
+          }
+        } catch (error) {
+          console.error("Error fetching credits:", error);
+        }
+      }
       fetchCredits();
     }
-  }, []);
+  }, [user, userInfo]);
 
   if (loading)
     return (

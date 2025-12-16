@@ -1,5 +1,5 @@
 "use client";
-
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useContext, createContext, useEffect, useState, useRef } from "react";
 import { useUser } from "./authContext";
 import { io, Socket } from "socket.io-client";

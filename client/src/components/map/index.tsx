@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -38,13 +38,7 @@ interface MapProps {
 }
 
 const Map: React.FC<MapProps> = ({ mapPins, zoom=10 }) => {
-  const [locations, setLocations] = useState<MapPin[]>([]);
-
-  useEffect(() => {
-    if (mapPins && mapPins.length > 0) {
-      setLocations(mapPins);
-    }
-  }, [mapPins]);
+  const locations = mapPins || [];
 
   return (
     <main>

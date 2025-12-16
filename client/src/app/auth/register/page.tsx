@@ -1,6 +1,6 @@
 "use client";
-
-import { useEffect, useState } from "react";
+/* eslint-disable react-hooks/set-state-in-effect */
+import { useEffect, useState, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Label } from "../../../components/ui/label";
 import { Input } from "../../../components/ui/input";
@@ -105,7 +105,7 @@ function Register() {
           toast("Something went wrong");
         }
       } catch (e) {
-        if(!(e instanceof FirebaseError)) {
+        if (!(e instanceof FirebaseError)) {
           toast.error("An unexpected error occurred");
           return;
         }
@@ -130,7 +130,9 @@ function Register() {
     }
   }
 
-  async function handleSignUpWithGoogle(event: React.MouseEvent<HTMLButtonElement>) {
+  async function handleSignUpWithGoogle(
+    event: React.MouseEvent<HTMLButtonElement>
+  ) {
     event.preventDefault();
 
     try {
@@ -159,14 +161,12 @@ function Register() {
         } catch (error) {
           console.error("Error creating user:", error);
         }
-        
 
         if (!loading) {
           toast.success("User registered Successfully");
           router.refresh();
           router.push(typeof redirect === "string" ? redirect : "/");
-        }
-        else{
+        } else {
           toast.loading("Registering user...");
         }
       } else {
@@ -178,18 +178,28 @@ function Register() {
     }
   }
 
+  const hasHandledVerification = useRef(false);
+
   useEffect(() => {
     const user = auth.currentUser;
-    if (user?.emailVerified) {
-      setVerifyEmail(false);
-      setLogging(false);
-      toast.success("User registered Successfully!");
-      setTimeout(() => {
-        router.refresh();
-        router.push(typeof redirect === "string" ? redirect : "/");
-      }, 1000);
-    }
-  }, []);
+
+    if (!user?.emailVerified) return;
+    if (hasHandledVerification.current) return;
+
+    hasHandledVerification.current = true;
+
+    setVerifyEmail(false);
+    setLogging(false);
+
+    toast.success("User registered Successfully!");
+
+    const timeout = setTimeout(() => {
+      router.refresh();
+      router.push(typeof redirect === "string" ? redirect : "/");
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [auth.currentUser?.emailVerified, router, redirect]);
 
   return (
     <main className="h-screen flex items-center justify-center bg-[url(/cover-photo.jpg)] bg-cover bg-center">
@@ -204,8 +214,8 @@ function Register() {
               your email to continue.
             </p>
             <p className="text-center">
-              If you didn&apos;t receive the email, please check your spam folder or
-              click the button below to resend the verification email.
+              If you didn&apos;t receive the email, please check your spam
+              folder or click the button below to resend the verification email.
             </p>
             <Button
               onClick={async () => {

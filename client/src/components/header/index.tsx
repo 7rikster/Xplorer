@@ -2,7 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-
 import { useEffect, useRef, useState } from "react";
 import { useWindowScroll } from "react-use";
 import gsap from "gsap";
@@ -43,7 +42,7 @@ interface HeaderItem {
 type HeaderContents = HeaderItem[];
 
 function Header() {
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollYRef = useRef(0);
   const [isNavVisible, setIsNavVisible] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -82,18 +81,26 @@ function Header() {
   }
 
   useEffect(() => {
-    if (currentScrollY === 0) {
-      setIsNavVisible(true);
-      navContainerRef?.current?.classList.remove("floating-nav");
-    } else if (currentScrollY > lastScrollY) {
-      setIsNavVisible(false);
-      navContainerRef.current?.classList.add("floating-nav");
-    } else if (currentScrollY < lastScrollY) {
-      setIsNavVisible(true);
-      navContainerRef.current?.classList.add("floating-nav");
-    }
-    setLastScrollY(currentScrollY);
-  }, [currentScrollY, lastScrollY]);
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY === 0) {
+        setIsNavVisible(true);
+        navContainerRef.current?.classList.remove("floating-nav");
+      } else if (currentScrollY > lastScrollYRef.current) {
+        setIsNavVisible(false);
+        navContainerRef.current?.classList.add("floating-nav");
+      } else {
+        setIsNavVisible(true);
+        navContainerRef.current?.classList.add("floating-nav");
+      }
+
+      lastScrollYRef.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     gsap.to(navContainerRef.current, {
@@ -309,7 +316,7 @@ function Header() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                       <DropdownMenuItem
-                        onSelect={(e) => {
+                        onSelect={(e: Event) => {
                           e.preventDefault(); // optional: prevent default selection behavior
                           handleDashboardClick();
                         }}
@@ -319,7 +326,7 @@ function Header() {
                       </DropdownMenuItem>
 
                       <DropdownMenuItem
-                        onSelect={(e) => {
+                        onSelect={(e: Event) => {
                           e.preventDefault();
                           setDropdownOpen(false);
                           signOut();
