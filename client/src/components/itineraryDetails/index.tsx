@@ -4,9 +4,12 @@ import getPlacePhoto from "@/lib/placePhoto";
 import { getFirstWord } from "@/lib/utils";
 import {
   CalendarDays,
+  Check,
   ChevronDown,
   ChevronUp,
+  Copy,
   Delete,
+  Loader2,
   MapPin,
   Share,
 } from "lucide-react";
@@ -14,7 +17,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import Map from "../map";
+import dynamic from "next/dynamic";
+const Map = dynamic(() => import("@/components/map"), {
+  ssr: false,
+});
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -26,6 +32,9 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Label } from "../ui/label";
 import { toast } from "sonner";
+import axios from "axios";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/lib/firebase/firebaseConfig";
 
 type TripDetailsProps = {
   trip?: Trip;
@@ -33,15 +42,20 @@ type TripDetailsProps = {
   viewReviews: boolean;
   addFaq?: (question: string, answer: string) => void;
   deleteFaq?: (faqId: string) => void;
+  itineraryId: string;
 };
 
-function TripDetails({
+function ItineraryDetails({
   trip,
   viewFaqs,
   addFaq,
   deleteFaq,
   viewReviews,
+  itineraryId,
 }: TripDetailsProps) {
+  const [user] = useAuthState(auth);
+
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [hotelPhoto, setHotelPhoto] = useState<string | null>(null);
   const [expandedDays, setExpandedDays] = useState<{ [key: number]: boolean }>(
     {}
@@ -51,7 +65,9 @@ function TripDetails({
     answer: "",
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+  const [shareLoading, setShareLoading] = useState(false);
+  const [shareLink, setShareLink] = useState("");
+  const [copied, setCopied] = useState(false);
   const {
     name,
     duration,
@@ -99,6 +115,25 @@ function TripDetails({
       console.error("Error adding FAQ: ", error);
     }
   }
+
+  function handleShare() {
+    setShareLoading(true);
+    setShareLink("");
+    setCopied(false);
+    setTimeout(() => {
+      setShareLink(`${window.location.origin}/shared/${itineraryId}`);
+      setShareLoading(false);
+    }, 1500);
+  }
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(shareLink);
+      setCopied(true);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
 
   useEffect(() => {
     if (accommodation) {
@@ -183,6 +218,77 @@ function TripDetails({
               4.9/5.0
             </span>
           </p>
+
+          <Dialog
+            open={shareDialogOpen}
+            onOpenChange={() => {
+              setShareDialogOpen((prev) => !prev);
+            }}
+          >
+            <DialogTrigger asChild>
+              <div
+                onClick={() => handleShare()}
+                className=" ml-auto px-3 py-1 text-sm md:text-[1rem] md:px-5 md:py-2 bg-blue-100 text-blue-600 font-semibold rounded-full md:ml-3 cursor-pointer transform transition-all duration-200 hover:scale-110 hover:shadow-md flex flex-row gap-1 items-center"
+              >
+                Share <Share className="md:h-5 md:w-5 h-4 w-4" />
+              </div>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[420px]">
+              <DialogTitle>Share Itinerary</DialogTitle>
+              {shareLoading ? (
+                <div className="flex flex-col items-center justify-center py-2">
+                  <Loader2 className="h-10 w-10 text-primary animate-spin mb-2" />
+                  <p className="text-gray-600">Generating share link...</p>
+                </div>
+              ) : shareLink ? (
+                <div className="space-y-4">
+                  <p className="text-sm text-gray-600">
+                    Share this link with anyone you want to view your itinerary
+                  </p>
+
+                  {/* Link Display */}
+                  <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                    <input
+                      type="text"
+                      value={shareLink}
+                      readOnly
+                      className="flex-1 bg-transparent text-sm text-gray-700 outline-none"
+                    />
+                    <Button
+                      onClick={handleCopy}
+                      className="cursor-pointer"
+                    >
+                      {copied ? (
+                        <>
+                          <Check className="h-4 w-4" />
+                          Copied
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="h-4 w-4" />
+                          Copy
+                        </>
+                      )}
+                    </Button>
+                  </div>
+
+                  {/* Success Message */}
+                  {copied && (
+                    <p className="text-sm text-green-600 flex items-center gap-1">
+                      <Check className="h-4 w-4" />
+                      Link copied to clipboard!
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-gray-500">
+                    Click the button above to generate a share link
+                  </p>
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
         </div>
         <section className="mt-4 sm:mt-8">
           <h1 className="text-xl sm:text-2xl md:text-4xl font-semibold">
@@ -525,4 +631,4 @@ function TripDetails({
   );
 }
 
-export default TripDetails;
+export default ItineraryDetails;

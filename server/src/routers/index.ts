@@ -15,5 +15,6 @@ import PaymentIntent from "./paymentIntent.js";
 import Expense from "./expense.js";
 import MoodDestination from "./moodDestination.js";
 import DestinationDetails  from "./destinationDetails.js";
+import SharedItinerary from "./sharedItinerary.js";
 
-export { Health, Destination, Media, Hoarding, Auth, AITrip, Faq, Review, User, GroupChat, UserTrip, TripBooking, CreditsPuchase, PaymentIntent, Expense, MoodDestination, DestinationDetails };
+export { Health, Destination, Media, Hoarding, Auth, AITrip, Faq, Review, User, GroupChat, UserTrip, TripBooking, CreditsPuchase, PaymentIntent, Expense, MoodDestination, DestinationDetails, SharedItinerary };

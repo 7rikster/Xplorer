@@ -17,4 +17,5 @@ import * as Expense from "./expense/index.js";
 import * as AISuggestion from "./aiDestinationSuggestion/index.js"
 import * as MoodDestination from "./moodDestination/index.js";
 import * as DestinationDetails from "./destinationDetails/index.js";
-export { Health, Destination, Media, Hoarding, Auth, AdminTrips, AiGeneratedTrip, Faq, Review, User, GroupChat, UserTrips, TripBooking, CreditsPurchase, PaymentIntent, Expense, AISuggestion, MoodDestination, DestinationDetails };
+import * as SharedItinerary from "./sharedItinerary/index.js";
+export { Health, Destination, Media, Hoarding, Auth, AdminTrips, AiGeneratedTrip, Faq, Review, User, GroupChat, UserTrips, TripBooking, CreditsPurchase, PaymentIntent, Expense, AISuggestion, MoodDestination, DestinationDetails, SharedItinerary };
