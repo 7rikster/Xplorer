@@ -1,4 +1,3 @@
-import { authenticateFirebase } from "../middlewares/firebaseAuth.js";
 import * as Controllers from "../controllers/index.js";
 import express from "express";
 
